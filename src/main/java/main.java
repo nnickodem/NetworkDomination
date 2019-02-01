@@ -1,4 +1,8 @@
 import ResourceHandlers.LogHandler;
+import GUIs.MainMenu;
+
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 /**
  * Temporary
@@ -6,5 +10,13 @@ import ResourceHandlers.LogHandler;
 public class main {
     public static void main(String args[]) {
         LogHandler.setup();
+        // set look and feel to the system and feel
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception c){
+            c.printStackTrace();
+        }
+
+        SwingUtilities.invokeLater(() -> new MainMenu().setVisible(true));
     }
 }
