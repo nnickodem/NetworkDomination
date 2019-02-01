@@ -1,7 +1,7 @@
 import GUIs.MainMenu;
-import GUIs.Test;
 
-import javax.swing.*;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 /**
  * Temporary

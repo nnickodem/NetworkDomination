@@ -1,7 +1,14 @@
 package GUIs;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+
 import static java.lang.System.exit;
 
 public class MainMenu extends JFrame {
@@ -19,7 +26,6 @@ public class MainMenu extends JFrame {
         JPanel mainMenu = new JPanel(new GridBagLayout());
         mainMenu.setBackground(Color.DARK_GRAY);
         GridBagConstraints constraints = new GridBagConstraints();
-        //mainMenu.setBounds(0,0,800,600);
 
         constraints.gridx = 0;
         constraints.gridy = 0;
