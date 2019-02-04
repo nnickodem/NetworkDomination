@@ -1,14 +1,8 @@
 package GUIs;
 
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Image;
-import java.awt.Insets;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.geom.Line2D;
 
 public class Tutorial extends JPanel {
     public JButton test1 = new JButton("Object1");
