@@ -1,58 +1,60 @@
 package GUIs;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Image;
-import java.awt.Point;
-import java.awt.Toolkit;
-import java.awt.geom.Line2D;
-import java.util.HashMap;
-import java.util.Map;
-
+import java.awt.Insets;
 
 public class Tutorial extends JPanel {
-    private String imageFile = "resources/objects/NetworkDevices/";
+    public JButton test1 = new JButton("Object1");
+    public JButton test2 = new JButton("Object2");
+    private String imageFile = "src/resources/objects/NetworkDevices/";
     public JLabel pc1;
     public JLabel pc2;
     public JLabel gameSwitch;
     public JLabel server;
-    public Map<JLabel, JLabel> connectedDevices = new HashMap();
-    public Map<Point,Point> lineMap= new HashMap<>();
-
-    private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    double screenWidth = screenSize.getWidth();
-    double screenHeight = screenSize.getHeight();
 
 
     public Tutorial(){
-        this.setLayout(null);
-        server = new JLabel(scaleImage(imageFile + "server/serverWhite.png"));
-        this.add(server);
-        server.setBounds((int)Math.round(screenWidth)/2,0,60,60);
+        JPanel panel = new JPanel(new GridBagLayout());
+        panel.setBorder(BorderFactory.createEtchedBorder());
+        GridBagConstraints constraints1 = new GridBagConstraints();
 
-        gameSwitch = new JLabel(scaleImage(imageFile + "switch/switchWhite.png"));
-        this.add(gameSwitch);
-        gameSwitch.setBounds((int)Math.round(screenWidth)/2, 300, 60, 60);
+        constraints1.gridx = 3;
+        constraints1.gridy = 1;
+        constraints1.insets = new Insets(30,30,100,30);
+        server = new JLabel(scaleImage(imageFile + "router/routerWhite.png"));
+        panel.add(server, constraints1);
 
-        pc1 = new JLabel(scaleImage(imageFile + "pc/pcRed.png"));
-        this.add(pc1);
-        pc1.setBounds((int)Math.round(screenWidth)/2 - 150, 500, 60, 60);
+        GridBagConstraints constraints2 = new GridBagConstraints();
+        constraints2.gridx = 3;
+        constraints2.gridy = 3;
+        constraints2.insets = new Insets(100,30,30,30);
+        gameSwitch = new JLabel(scaleImage(imageFile + "switch/switchBlue.png"));
+        panel.add(gameSwitch, constraints2);
 
-        pc2 = new JLabel(scaleImage(imageFile + "pc/pcBlue.png"));
-        this.add(pc2);
-        pc2.setBounds((int)Math.round(screenWidth)/2 + 150, 500, 60, 60);
+        GridBagConstraints constraints3 = new GridBagConstraints();
+        constraints3.gridx = 2;
+        constraints3.gridy = 4;
+        constraints3.insets = new Insets(100, 0, 0, 75);
+        pc1 = new JLabel(scaleImage(imageFile + "pc/pc starter.png"));
+        panel.add(pc1, constraints3);
 
-        setBackground(Color.DARK_GRAY);
-        connectedDevices.put(pc1,gameSwitch);
-        connectedDevices.put(pc2, gameSwitch);
-        connectedDevices.put(gameSwitch, server);
-        listCoordinates(connectedDevices);
+        GridBagConstraints constraints4 = new GridBagConstraints();
+        constraints4.gridx = 4;
+        constraints4.gridy = 4;
+        constraints4.insets = new Insets(100, 75, 0, 0);
+        pc2 = new JLabel(scaleImage(imageFile + "pc/pc starter.png"));
+        panel.add(pc2, constraints4);
+
+//        panel.repaint();
+        add(panel);
+
     }
 
     //Scales the image files that are loaded in to the proper game image size wanted
@@ -64,28 +66,10 @@ public class Tutorial extends JPanel {
         return imageIcon;
     }
 
-    public void listCoordinates(Map<JLabel,JLabel> connections){
-        Point tempA;
-        Point tempB;
-        for(Map.Entry<JLabel, JLabel> connection : connections.entrySet()){
-            tempA = connection.getKey().getLocation();
-            tempB = connection.getValue().getLocation();
-            tempA = new Point((int)tempA.getX() + 30, (int)tempA.getY() + 30);
-            tempB = new Point((int)tempB.getX() + 30, (int)tempB.getY() + 30);
-            lineMap.put(tempA, tempB);
-
-        }
-    }
-
-    @Override
-    protected void paintComponent(Graphics g){
-        super.paintComponent(g);
-        Graphics g2d = (Graphics2D) g;
-        Line2D line2D;
-        ((Graphics2D) g2d).setStroke(new BasicStroke(4));
-        for(Map.Entry<Point, Point> entry : lineMap.entrySet() ){
-            line2D = new Line2D.Double(entry.getKey(), entry.getValue());
-            ((Graphics2D) g2d).draw(line2D);
-        }
-    }
+//    @Override
+//    public void paintComponent(Graphics g){
+//        Graphics2D g2 = (Graphics2D) g;
+//        Line2D lin = new Line2D.Float(1, 1, 2, 2);
+//        g2.draw(lin);
+//    }
 }
