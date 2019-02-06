@@ -3,8 +3,8 @@ package Objects.Packets;
 public class SYN extends Packet {
 
     public SYN() {
-        setCost(1);
-        setStealth(1);
+        /*setCost(1);
+        setStealth(1);*/
     }
 
 }
