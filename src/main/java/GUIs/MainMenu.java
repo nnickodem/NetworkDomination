@@ -12,6 +12,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Toolkit;
 
 import static java.lang.System.exit;
 
@@ -23,6 +24,8 @@ public class MainMenu extends JFrame {
 
     private int buttonHeight = 40;
     private int buttonWidth = 150;
+
+    private Dimension dimMax = Toolkit.getDefaultToolkit().getScreenSize();
 
     //Add each button to the JPanel
     public MainMenu(){
@@ -63,10 +66,12 @@ public class MainMenu extends JFrame {
         mainMenu.add(exitButton, constraints);
 
         //Add the mainMenu panel to the frame and set the window size
-        add(mainMenu);
+        getContentPane().add(mainMenu);
         getContentPane().setBackground(Color.DARK_GRAY);
 
-        setSize(800,600);
+        setMaximumSize(dimMax);
+        //setResizable(false);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 }
