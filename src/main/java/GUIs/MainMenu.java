@@ -29,7 +29,6 @@ public class MainMenu extends JFrame {
 
     //Add each button to the JPanel
     public MainMenu(){
-        JFrame gameWindow = new JFrame();
         JPanel mainMenu = new JPanel(new GridBagLayout());
         mainMenu.setBorder(BorderFactory.createEmptyBorder());
         mainMenu.setBackground(Color.DARK_GRAY);
@@ -70,7 +69,6 @@ public class MainMenu extends JFrame {
         getContentPane().setBackground(Color.DARK_GRAY);
 
         setMaximumSize(dimMax);
-        //setResizable(false);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }

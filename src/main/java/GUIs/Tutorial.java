@@ -4,6 +4,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -11,9 +12,7 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.geom.Line2D;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -23,7 +22,6 @@ public class Tutorial extends JPanel {
     public JLabel pc2;
     public JLabel gameSwitch;
     public JLabel server;
-    public List<JLabel> networkDevices = new ArrayList();
     public Map<JLabel, JLabel> connectedDevices = new HashMap();
     public Map<Point,Point> lineMap= new HashMap<>();
 
@@ -50,6 +48,7 @@ public class Tutorial extends JPanel {
         this.add(pc2);
         pc2.setBounds((int)Math.round(screenWidth)/2 + 150, 500, 60, 60);
 
+        setBackground(Color.DARK_GRAY);
         connectedDevices.put(pc1,gameSwitch);
         connectedDevices.put(pc2, gameSwitch);
         connectedDevices.put(gameSwitch, server);
@@ -76,7 +75,6 @@ public class Tutorial extends JPanel {
             lineMap.put(tempA, tempB);
 
         }
-        System.out.println(lineMap);
     }
 
     @Override
