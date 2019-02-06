@@ -18,7 +18,7 @@ import java.util.Map;
 
 
 public class Tutorial extends JPanel {
-    private String imageFile = "src/resources/objects/NetworkDevices/";
+    private String imageFile = "resources/objects/NetworkDevices/";
     public JLabel pc1;
     public JLabel pc2;
     public JLabel gameSwitch;
@@ -78,8 +78,10 @@ public class Tutorial extends JPanel {
         }
         System.out.println(lineMap);
     }
+
     @Override
     protected void paintComponent(Graphics g){
+        super.paintComponent(g);
         Graphics g2d = (Graphics2D) g;
         Line2D line2D;
         ((Graphics2D) g2d).setStroke(new BasicStroke(4));
