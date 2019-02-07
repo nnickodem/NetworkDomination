@@ -8,9 +8,16 @@ import java.util.ArrayList;
 public class NetworkDevice {
 
     private int id;
-    private int team;
+    private String team;
     private ArrayList<Integer> connections;
 
+    public void setTeam(final String team) {
+        this.team = team;
+    }
+
+    public String getTeam() {
+        return team;
+    }
     //TODO: other universal values?
 
 }
