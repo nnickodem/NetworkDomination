@@ -4,7 +4,7 @@ import GameHandlers.DeviceHandler;
 import Objects.NetworkDevices.NetworkDevice;
 
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -13,6 +13,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.geom.Line2D;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,16 +21,17 @@ import java.util.Map;
 
 public class Level extends JPanel {
 
-    private final String imageFile = "resources/objects/NetworkDevices/";
-    public Map<Point,Point> lineMap= new HashMap<>();
+    private final String imagePath = "resources/objects/NetworkDevices/";
+    private List<Map.Entry<Point, Point>> lineMap;
 
-    public Level(final String[][] levelMap, final Map<String, String> connections) {
+    public Level(final String[][] levelMap, final List<Map.Entry<String, String>> connections) {
 
-        Map<JLabel, JLabel> deviceConnections = new HashMap<>();
-        Map<String, JLabel> devices = new HashMap<>();
+        List<Map.Entry<JButton, JButton>> deviceConnections = new ArrayList<>();
+        Map<String, JButton> devices = new HashMap<>();
         String temp;
         String deviceType;
         NetworkDevice tempDevice;
+        JButton button;
 
         this.setLayout(null);
         setBackground(Color.DARK_GRAY);
@@ -41,15 +43,18 @@ public class Level extends JPanel {
                     tempDevice = DeviceHandler.getNetworkDeviceById(temp);
                     deviceType = tempDevice.getClass().toString();
                     deviceType = deviceType.substring(deviceType.lastIndexOf(".")+1).toLowerCase();
-                    devices.put(temp ,new JLabel(scaleImage(imageFile + deviceType + "/" + deviceType + tempDevice.getTeam() + ".png")));
-                    this.add(devices.get(temp));
-                    devices.get(temp).setBounds(i*100, k*100, 60,60);
+                    button = new JButton(scaleImage(imagePath + deviceType + "/" + deviceType + tempDevice.getTeam() + ".png"));
+                    devices.put(temp, button);
+                    this.add(button);
+                    //TODO: adjust scaling
+                    button.setBounds(i*100, k*100, 70,70);
+                    button.setContentAreaFilled(false);
                 }
             }
         }
 
-        for(Map.Entry<String, String> connection : connections.entrySet()) {
-            deviceConnections.put(devices.get(connection.getKey()), devices.get(connection.getValue()));
+        for(Map.Entry<String, String> connection : connections) {
+            deviceConnections.add(new AbstractMap.SimpleEntry<>(devices.get(connection.getKey()), devices.get(connection.getValue())));
         }
 
         listCoordinates(deviceConnections);
@@ -59,20 +64,22 @@ public class Level extends JPanel {
     public ImageIcon scaleImage(String imageFile){
         ImageIcon imageIcon = new ImageIcon(imageFile);
         Image image = imageIcon.getImage();
+        //TODO: adjust scaling?
         Image newImage = image.getScaledInstance(60,60, Image.SCALE_SMOOTH);
         imageIcon = new ImageIcon(newImage);
         return imageIcon;
     }
 
-    public void listCoordinates(Map<JLabel,JLabel> connections){
+    public void listCoordinates(List<Map.Entry<JButton, JButton>> connections){
         Point tempA;
         Point tempB;
-        for(Map.Entry<JLabel, JLabel> connection : connections.entrySet()){
+        lineMap = new ArrayList<>();
+        for(Map.Entry<JButton, JButton> connection : connections){
             tempA = connection.getKey().getLocation();
             tempB = connection.getValue().getLocation();
-            tempA = new Point((int)tempA.getX() + 30, (int)tempA.getY() + 30);
-            tempB = new Point((int)tempB.getX() + 30, (int)tempB.getY() + 30);
-            lineMap.put(tempA, tempB);
+            tempA = new Point((int)tempA.getX() + 35, (int)tempA.getY() + 35);
+            tempB = new Point((int)tempB.getX() + 35, (int)tempB.getY() + 35);
+            lineMap.add(new AbstractMap.SimpleEntry<>(tempA, tempB));
 
         }
     }
@@ -83,7 +90,7 @@ public class Level extends JPanel {
         Graphics g2d = (Graphics2D) g;
         Line2D line2D;
         ((Graphics2D) g2d).setStroke(new BasicStroke(4));
-        for(Map.Entry<Point, Point> entry : lineMap.entrySet() ){
+        for(Map.Entry<Point, Point> entry : lineMap){
             line2D = new Line2D.Double(entry.getKey(), entry.getValue());
             ((Graphics2D) g2d).draw(line2D);
         }

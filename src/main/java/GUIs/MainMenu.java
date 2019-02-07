@@ -16,7 +16,10 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Toolkit;
+import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static java.lang.System.exit;
@@ -43,7 +46,7 @@ public class MainMenu extends JFrame {
                 {"-", "-", "-", "-", "-", "switch1", "-", "-", "-", "-"},
                 {"-", "-", "-", "-", "-", "-", "-", "-", "-", "-"},
                 {"-", "-", "-", "-", "-", "-", "-", "-", "-", "-"},
-                {"-", "-", "-", "-", "-", "pc1", "-", "-", "-", "-"},
+                {"-", "-", "-", "-", "pc2", "pc1", "-", "-", "-", "-"},
                 {"-", "-", "-", "-", "-", "-", "-", "-", "-", "-"},
                 {"-", "-", "-", "-", "-", "-", "-", "-", "-", "-"}
         };
@@ -52,12 +55,15 @@ public class MainMenu extends JFrame {
         idToDevice.get("router1").setTeam("White");
         idToDevice.put("pc1", new PC());
         idToDevice.get("pc1").setTeam("Blue");
+        idToDevice.put("pc2", new PC());
+        idToDevice.get("pc2").setTeam("Yellow");
         idToDevice.put("switch1", new Switch());
         idToDevice.get("switch1").setTeam("Red");
 
-        Map<String, String> connections = new HashMap<>();
-        connections.put("router1", "switch1");
-        connections.put("switch1", "pc1");
+        List<Map.Entry<String, String>> connections = new ArrayList<>();
+        connections.add(new AbstractMap.SimpleEntry<>("router1", "switch1"));
+        connections.add(new AbstractMap.SimpleEntry<>("switch1", "pc2"));
+        connections.add(new AbstractMap.SimpleEntry<>("switch1", "pc1"));
 
         DeviceHandler.setDeviceIdToDevice(idToDevice);
 
