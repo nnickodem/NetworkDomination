@@ -1,5 +1,11 @@
 package GUIs;
 
+import GameHandlers.DeviceHandler;
+import Objects.NetworkDevices.NetworkDevice;
+import Objects.NetworkDevices.PC;
+import Objects.NetworkDevices.Router;
+import Objects.NetworkDevices.Switch;
+
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -10,6 +16,11 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Toolkit;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static java.lang.System.exit;
 
@@ -26,6 +37,36 @@ public class MainMenu extends JFrame {
 
     //Add each button to the JPanel
     public MainMenu(){
+
+        String[][] level = new String[][]{
+                {"-", "-", "-", "-", "-", "-", "-", "-", "-", "-"},
+                {"-", "-", "-", "-", "-", "-", "-", "-", "-", "-"},
+                {"-", "-", "-", "-", "-", "-", "-", "-", "-", "-"},
+                {"-", "-", "-", "-", "-", "router1", "-", "-", "-", "-"},
+                {"-", "-", "-", "-", "-", "switch1", "-", "-", "-", "-"},
+                {"-", "-", "-", "-", "-", "-", "-", "-", "-", "-"},
+                {"-", "-", "-", "-", "-", "-", "-", "-", "-", "-"},
+                {"-", "-", "-", "-", "pc2", "pc1", "-", "-", "-", "-"},
+                {"-", "-", "-", "-", "-", "-", "-", "-", "-", "-"},
+                {"-", "-", "-", "-", "-", "-", "-", "-", "-", "-"}
+        };
+        Map<String, NetworkDevice> idToDevice = new HashMap<>();
+        idToDevice.put("router1", new Router());
+        idToDevice.get("router1").setTeam("White");
+        idToDevice.put("pc1", new PC());
+        idToDevice.get("pc1").setTeam("Blue");
+        idToDevice.put("pc2", new PC());
+        idToDevice.get("pc2").setTeam("Yellow");
+        idToDevice.put("switch1", new Switch());
+        idToDevice.get("switch1").setTeam("Red");
+
+        List<Map.Entry<String, String>> connections = new ArrayList<>();
+        connections.add(new AbstractMap.SimpleEntry<>("router1", "switch1"));
+        connections.add(new AbstractMap.SimpleEntry<>("switch1", "pc2"));
+        connections.add(new AbstractMap.SimpleEntry<>("switch1", "pc1"));
+
+        DeviceHandler.setDeviceIdToDevice(idToDevice);
+
         JPanel mainMenu = new JPanel(new GridBagLayout());
         mainMenu.setBorder(BorderFactory.createEmptyBorder());
         mainMenu.setBackground(Color.DARK_GRAY);
@@ -37,7 +78,7 @@ public class MainMenu extends JFrame {
         constraints.fill = GridBagConstraints.CENTER;
         playButton.setPreferredSize(new Dimension(buttonWidth,buttonHeight));
         playButton.addActionListener(e -> {
-            add(new Tutorial());
+            add(new Level(level, connections));
             mainMenu.setVisible(false);
         });
         mainMenu.add(playButton, constraints);

@@ -1,5 +1,5 @@
-import ResourceHandlers.LogHandler;
 import GUIs.MainMenu;
+import ResourceHandlers.LogHandler;
 
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
