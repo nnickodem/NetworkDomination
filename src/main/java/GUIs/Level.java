@@ -1,6 +1,6 @@
 package GUIs;
 
-import GameHandlers.DeviceHandler;
+import Objects.GameLevel;
 import Objects.NetworkDevices.NetworkDevice;
 
 import javax.swing.ImageIcon;
@@ -24,7 +24,7 @@ public class Level extends JPanel {
     private final String imagePath = "resources/objects/NetworkDevices/";
     private List<Map.Entry<Point, Point>> lineMap;
 
-    public Level(final String[][] levelMap, final List<Map.Entry<String, String>> connections) {
+    public Level(final GameLevel level) {
 
         List<Map.Entry<JButton, JButton>> deviceConnections = new ArrayList<>();
         Map<String, JButton> devices = new HashMap<>();
@@ -36,11 +36,11 @@ public class Level extends JPanel {
         this.setLayout(null);
         setBackground(Color.DARK_GRAY);
 
-        for(int i = 0; i < levelMap.length; i++) {
-            for(int k = 0; k < levelMap[i].length; k++) {
-                temp = levelMap[k][i];
+        for(int i = 0; i < level.getLevelMap().length; i++) {
+            for(int k = 0; k < level.getLevelMap()[i].length; k++) {
+                temp = level.getLevelMap()[i][k];
                 if(temp != null && !temp.equals("-")) {
-                    tempDevice = DeviceHandler.getNetworkDeviceById(temp);
+                    tempDevice = level.getIdToDeviceObject().get(temp);
                     deviceType = tempDevice.getClass().toString();
                     deviceType = deviceType.substring(deviceType.lastIndexOf(".")+1).toLowerCase();
                     button = new JButton(scaleImage(imagePath + deviceType + "/" + deviceType + tempDevice.getTeam() + ".png"));
@@ -53,7 +53,7 @@ public class Level extends JPanel {
             }
         }
 
-        for(Map.Entry<String, String> connection : connections) {
+        for(Map.Entry<String, String> connection : level.getConnections()) {
             deviceConnections.add(new AbstractMap.SimpleEntry<>(devices.get(connection.getKey()), devices.get(connection.getValue())));
         }
 
