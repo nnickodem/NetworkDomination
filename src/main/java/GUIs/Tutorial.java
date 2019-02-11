@@ -1,7 +1,9 @@
 package GUIs;
 
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -18,12 +20,18 @@ import java.util.Map;
 
 public class Tutorial extends JPanel {
     private String imageFile = "resources/objects/NetworkDevices/";
-    public JLabel pc1;
-    public JLabel pc2;
-    public JLabel gameSwitch;
-    public JLabel server;
-    public Map<JLabel, JLabel> connectedDevices = new HashMap();
+    public JButton testPacket1;
+    public JButton testPacket2;
+    public JButton upgradeButton1;
+    public JButton upgradeButton2;
+
+    public JButton pc1;
+    public JButton pc2;
+    public JButton gameSwitch;
+    public JButton server;
+    public Map<JButton, JButton> connectedDevices = new HashMap();
     public Map<Point,Point> lineMap= new HashMap<>();
+    public Dimension buttonSize = new Dimension(100,60);
 
     private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     double screenWidth = screenSize.getWidth();
@@ -32,19 +40,23 @@ public class Tutorial extends JPanel {
 
     public Tutorial(){
         this.setLayout(null);
-        server = new JLabel(scaleImage(imageFile + "server/serverWhite.png"));
+
+        server = new JButton(scaleImage(imageFile + "server/serverWhite.png"));
         this.add(server);
         server.setBounds((int)Math.round(screenWidth)/2,0,60,60);
 
-        gameSwitch = new JLabel(scaleImage(imageFile + "switch/switchWhite.png"));
+        gameSwitch = new JButton(scaleImage(imageFile + "switch/switchWhite.png"));
         this.add(gameSwitch);
         gameSwitch.setBounds((int)Math.round(screenWidth)/2, 300, 60, 60);
 
-        pc1 = new JLabel(scaleImage(imageFile + "pc/pcRed.png"));
+        pc1 = new JButton(scaleImage(imageFile + "pc/pcRed.png"));
+        pc1.addActionListener(e -> {
+            createSideComponent();
+        });
         this.add(pc1);
         pc1.setBounds((int)Math.round(screenWidth)/2 - 150, 500, 60, 60);
 
-        pc2 = new JLabel(scaleImage(imageFile + "pc/pcBlue.png"));
+        pc2 = new JButton(scaleImage(imageFile + "pc/pcBlue.png"));
         this.add(pc2);
         pc2.setBounds((int)Math.round(screenWidth)/2 + 150, 500, 60, 60);
 
@@ -64,10 +76,11 @@ public class Tutorial extends JPanel {
         return imageIcon;
     }
 
-    public void listCoordinates(Map<JLabel,JLabel> connections){
+
+    public void listCoordinates(Map<JButton,JButton> connections){
         Point tempA;
         Point tempB;
-        for(Map.Entry<JLabel, JLabel> connection : connections.entrySet()){
+        for(Map.Entry<JButton, JButton> connection : connections.entrySet()){
             tempA = connection.getKey().getLocation();
             tempB = connection.getValue().getLocation();
             tempA = new Point((int)tempA.getX() + 30, (int)tempA.getY() + 30);
@@ -87,5 +100,44 @@ public class Tutorial extends JPanel {
             line2D = new Line2D.Double(entry.getKey(), entry.getValue());
             ((Graphics2D) g2d).draw(line2D);
         }
+    }
+
+    protected void createSideComponent(){
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
+        JPanel packetTypes = new JPanel();
+        JPanel upgradeButtons = new JPanel();
+        this.add(panel);
+        panel.add(packetTypes);
+        panel.add(upgradeButtons);
+
+        //TODO Add if checks to determine what network device you are creating the buttons for
+
+        //Base framework for packet type buttons
+        testPacket1 = new JButton("Packet1");
+        testPacket2 = new JButton("Packet2");
+
+        testPacket1.setPreferredSize(buttonSize);
+        packetTypes.add(testPacket1);
+
+        testPacket2.setPreferredSize(buttonSize);
+        packetTypes.add(testPacket2);
+        packetTypes.setBorder(BorderFactory.createEtchedBorder());
+
+
+        upgradeButton1 = new JButton("Upgrade 1");
+        upgradeButton2 = new JButton("Upgrade 2");
+
+        upgradeButton1.setPreferredSize(buttonSize);
+        upgradeButtons.add(upgradeButton1);
+
+        upgradeButton2.setPreferredSize(buttonSize);
+        upgradeButtons.add(upgradeButton2);
+        upgradeButtons.setBorder(BorderFactory.createEtchedBorder());
+
+        panel.setBackground(Color.lightGray);
+        //reset container to read the new components added
+        revalidate();
+        panel.setBounds((int)screenWidth - 150, 0, 150, (int)screenHeight);
     }
 }
