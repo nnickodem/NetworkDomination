@@ -7,9 +7,17 @@ import java.util.ArrayList;
  */
 public class NetworkDevice {
 
-    private int id;
+    private String id;
     private String team;
     private ArrayList<Integer> connections;
+
+    public void setId(final String id) {
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
+    }
 
     public void setTeam(final String team) {
         this.team = team;
