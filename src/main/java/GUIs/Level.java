@@ -116,7 +116,6 @@ public class Level extends JPanel {
             tempA = new Point((int)tempA.getX() + 35, (int)tempA.getY() + 35);
             tempB = new Point((int)tempB.getX() + 35, (int)tempB.getY() + 35);
             lineMap.add(new AbstractMap.SimpleEntry<>(tempA, tempB));
-
         }
     }
 
@@ -194,9 +193,6 @@ public class Level extends JPanel {
         //reset container to read the new components added
         revalidate();
         panel.setBounds((int)screenWidth - 150, 0, 150, (int)screenHeight);
-
-
-
     }
 
     /**
