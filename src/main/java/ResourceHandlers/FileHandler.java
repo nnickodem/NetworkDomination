@@ -10,6 +10,7 @@ import Objects.NetworkDevices.Switch;
 
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.file.Files;
@@ -26,11 +27,12 @@ import java.util.logging.Logger;
 /**
  *
  */
-public class FileHandler { //TODO: implement save file handling, level file handling, any others that are needed
+public class FileHandler { //TODO: implement save file handling, any others that are needed
 
     private static final Logger errorLogger = Logger.getLogger("errorLogger");
+    private static final String levelFilePath = "resources/levels/";
 
-    //TODO: Temporary, make generic
+    //TODO: Temporary, make generic for level creator and perhaps save file
     public static void writeLevel() {
         String[][] level = new String[10][10];
         for(String[] row : level) {
@@ -59,7 +61,7 @@ public class FileHandler { //TODO: implement save file handling, level file hand
 
     }
 
-    //TODO: throws exception?
+    //TODO: throws exception to stop program from attempting to continue?
     public static GameLevel readLevel(int levelNum) {
         List<List<String>> levelMap = new ArrayList<>();
         List<Map.Entry<String, String>> connections = new ArrayList<>();
@@ -67,7 +69,7 @@ public class FileHandler { //TODO: implement save file handling, level file hand
         Map<String, NetworkDevice> idToDeviceObject = new HashMap<>();
 
         try {
-            file = Files.readAllLines(Paths.get("level"+levelNum+".txt"));
+            file = Files.readAllLines(Paths.get(levelFilePath + "level"+levelNum+".txt"));
             String line = file.get(0);
             while(line != null && !line.equals("*")) {
                 levelMap.add(Arrays.asList(line.split(",")));

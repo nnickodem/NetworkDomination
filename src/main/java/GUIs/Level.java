@@ -2,9 +2,12 @@ package GUIs;
 
 import Objects.GameLevel;
 import Objects.NetworkDevices.NetworkDevice;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -15,7 +18,6 @@ import java.awt.Point;
 import java.awt.geom.Line2D;
 import java.util.AbstractMap;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +29,7 @@ public class Level extends JPanel {
     public Level(final GameLevel level) {
 
         List<Map.Entry<JButton, JButton>> deviceConnections = new ArrayList<>();
-        Map<String, JButton> devices = new HashMap<>();
+        BiMap<String, JButton> devices = HashBiMap.create();
         String temp;
         String deviceType;
         NetworkDevice tempDevice;
@@ -46,9 +48,14 @@ public class Level extends JPanel {
                     button = new JButton(scaleImage(imagePath + deviceType + "/" + deviceType + tempDevice.getTeam() + ".png"));
                     devices.put(temp, button);
                     this.add(button);
-                    //TODO: adjust scaling
-                    button.setBounds(i*100, k*100, 70,70);
+                    button.setBounds(i*125, k*125, 70,70);
                     button.setContentAreaFilled(false);
+                    JLabel test = new JLabel();
+                    this.add(test);
+                    test.setBounds(i*125 + 70, k*125, 20, 20);
+                    test.setText("10");
+                    test.setFont(test.getFont().deriveFont(12.0F));
+                    test.setForeground(Color.WHITE);
                 }
             }
         }
