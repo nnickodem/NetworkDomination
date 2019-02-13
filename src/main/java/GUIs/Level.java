@@ -5,16 +5,20 @@ import Objects.NetworkDevices.NetworkDevice;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.geom.Line2D;
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -24,6 +28,11 @@ import java.util.Map;
 public class Level extends JPanel {
 
     private final String imagePath = "resources/objects/NetworkDevices/";
+    private final Dimension buttonSize = new Dimension(100,60);
+    private final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    private final double screenWidth = screenSize.getWidth();
+    private final double screenHeight = screenSize.getHeight();
+    private final List<JButton> packetButtons = new ArrayList<JButton>();
     private List<Map.Entry<Point, Point>> lineMap;
 
     public Level(final GameLevel level) {
@@ -44,9 +53,11 @@ public class Level extends JPanel {
                 if(temp != null && !temp.equals("-")) {
                     tempDevice = level.getIdToDeviceObject().get(temp);
                     deviceType = tempDevice.getClass().toString();
-                    deviceType = deviceType.substring(deviceType.lastIndexOf(".")+1).toLowerCase();
+                    deviceType = tempDevice.getClass().toString().substring(deviceType.lastIndexOf(".")+1).toLowerCase();
+                    final String tempNetworkDevice = deviceType;
                     button = new JButton(scaleImage(imagePath + deviceType + "/" + deviceType + tempDevice.getTeam() + ".png"));
                     devices.put(temp, button);
+                    button.addActionListener(e-> setButtonUsage(tempNetworkDevice));
                     this.add(button);
                     button.setBounds(i*125, k*125, 70,70);
                     button.setContentAreaFilled(false);
@@ -65,6 +76,7 @@ public class Level extends JPanel {
         }
 
         listCoordinates(deviceConnections);
+        createSideComponent();
     }
 
     //Scales the image files that are loaded in to the proper game image size wanted
@@ -101,5 +113,66 @@ public class Level extends JPanel {
             line2D = new Line2D.Double(entry.getKey(), entry.getValue());
             ((Graphics2D) g2d).draw(line2D);
         }
+    }
+
+    protected void createSideComponent(){
+        JButton botNet = new JButton("Botnet");
+        packetButtons.add(botNet);
+        JButton ICMP = new JButton("ICMP");
+        packetButtons.add(ICMP);
+        JButton SYN = new JButton("SYN");
+        packetButtons.add(SYN);
+        JButton crypto = new JButton("CryptoJack");
+        packetButtons.add(crypto);
+        for(JButton button : packetButtons){
+            button.setEnabled(false);
+        }
+
+        JButton upgradeButton1 = new JButton("Upgrade 1");
+        JButton upgradeButton2 = new JButton("Upgrade 2");
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
+        JPanel packetTypes = new JPanel();
+        JPanel upgradeButtons = new JPanel();
+        this.add(panel);
+        panel.add(packetTypes);
+        panel.add(upgradeButtons);
+
+        botNet.setPreferredSize(buttonSize);
+        packetTypes.add(botNet);
+
+        ICMP.setPreferredSize(buttonSize);
+        packetTypes.add(ICMP);
+
+        SYN.setPreferredSize(buttonSize);
+        packetTypes.add(SYN);
+
+        crypto.setPreferredSize(buttonSize);
+        packetTypes.add(crypto);
+
+        packetTypes.setBorder(BorderFactory.createEtchedBorder());
+
+        //Add upgrade buttons to the upgradePanel
+        upgradeButton1.setPreferredSize(buttonSize);
+        upgradeButtons.add(upgradeButton1);
+
+        upgradeButton2.setPreferredSize(buttonSize);
+        upgradeButtons.add(upgradeButton2);
+        upgradeButtons.setBorder(BorderFactory.createEtchedBorder());
+
+//        JFrame gameFrame = (JFrame) SwingUtilities.getRoot(panel);
+//        gameFrame.requestFocus();
+//        gameFrame.setFocusable(true);
+        panel.setBackground(Color.lightGray);
+        //reset container to read the new components added
+        revalidate();
+        panel.setBounds((int)screenWidth - 150, 0, 150, (int)screenHeight);
+
+
+    }
+
+    public void setButtonUsage(String device){
+        packetButtons.get(0).setEnabled(true);
     }
 }
