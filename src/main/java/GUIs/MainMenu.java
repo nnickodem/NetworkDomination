@@ -25,25 +25,44 @@ public class MainMenu extends JFrame {
     private JButton optionsButton = new JButton("Settings");
     private JButton exitButton = new JButton("Exit");
     private JButton saveButton = new JButton("Save Game");
+    private JButton returnToMainMenu = new JButton("Return to Main Menu");
     private Dimension buttonSize = new Dimension(150, 40);
     private Dimension dimMax = Toolkit.getDefaultToolkit().getScreenSize();
 
     //Add each button to the JPanel
     public MainMenu(){
+        JPanel mainMenu = new JPanel(new GridBagLayout());
         setMaximumSize(dimMax);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setFocusable(true);
         setTitle("Network Domination");
         addKeyListener(new KeyListener() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if(e.getKeyCode() == VK_ESCAPE){
-                    //TODO Work in progress
+                    //Create JFrame and JPanel instances
                     JFrame pauseFrame = new JFrame();
-                    pauseFrame.setSize(new Dimension(100,100));
-                    pauseFrame.add(exitButton);
-                    pauseFrame.add(saveButton);
+                    JPanel pausePanel = new JPanel();
+
+                    //Add Save button to pause menu
+                    saveButton.setPreferredSize(buttonSize);
+                    pausePanel.add(saveButton);
+
+                    //Add return to main menu button to pause menu
+                    returnToMainMenu.setPreferredSize(buttonSize);
+                    returnToMainMenu.addActionListener(e1->{
+
+                    });
+                    pausePanel.add(returnToMainMenu);
+
+                    //Add Exit button to pause menu
+                    exitButton.setPreferredSize(buttonSize);
+                    pausePanel.add(exitButton);
+
+                    //Add the JFrame criteria
+                    pauseFrame.setSize(new Dimension(250,300));
+                    pauseFrame.add(pausePanel);
+                    pauseFrame.setLocationRelativeTo(null);
                     pauseFrame.setVisible(true);
                 }
             }
@@ -56,7 +75,6 @@ public class MainMenu extends JFrame {
 
             }
         });
-        JPanel mainMenu = new JPanel(new GridBagLayout());
         mainMenu.setBorder(BorderFactory.createEmptyBorder());
         mainMenu.setBackground(Color.DARK_GRAY);
         GridBagConstraints constraints = new GridBagConstraints();
@@ -94,6 +112,7 @@ public class MainMenu extends JFrame {
         mainMenu.add(exitButton, constraints);
 
         //Add the mainMenu panel to the frame and set the window size
+        setFocusable(true);
         getContentPane().add(mainMenu);
         getContentPane().setBackground(Color.DARK_GRAY);
 
