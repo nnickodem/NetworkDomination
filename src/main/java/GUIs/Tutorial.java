@@ -4,7 +4,9 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -135,9 +137,14 @@ public class Tutorial extends JPanel {
         upgradeButtons.add(upgradeButton2);
         upgradeButtons.setBorder(BorderFactory.createEtchedBorder());
 
+        JFrame gameFrame = (JFrame) SwingUtilities.getRoot(panel);
+        gameFrame.requestFocus();
+        gameFrame.setFocusable(true);
         panel.setBackground(Color.lightGray);
         //reset container to read the new components added
         revalidate();
         panel.setBounds((int)screenWidth - 150, 0, 150, (int)screenHeight);
+
+
     }
 }
