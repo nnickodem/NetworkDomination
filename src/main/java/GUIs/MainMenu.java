@@ -35,6 +35,7 @@ public class MainMenu extends JFrame {
         setMaximumSize(dimMax);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setTitle("Network Domination");
         addKeyListener(new KeyListener() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -83,8 +84,10 @@ public class MainMenu extends JFrame {
         constraints.insets = new Insets(3,0,3,0);
         constraints.fill = GridBagConstraints.CENTER;
         playButton.setPreferredSize(buttonSize);
+        GameLevel level = FileHandler.readLevel(1);
         playButton.addActionListener(e -> {
-            add(new Tutorial());
+            setTitle("Network Domination - Level 1");
+            add(new Level(level));
             mainMenu.setVisible(false);
         });
         mainMenu.add(playButton, constraints);
