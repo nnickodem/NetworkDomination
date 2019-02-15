@@ -9,8 +9,10 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -55,12 +57,17 @@ public class Level extends JPanel {
                     deviceType = tempDevice.getClass().toString();
                     deviceType = tempDevice.getClass().toString().substring(deviceType.lastIndexOf(".")+1).toLowerCase();
                     final String tempNetworkDevice = deviceType;
+                    final String deviceTeams = tempDevice.getTeam();
                     button = new JButton(scaleImage(imagePath + deviceType + "/" + deviceType + tempDevice.getTeam() + ".png"));
                     devices.put(temp, button);
-                    button.addActionListener(e-> setButtonUsage(tempNetworkDevice));
+                    button.addActionListener(e-> {
+                        setButtonUsage(tempNetworkDevice, deviceTeams);
+                        transferFocusBackward();
+                    });
                     this.add(button);
                     button.setBounds(i*125, k*125, 70,70);
                     button.setContentAreaFilled(false);
+                    button.setFocusPainted(false);
                     JLabel test = new JLabel();
                     this.add(test);
                     test.setBounds(i*125 + 70, k*125, 20, 20);
@@ -80,6 +87,12 @@ public class Level extends JPanel {
     }
 
     //Scales the image files that are loaded in to the proper game image size wanted
+
+    /**
+     * Scales the image files that are loaded into the proper game image size wanted
+     * @param imageFile
+     * @return imageIcon
+     */
     public ImageIcon scaleImage(String imageFile){
         ImageIcon imageIcon = new ImageIcon(imageFile);
         Image image = imageIcon.getImage();
@@ -89,6 +102,10 @@ public class Level extends JPanel {
         return imageIcon;
     }
 
+    /**
+     * Creates a Map of coordinates of each network device.
+     * @param connections List of connections between buttons
+     */
     public void listCoordinates(List<Map.Entry<JButton, JButton>> connections){
         Point tempA;
         Point tempB;
@@ -99,10 +116,13 @@ public class Level extends JPanel {
             tempA = new Point((int)tempA.getX() + 35, (int)tempA.getY() + 35);
             tempB = new Point((int)tempB.getX() + 35, (int)tempB.getY() + 35);
             lineMap.add(new AbstractMap.SimpleEntry<>(tempA, tempB));
-
         }
     }
 
+    /**
+     * Paints a line between two buttons depending on the entries in the lineMap map.
+     * @param g
+     */
     @Override
     protected void paintComponent(Graphics g){
         super.paintComponent(g);
@@ -115,6 +135,10 @@ public class Level extends JPanel {
         }
     }
 
+    /**
+     * Creates the side panel on the level which has two panels. One panel with buttons for sending packets and one
+     * panel for upgrading a network device.
+     */
     protected void createSideComponent(){
         JButton botNet = new JButton("Botnet");
         packetButtons.add(botNet);
@@ -125,6 +149,10 @@ public class Level extends JPanel {
         JButton crypto = new JButton("CryptoJack");
         packetButtons.add(crypto);
         for(JButton button : packetButtons){
+            button.addActionListener(e->{
+                transferFocusBackward();
+                //TODO Jared add function here
+            });
             button.setEnabled(false);
         }
 
@@ -161,18 +189,23 @@ public class Level extends JPanel {
         upgradeButtons.add(upgradeButton2);
         upgradeButtons.setBorder(BorderFactory.createEtchedBorder());
 
-//        JFrame gameFrame = (JFrame) SwingUtilities.getRoot(panel);
-//        gameFrame.requestFocus();
-//        gameFrame.setFocusable(true);
         panel.setBackground(Color.lightGray);
         //reset container to read the new components added
         revalidate();
         panel.setBounds((int)screenWidth - 150, 0, 150, (int)screenHeight);
-
-
     }
 
-    public void setButtonUsage(String device){
-        packetButtons.get(0).setEnabled(true);
+    /**
+     * Sets the visibility of buttons depending on which device that you press.
+     * @param device String variable for the type of device that was clicked
+     * @param team String variable for the team of the selected device
+     */
+    public void setButtonUsage(String device, String team){
+        if(device.equalsIgnoreCase("Switch")){
+            packetButtons.get(0).setEnabled(false);
+        }
+        if(team.equalsIgnoreCase("Blue")){
+            packetButtons.get(0).setEnabled(true);
+        }
     }
 }
