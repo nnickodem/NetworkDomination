@@ -2,9 +2,11 @@ package Objects.Packets;
 
 public class Crypto extends Packet {
 
-    public Crypto() {
-        /*setCost(13); //TODO: Update with balanced value?
-        setStealth(0);*/
+    public Crypto(final String team) {
+        setPacketType("Crypto");
+        setTeam(team);
+        setCost(13);
+        setStealth(0);
     }
 
 }
