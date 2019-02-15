@@ -8,7 +8,11 @@ import Objects.NetworkDevices.Router;
 import Objects.NetworkDevices.Server;
 import Objects.NetworkDevices.Switch;
 
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -31,6 +35,20 @@ public class FileHandler { //TODO: implement save file handling, any others that
 
     private static final Logger errorLogger = Logger.getLogger("errorLogger");
     private static final String levelFilePath = "resources/levels/";
+
+    public static Font loadFont() {
+        try {
+            GraphicsEnvironment ge =
+                    GraphicsEnvironment.getLocalGraphicsEnvironment();
+            Font gameFont = Font.createFont(Font.TRUETYPE_FONT, new File("resources/gameFont.ttf"));
+            System.out.println(gameFont.toString());
+            ge.registerFont(gameFont);
+            return gameFont;
+        } catch (IOException| FontFormatException e) {
+            //Handle exception
+            return null;
+        }
+    }
 
     //TODO: Temporary, make generic for level creator and perhaps save file
     public static void writeLevel() {

@@ -9,6 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -84,6 +85,7 @@ public class MainMenu extends JFrame {
         constraints.insets = new Insets(3,0,3,0);
         constraints.fill = GridBagConstraints.CENTER;
         playButton.setPreferredSize(buttonSize);
+        playButton.setFont(FileHandler.loadFont().deriveFont(Font.PLAIN, 15));
         GameLevel level = FileHandler.readLevel(1);
         playButton.addActionListener(e -> {
             setTitle("Network Domination - Level 1");
