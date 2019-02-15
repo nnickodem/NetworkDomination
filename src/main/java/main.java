@@ -12,12 +12,7 @@ import java.util.logging.Logger;
 public class main {
     private static final Logger logger = Logger.getLogger("errorLogger");
     public static void main(String args[]) {
-        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-            @Override
-            public void uncaughtException(final Thread t, final Throwable e) {
-                logger.log(Level.SEVERE, "Uncaught exception",new Exception(e));
-            }
-        });
+        Thread.setDefaultUncaughtExceptionHandler((t, e) -> logger.log(Level.SEVERE, "Uncaught exception",new Exception(e)));
         LogHandler.setup();
         // set look and feel to the system and feel
         try {
