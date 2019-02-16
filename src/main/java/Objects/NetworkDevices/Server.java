@@ -2,7 +2,23 @@ package Objects.NetworkDevices;
 
 import java.util.ArrayList;
 
+/**
+ * A specialized network device that is
+ * used for generating in-level currency
+ * for upgrading devices.
+ * Not capable of sending any types of
+ * packets.
+ */
 public class Server extends NetworkDevice {
+    /**
+     * Constructor for a Server
+     * @param speed         Packet generation speed
+     * @param team          Team device belongs to
+     * @param connections   List of connected devices
+     * @param hidden        Whether device is hidden by fog of war
+     * @param max_packet    Max number of packets device can hold
+     * @param id            Unique device ID value
+     */
     public Server(final int speed, final String team,
                   final ArrayList<Integer> connections,
                   final Boolean hidden, final int max_packet,

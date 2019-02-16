@@ -2,8 +2,22 @@ package Objects.NetworkDevices;
 
 import java.util.ArrayList;
 
+/**
+ * A specialized Router type.
+ * Slows packets as a normal router, but also deletes
+ * some packets.
+ */
 public class Firewall extends Router {
 
+    /**
+     * Constructor for a firewall.
+     * @param speed         Packet generation speed
+     * @param team          Team device belongs to
+     * @param connections   List of connected devices
+     * @param hidden        Whether device is hidden by fog of war
+     * @param max_packet    Max number of packets device can hold
+     * @param id            Unique device ID value
+     */
     public Firewall(final int speed, final String team,
                     final ArrayList<Integer> connections,
                     final Boolean hidden, final int max_packet,
@@ -11,6 +25,10 @@ public class Firewall extends Router {
         super(speed, team, connections, hidden, max_packet, id);
     }
 
+    /**
+     * Overriden function from the Router to include
+     * the ability to "drop packets"
+     */
     @Override
     public void filterPackets() {
         //TODO: No idea how to implement this
