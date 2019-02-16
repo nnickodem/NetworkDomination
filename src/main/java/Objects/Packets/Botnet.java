@@ -11,7 +11,6 @@ public class Botnet extends Packet {
      * @param team Team that owns the packet.
      */
     public Botnet(final String team) {
-        setPacketType("Botnet");
         setTeam(team);
         setCost(1);
         setStealth(0);

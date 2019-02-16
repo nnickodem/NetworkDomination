@@ -7,9 +7,8 @@ package Objects.Packets;
 public class Packet {
 
     private String team;
-    private int cost;
-    private int stealth;
-    private String packet_type;
+    private Integer cost;
+    private Integer stealth;
 
     /**
      * Sets the team which the packet belongs to.
@@ -31,7 +30,7 @@ public class Packet {
      * Sets how much a packet costs to produce.
      * @param cost How much a packet costs to produce.
      */
-    public void setCost(final int cost) {
+    public void setCost(final Integer cost) {
         this.cost = cost;
     }
 
@@ -39,7 +38,7 @@ public class Packet {
      * Gets the cost of the packet.
      * @return How much a packet costs to produce.
      */
-    public int getCost() {
+    public Integer getCost() {
         return cost;
     }
 
@@ -47,7 +46,7 @@ public class Packet {
      * Sets the stealth value for the packet.
      * @param stealth Stealth value of the packet.
      */
-    public void setStealth(final int stealth) {
+    public void setStealth(final Integer stealth) {
         this.stealth = stealth;
     }
 
@@ -55,24 +54,15 @@ public class Packet {
      * Gets the stealth value of the packet.
      * @return Stealth value of the packet.
      */
-    public int getStealth() {
+    public Integer getStealth() {
         return stealth;
     }
 
     /**
      * Gets what the packet type is (Botnet, Crypto, ICMP, SYN)
-     * @return The type of packet it is.
+     * @return The type of packet it is, as a class.
      */
-    public String getPacketType() {
-        return packet_type;
+    public Class getPacketType() {
+        return getClass();
     }
-
-    /**
-     * Sets the packet type.
-     * @param packet_type The type of packet it is.
-     */
-    public void setPacketType(final String packet_type) {
-        this.packet_type = packet_type;
-    }
-
 }

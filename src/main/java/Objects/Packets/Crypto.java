@@ -12,7 +12,6 @@ public class Crypto extends Packet {
      * @param team Team that owns the packet.
      */
     public Crypto(final String team) {
-        setPacketType("Crypto");
         setTeam(team);
         setCost(13);
         setStealth(0);

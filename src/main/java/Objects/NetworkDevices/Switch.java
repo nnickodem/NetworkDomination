@@ -19,9 +19,9 @@ public class Switch extends NetworkDevice {
      * @param max_packet    Max number of packets device can hold
      * @param id            Unique device ID value
      */
-    public Switch(final int speed, final String team,
+    public Switch(final Integer speed, final String team,
               final ArrayList<Integer> connections,
-              final Boolean hidden, final int max_packet,
+              final Boolean hidden, final Integer max_packet,
               final String id) {
         setSpeed(speed);
         setTeam(team);

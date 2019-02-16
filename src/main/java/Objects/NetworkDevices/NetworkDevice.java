@@ -11,9 +11,9 @@ public class NetworkDevice {
     private String id;
     private String team;
     private ArrayList<Integer> connections;
-    private int speed;
+    private Integer speed;
     private Boolean hidden;
-    private int max_packet;
+    private Integer max_packet;
     private List<String> packets;
 
     /**
@@ -24,6 +24,10 @@ public class NetworkDevice {
         this.id = id;
     }
 
+    /**
+     * Returns the unique device ID
+     * @return Unique device ID
+     */
     public String getId() {
         return id;
     }
@@ -64,7 +68,7 @@ public class NetworkDevice {
      * Sets the number of packets the device can hold.
      * @param max_packet Number of packets the device can hold.
      */
-    public void setMaxPacket(final int max_packet) {
+    public void setMaxPacket(final Integer max_packet) {
         this.max_packet = max_packet;
     }
 
@@ -72,7 +76,7 @@ public class NetworkDevice {
      * Gets the number of packets the device can hold.
      * @return Number of packets the device can hold.
      */
-    public int getMaxPacket() {
+    public Integer getMaxPacket() {
         return max_packet;
     }
 
@@ -96,9 +100,17 @@ public class NetworkDevice {
      * Sets the speed with which the device generates packets.
      * @param speed Speed of packet generation (3, 4, or 5)
      */
-    public void setSpeed(final int speed) {
+    public void setSpeed(final Integer speed) {
         this.speed = speed;
         //TODO: Check that speed value is valid.
+    }
+
+    /**
+     * Gets the speed with which the device generates packets.
+     * @return Packet generation speed.
+     */
+    public Integer getSpeed() {
+        return speed;
     }
 
     /**

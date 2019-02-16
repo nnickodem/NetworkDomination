@@ -11,7 +11,6 @@ public class SYN extends Packet {
      * @param team Team that owns the packet.
      */
     public SYN(final String team) {
-        setPacketType("SYN");
         setTeam(team);
         setCost(1);
         setStealth(1);

@@ -12,7 +12,6 @@ public class ICMP extends Packet {
      * @param team Team that owns the packet.
      */
     public ICMP(final String team) {
-        setPacketType("ICMP");
         setTeam(team);
         setCost(1);
         setStealth(1);

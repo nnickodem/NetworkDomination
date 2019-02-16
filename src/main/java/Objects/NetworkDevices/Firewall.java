@@ -18,9 +18,9 @@ public class Firewall extends Router {
      * @param max_packet    Max number of packets device can hold
      * @param id            Unique device ID value
      */
-    public Firewall(final int speed, final String team,
+    public Firewall(final Integer speed, final String team,
                     final ArrayList<Integer> connections,
-                    final Boolean hidden, final int max_packet,
+                    final Boolean hidden, final Integer max_packet,
                     final String id) {
         super(speed, team, connections, hidden, max_packet, id);
     }
