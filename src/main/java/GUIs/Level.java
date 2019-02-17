@@ -9,10 +9,8 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -27,6 +25,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Loads the level gui dynamically
+ */
 public class Level extends JPanel {
 
     private final String imagePath = "resources/objects/NetworkDevices/";
@@ -37,6 +38,10 @@ public class Level extends JPanel {
     private final List<JButton> packetButtons = new ArrayList<JButton>();
     private List<Map.Entry<Point, Point>> lineMap;
 
+    /**
+     * Constructs the level JPanel
+     * @param level
+     */
     public Level(final GameLevel level) {
 
         List<Map.Entry<JButton, JButton>> deviceConnections = new ArrayList<>();
@@ -68,7 +73,7 @@ public class Level extends JPanel {
                     button.setBounds(i*125, k*125, 70,70);
                     button.setContentAreaFilled(false);
                     button.setFocusPainted(false);
-                    JLabel test = new JLabel();
+                    JLabel test = new JLabel(); //TODO: this is the first iteration of packet counters, needs to be redone
                     this.add(test);
                     test.setBounds(i*125 + 70, k*125, 20, 20);
                     test.setText("10");

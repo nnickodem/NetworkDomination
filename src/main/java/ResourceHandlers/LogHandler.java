@@ -7,11 +7,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-
+/**
+ * Basic log handler, customizes java logger
+ */
 public class LogHandler {
 
     private static final Logger errorLogger = Logger.getLogger("errorLogger");
 
+    /**
+     * Sets up custom logger
+     */
     public static void setup() {
         Handler fileHandler;
         try {

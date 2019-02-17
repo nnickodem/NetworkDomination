@@ -20,6 +20,9 @@ import java.awt.event.KeyListener;
 import static java.awt.event.KeyEvent.VK_ESCAPE;
 import static java.lang.System.exit;
 
+/**
+ * Creates the main menu gui
+ */
 public class MainMenu extends JFrame {
     private JButton playButton = new JButton("New Game");
     private JButton loadButton = new JButton("Load Game");
@@ -30,7 +33,9 @@ public class MainMenu extends JFrame {
     private Dimension buttonSize = new Dimension(150, 40);
     private Dimension dimMax = Toolkit.getDefaultToolkit().getScreenSize();
 
-    //Add each button to the JPanel
+    /**
+     * Constructs the main menu JPanel
+     */
     public MainMenu(){
         JPanel mainMenu = new JPanel(new GridBagLayout());
         setMaximumSize(dimMax);
