@@ -1,6 +1,6 @@
 package Objects.NetworkDevices;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A specialized Router type.
@@ -19,7 +19,7 @@ public class Firewall extends Router {
      * @param id            Unique device ID value
      */
     public Firewall(final Integer speed, final String team,
-                    final ArrayList<Integer> connections,
+                    final List<String> connections,
                     final Boolean hidden, final Integer max_packet,
                     final String id) {
         super(speed, team, connections, hidden, max_packet, id);

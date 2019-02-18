@@ -1,7 +1,5 @@
 package Objects.NetworkDevices;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -22,7 +20,7 @@ public class Switch extends NetworkDevice {
      * @param id            Unique device ID value
      */
     public Switch(final Integer speed, final String team,
-              final ArrayList<Integer> connections,
+              final List<String> connections,
               final Boolean hidden, final Integer max_packet,
               final String id) {
         setSpeed(speed);
