@@ -5,6 +5,9 @@ import Objects.NetworkDevices.NetworkDevice;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Game level object, used to hold information about the game level
+ */
 public class GameLevel {
 
     private String[][] levelMap;

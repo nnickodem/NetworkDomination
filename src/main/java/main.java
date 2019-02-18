@@ -7,7 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Temporary
+ * Temporary, or is it?
  */
 public class main {
     private static final Logger logger = Logger.getLogger("errorLogger");

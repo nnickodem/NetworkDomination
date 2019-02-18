@@ -5,6 +5,9 @@ import Objects.NetworkDevices.NetworkDevice;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Unfinished, not even sure if this is gonna remain or what it will do
+ */
 public class DeviceHandler {
 
     private static Map<String, NetworkDevice> deviceIdToDevice = new HashMap<>();

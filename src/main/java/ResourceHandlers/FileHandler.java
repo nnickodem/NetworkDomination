@@ -29,13 +29,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Handles reading/writing of various external resources including save files, level files, and fonts
  */
 public class FileHandler { //TODO: implement save file handling, any others that are needed
 
     private static final Logger errorLogger = Logger.getLogger("errorLogger");
     private static final String levelFilePath = "resources/levels/";
 
+    /**
+     * Creates and registers the game's custom font
+     * @return font
+     */
     public static Font loadFont() {
         try {
             GraphicsEnvironment ge =
@@ -50,6 +54,9 @@ public class FileHandler { //TODO: implement save file handling, any others that
         }
     }
 
+    /**
+     * Writes level file
+     */
     //TODO: Temporary, make generic for level creator and perhaps save file
     public static void writeLevel() {
         String[][] level = new String[10][10];
@@ -79,6 +86,11 @@ public class FileHandler { //TODO: implement save file handling, any others that
 
     }
 
+    /**
+     * Reads a given level file and converts the information to a GameLevel object
+     * @param levelNum level number TODO: change to level String?
+     * @return GameLevel object
+     */
     //TODO: throws exception to stop program from attempting to continue?
     public static GameLevel readLevel(int levelNum) {
         List<List<String>> levelMap = new ArrayList<>();
