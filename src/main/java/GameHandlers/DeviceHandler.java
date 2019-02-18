@@ -10,6 +10,7 @@ import java.util.Map;
  */
 public class DeviceHandler {
 
+    //TODO: add getTeamById?
     private static Map<String, NetworkDevice> deviceIdToDevice = new HashMap<>();
 
     public static void setDeviceIdToDevice(final Map<String, NetworkDevice> deviceIdToDev) {
