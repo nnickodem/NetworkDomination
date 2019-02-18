@@ -9,7 +9,7 @@ public class NetworkDevice {
 
     private String id;
     private String team;
-    private List<Integer> connections;
+    private List<String> connections;
     private Integer speed;
     private Boolean hidden;
     private Integer max_packet;
@@ -35,7 +35,7 @@ public class NetworkDevice {
      * Gets the last of packet types the device can send.
      * @return The list of packet types the device can send.
      */
-    public List getPacket() {
+    public List getPackets() {
         return packets;
     }
 
@@ -116,7 +116,7 @@ public class NetworkDevice {
      * Gets the list of connected devices.
      * @return List of connected devices.
      */
-    public List<Integer> getConnections() {
+    public List<String> getConnections() {
         return connections;
     }
 
@@ -124,7 +124,7 @@ public class NetworkDevice {
      * Sets the list of connected devices.
      * @param connections List of connected devices.
      */
-    public void setConnections(final List<Integer> connections) {
+    public void setConnections(final List<String> connections) {
         this.connections = connections;
     }
 }
