@@ -201,7 +201,7 @@ public class Level extends JPanel {
      * @param team String variable for the team of the selected device
      */
     public void setButtonUsage(String device, String team){
-        if(device.equalsIgnoreCase("Switch")){
+        if(!team.equalsIgnoreCase("Blue")){
             packetButtons.get(0).setEnabled(false);
         }
         if(team.equalsIgnoreCase("Blue")){
