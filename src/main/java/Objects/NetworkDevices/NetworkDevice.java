@@ -1,6 +1,5 @@
 package Objects.NetworkDevices;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -10,12 +9,20 @@ public class NetworkDevice {
 
     private String id;
     private String team;
-    private ArrayList<Integer> connections;
+    private List<Integer> connections;
     private Integer speed;
     private Boolean hidden;
     private Integer max_packet;
     private List<String> packets;
 
+
+    /**
+     * Returns the unique device ID
+     * @return Unique device ID
+     */
+    public String getId() {
+        return id;
+    }
     /**
      * Sets the ID of the device.
      * @param id The unique ID given to the device.
@@ -25,27 +32,19 @@ public class NetworkDevice {
     }
 
     /**
-     * Returns the unique device ID
-     * @return Unique device ID
-     */
-    public String getId() {
-        return id;
-    }
-
-    /**
-     * Sets the types of packets each device can send.
-     * @param packet_type The types of packets each device can send.
-     */
-    public void setPacket(final String packet_type) {
-        packets.add(packet_type);
-    }
-
-    /**
      * Gets the last of packet types the device can send.
      * @return The list of packet types the device can send.
      */
     public List getPacket() {
         return packets;
+    }
+
+    /**
+     * Sets the types of packets each device can send.
+     * @param packets The types of packets each device can send.
+     */
+    public void setPackets(final List<String> packets) {
+        this.packets = packets;
     }
 
     /**
@@ -65,6 +64,14 @@ public class NetworkDevice {
     }
 
     /**
+     * Gets the number of packets the device can hold.
+     * @return Number of packets the device can hold.
+     */
+    public Integer getMaxPacket() {
+        return max_packet;
+    }
+
+    /**
      * Sets the number of packets the device can hold.
      * @param max_packet Number of packets the device can hold.
      */
@@ -73,11 +80,11 @@ public class NetworkDevice {
     }
 
     /**
-     * Gets the number of packets the device can hold.
-     * @return Number of packets the device can hold.
+     * Returns the name of the team of the device.
+     * @return The team name.
      */
-    public Integer getMaxPacket() {
-        return max_packet;
+    public String getTeam() {
+        return team;
     }
 
     /**
@@ -89,11 +96,11 @@ public class NetworkDevice {
     }
 
     /**
-     * Returns the name of the team of the device.
-     * @return The team name.
+     * Gets the speed with which the device generates packets.
+     * @return Packet generation speed.
      */
-    public String getTeam() {
-        return team;
+    public Integer getSpeed() {
+        return speed;
     }
 
     /**
@@ -106,26 +113,18 @@ public class NetworkDevice {
     }
 
     /**
-     * Gets the speed with which the device generates packets.
-     * @return Packet generation speed.
+     * Gets the list of connected devices.
+     * @return List of connected devices.
      */
-    public Integer getSpeed() {
-        return speed;
+    public List<Integer> getConnections() {
+        return connections;
     }
 
     /**
      * Sets the list of connected devices.
      * @param connections List of connected devices.
      */
-    public void setConnections(final ArrayList<Integer> connections) {
+    public void setConnections(final List<Integer> connections) {
         this.connections = connections;
-    }
-
-    /**
-     * Gets the list of connected devices.
-     * @return List of connected devices.
-     */
-    public ArrayList<Integer> getConnections() {
-        return connections;
     }
 }

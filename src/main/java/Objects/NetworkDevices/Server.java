@@ -1,6 +1,8 @@
 package Objects.NetworkDevices;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * A specialized network device that is
@@ -24,6 +26,8 @@ public class Server extends NetworkDevice {
                   final Boolean hidden, final Integer max_packet,
                   final String id) {
 
+        List<String> packets = Arrays.asList("ICMP");
+        setPackets(packets);
         setSpeed(speed);
         setTeam(team);
         setConnections(connections);

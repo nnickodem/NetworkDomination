@@ -1,6 +1,8 @@
 package Objects.NetworkDevices;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * A specialized NetworkDevice that will
@@ -23,11 +25,8 @@ public class PC extends NetworkDevice {
                   final ArrayList<Integer> connections,
                   final Boolean hidden, final Integer max_packet,
                   final String id) {
-
-        setPacket("ICMP");
-        setPacket("Botnet");
-        setPacket("Crypto");
-        setPacket("SYN");
+        List<String> packets = Arrays.asList("ICMP", "Botnet", "SYN", "Crypto");
+        setPackets(packets);
         setSpeed(speed);
         setTeam(team);
         setConnections(connections);

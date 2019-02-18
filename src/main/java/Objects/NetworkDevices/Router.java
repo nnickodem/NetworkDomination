@@ -1,6 +1,7 @@
 package Objects.NetworkDevices;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -25,7 +26,8 @@ public class Router extends NetworkDevice {
                     final ArrayList<Integer> connections,
                     final Boolean hidden, final Integer max_packet,
                     final String id) {
-        setPacket("ICMP");
+        List<String> packets = Arrays.asList("ICMP");
+        setPackets(packets);
         setSpeed(speed);
         setTeam(team);
         setConnections(connections);

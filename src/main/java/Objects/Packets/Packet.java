@@ -58,11 +58,4 @@ public class Packet {
         return stealth;
     }
 
-    /**
-     * Gets what the packet type is (Botnet, Crypto, ICMP, SYN)
-     * @return The type of packet it is, as a class.
-     */
-    public Class getPacketType() {
-        return getClass();
-    }
 }
