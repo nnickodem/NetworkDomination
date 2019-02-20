@@ -119,22 +119,22 @@ public class FileHandler { //TODO: implement save file handling, any others that
                     if(mapArray[x][y] != null && !mapArray[x][y].equals("-")) {
                         switch(mapArray[x][y].substring(0, mapArray[x][y].indexOf("."))) {
                             case "Switch":
-                                device = new Switch(0, "abc", null, false, 0, null);
+                                device = new Switch(null, null, null, false, null, null);
                                 break;
                             case "Router":
-                                device = new Router(0, "abc", null, false, 0, null);
+                                device = new Router(null, null, null, false, null, null);
                                 break;
                             case "Firewall":
-                                device = new Firewall(0, "abc", null, false, 0, null);
+                                device = new Firewall(null, null, null, false, null, null);
                                 break;
                             case "Server":
-                                device = new Server(0, "abc", null, false, 0, null);
+                                device = new Server(null, null, null, false, null, null);
                                 break;
                             case "PC":
-                                device = new PC(0, "abc", null, false, 0, null);
+                                device = new PC(null, null, null, false, null, null);
                                 break;
                             default:
-                                device = new NetworkDevice();
+                                device = new NetworkDevice(null, null, null, null, null, null);
                                 break;
                         }
                         device.setTeam(mapArray[x][y].substring(mapArray[x][y].indexOf(".") + 1, mapArray[x][y].lastIndexOf(".")));

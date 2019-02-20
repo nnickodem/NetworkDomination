@@ -25,14 +25,7 @@ public class Router extends NetworkDevice {
                     final List<String> connections,
                     final Boolean hidden, final Integer max_packet,
                     final String id) {
-        List<String> packets = Arrays.asList("ICMP");
-        setPackets(packets);
-        setSpeed(speed);
-        setTeam(team);
-        setConnections(connections);
-        setHidden(hidden);
-        setMaxPacket(max_packet);
-        setId(id);
+        super(speed, team, connections, hidden, max_packet, id);
     }
 
     public void filterPackets() {
