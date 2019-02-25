@@ -1,5 +1,9 @@
 package GameHandlers;
 
+import GUIs.Level;
+import Objects.GameLevel;
+
+import javax.swing.Timer;
 import java.util.logging.Logger;
 
 /**
@@ -8,46 +12,35 @@ import java.util.logging.Logger;
 public class GameHandler extends Thread {
 
     private static final Logger logger = Logger.getLogger("errorLogger");
-    private final Double timePerTick = 0.2;
-    private Double time;
+    private GameLevel level;
+    private Level levelGui;
+    private Integer tick = 0;
+
+    public GameHandler(final GameLevel level, final Level levelGui) {
+        this.level = level;
+        this.levelGui = levelGui;
+    }
 
     /**
      * Runs throughout the game checking if enough time has passed to call for a tick
      */
+    @Override
     public void run() {
-        Double timePassed = 0.0;
-        boolean running = true;
-
-        while(running) {
-            while (timePassed > timePerTick) {
-                tick();
-                timePassed -= timePerTick;
-            }
-            timePassed += getTimePassed();
-        }
-    }
-
-    /**
-     * Checks how much time has passed since the last getTimePassed() call
-     * @return how much time has passed
-     */
-    private Double getTimePassed() {
-        Double timePassed;
-        Double tempTime = Double.valueOf(System.currentTimeMillis())/1000;
-        if(time == null) {
-            time = tempTime;
-        }
-        timePassed = tempTime - time;
-        time = tempTime;
-        return timePassed;
+        Timer timer = new Timer(200, e -> {
+            tick();
+        });
+        timer.start();
     }
 
     /**
      * Calls for game updates
      */
     private void tick() {
+        if(++tick%5 == 0) {
+            //levelGui.updatePacketCounter("Switch.White.1", 1);
+        }
+        levelGui.updatePacketCounter("PC.Blue.1", 1);
         //TODO: implement
-        logger.severe("tick");
     }
 
 }

@@ -94,7 +94,7 @@ public class FileHandler { //TODO: implement save file handling, any others that
     //TODO: throws exception to stop program from attempting to continue?
     public static GameLevel readLevel(int levelNum) {
         List<List<String>> levelMap = new ArrayList<>();
-        List<Map.Entry<String, String>> connections = new ArrayList<>();
+        List<Map.Entry<String, String>> mapConnections = new ArrayList<>();
         List<String> file;
         Map<String, NetworkDevice> idToDeviceObject = new HashMap<>();
 
@@ -108,43 +108,45 @@ public class FileHandler { //TODO: implement save file handling, any others that
             }
             file.remove(0);
             for(String l : file) {
-                connections.add(new AbstractMap.SimpleEntry<>(l.substring(0, l.indexOf(",")), l.substring(l.indexOf(",") + 1)));
+                mapConnections.add(new AbstractMap.SimpleEntry<>(l.substring(0, l.indexOf(",")), l.substring(l.indexOf(",") + 1)));
             }
             GameLevel level = new GameLevel();
             String[][] mapArray = new String[levelMap.get(0).size()][levelMap.size()];
             NetworkDevice device;
+            String team;
+            List<String> deviceConnections;
             for(int y = 0; y < levelMap.size(); y++) {
                 for(int x = 0; x < levelMap.get(0).size(); x++) {
                     mapArray[x][y] = levelMap.get(y).get(x);
+                    deviceConnections = getDeviceConnections(mapConnections, mapArray[x][y]);
                     if(mapArray[x][y] != null && !mapArray[x][y].equals("-")) {
+                        team = mapArray[x][y].substring(mapArray[x][y].indexOf(".") + 1, mapArray[x][y].lastIndexOf("."));
                         switch(mapArray[x][y].substring(0, mapArray[x][y].indexOf("."))) {
                             case "Switch":
-                                device = new Switch(null, null, null, false, null, null);
+                                device = new Switch(0, team, deviceConnections, false, 0, mapArray[x][y]);
                                 break;
                             case "Router":
-                                device = new Router(null, null, null, false, null, null);
+                                device = new Router(0, team, deviceConnections, false, 0, mapArray[x][y]);
                                 break;
                             case "Firewall":
-                                device = new Firewall(null, null, null, false, null, null);
+                                device = new Firewall(0, team, deviceConnections, false, 0, mapArray[x][y]);
                                 break;
                             case "Server":
-                                device = new Server(null, null, null, false, null, null);
+                                device = new Server(0, team, deviceConnections, false, 0, mapArray[x][y]);
                                 break;
                             case "PC":
-                                device = new PC(null, null, null, false, null, null);
+                                device = new PC(0, team, deviceConnections, false, 0, mapArray[x][y]);
                                 break;
                             default:
-                                device = new NetworkDevice(null, null, null, null, null, null);
+                                device = new NetworkDevice();
                                 break;
                         }
-                        device.setTeam(mapArray[x][y].substring(mapArray[x][y].indexOf(".") + 1, mapArray[x][y].lastIndexOf(".")));
-                        device.setId(mapArray[x][y]);
                         idToDeviceObject.put(mapArray[x][y], device);
                     }
                 }
             }
             level.setLevelMap(mapArray);
-            level.setConnections(connections);
+            level.setConnections(mapConnections);
             level.setIdToDeviceObject(idToDeviceObject);
 
             return level;
@@ -152,6 +154,18 @@ public class FileHandler { //TODO: implement save file handling, any others that
             errorLogger.log(Level.SEVERE, "Error reading level file", e);
             return null;
         }
+    }
+
+    private static List<String> getDeviceConnections(List<Map.Entry<String, String>> mapConnections, String deviceId) {
+        List<String> deviceConnections = new ArrayList<>();
+        for(Map.Entry<String, String> connection : mapConnections) {
+            if(connection.getKey().equals(deviceId)) {
+                deviceConnections.add(connection.getValue());
+            } else if(connection.getValue().equals(deviceId)) {
+                deviceConnections.add(connection.getKey());
+            }
+        }
+        return deviceConnections;
     }
 
 }
