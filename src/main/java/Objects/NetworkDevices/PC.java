@@ -20,10 +20,11 @@ public class PC extends NetworkDevice {
      * @param max_packet    Max number of packets device can hold
      * @param id            Unique device ID value
      */
-    public PC(final Integer speed, final String team,
+    public PC(final Integer speed,
                   final List<String> connections,
                   final Boolean hidden, final Integer max_packet,
                   final String id) {
-        super(speed, team, connections, hidden, max_packet, id);
+        super(speed, connections, hidden, max_packet, id);
+        setPackets(Arrays.asList("ICMP", "Botnet", "SYN", "Crypto"));
     }
 }

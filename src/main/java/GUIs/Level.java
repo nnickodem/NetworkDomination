@@ -20,20 +20,20 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.geom.Line2D;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * Loads the level gui dynamically
  */
 public class Level extends JPanel {
 
+    private static final Logger logger = Logger.getLogger("errorLogger");
     private static final int PACKET_TIME = 2000;
     private final String imagePath = "resources/objects/NetworkDevices/";
     private final String packetImagePath = "resources/objects/Packets/botnet/";
@@ -44,9 +44,10 @@ public class Level extends JPanel {
     private final List<JButton> packetButtons = new ArrayList<JButton>();
     private List<Map.Entry<Point, Point>> lineMap;
     private JButton selected;
-    private List<Map.Entry<JLabel, Map.Entry<Point, Point>>> packets = new ArrayList<>();
+    private Map<JLabel, Map.Entry<JButton, JButton>> packets = new HashMap<>();
     private BiMap<String, JButton> devices = HashBiMap.create();
     private Map<JLabel, Long> packetToTime = new HashMap<>();
+    private Map<String, JLabel> idToPackets = new HashMap<>();
 
     /**
      * Constructs the level JPanel
@@ -82,12 +83,13 @@ public class Level extends JPanel {
                     button.setBounds(i*125, k*125, 60,60);
                     button.setContentAreaFilled(false);
                     button.setFocusPainted(false);
-                    JLabel test = new JLabel(); //TODO: this is the first iteration of packet counters, needs to be redone
-                    this.add(test);
-                    test.setBounds(i*125 + 70, k*125, 20, 20);
-                    test.setText("10");
-                    test.setFont(test.getFont().deriveFont(12.0F));
-                    test.setForeground(Color.WHITE);
+                    JLabel packets = new JLabel(); //TODO: this is the first iteration of packet counters, needs to be redone
+                    idToPackets.put(temp, packets);
+                    this.add(packets);
+                    packets.setBounds(i*125 + 70, k*125, 40, 20);
+                    packets.setText("0");
+                    packets.setFont(packets.getFont().deriveFont(12.0F));
+                    packets.setForeground(Color.WHITE);
                 }
             }
         }
@@ -98,35 +100,7 @@ public class Level extends JPanel {
 
         listCoordinates(deviceConnections);
         createSideComponent();
-
-        Timer timer = new Timer(30, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                for (Map.Entry<JLabel, Map.Entry<Point, Point>> packet : packets) {
-                    JLabel label = packet.getKey();
-                    Point start = packet.getValue().getKey();
-                    Point end = packet.getValue().getValue();
-                    if(label.getLocation() == end || (label.getLocation().x - end.x < 5 && label.getLocation().y - end.y < 5)) {
-                        packets.remove(packet);
-                        packetToTime.remove(packet);
-                        remove(label);
-                        break;
-                    }
-                    long duration = System.currentTimeMillis() - packetToTime.get(label);
-                    float progress = (float) duration / (float) PACKET_TIME;
-                    if (progress > 1f) {
-                        progress = 1f;
-                        ((Timer) (e.getSource())).stop();
-                    }
-                    System.out.println("current: " + label.getLocation() + " end: " + end);
-                    int x = start.x + (int) Math.round((end.x - start.x) * progress);
-                    int y = start.y + (int) Math.round((end.y - start.y) * progress);
-
-                    label.setLocation(x, y);
-                }
-            }
-        });
-        timer.start();
+        startTimer();
     }
 
     //Scales the image files that are loaded in to the proper game image size wanted
@@ -255,17 +229,57 @@ public class Level extends JPanel {
     /**
      * Adds a packet to the list, starting from the currently selected device and going to the current target device
      */
-    public void sendPacket() {
-        JLabel packet = new JLabel(scaleImage(packetImagePath + "botnetBlue.png"));
-        packet.setBounds(selected.getLocation().x + 20, selected.getLocation().y + 20,20, 20);
-        add(packet);
-        Point target = devices.get("Switch.White.1").getLocation();
-        target.x += 20;
-        target.y += 20;
-        Point start = selected.getLocation();
-        start.x += 20;
-        start.y += 20;
-        packets.add(new AbstractMap.SimpleEntry<>(packet, new AbstractMap.SimpleEntry<>(start, target)));
-        packetToTime.put(packet, System.currentTimeMillis());
+    private void sendPacket() {
+        if(Integer.valueOf(idToPackets.get(devices.inverse().get(selected)).getText()) > 0) {
+            JLabel packet = new JLabel(scaleImage(packetImagePath + "botnetBlue.png"));
+            packet.setBounds(selected.getLocation().x + 20, selected.getLocation().y + 20, 20, 20);
+            add(packet);
+            packets.put(packet, new AbstractMap.SimpleEntry<>(selected, devices.get("Switch.White.1")));
+            packetToTime.put(packet, System.currentTimeMillis());
+            updatePacketCounter(devices.inverse().get(selected), -1);
+        }
+    }
+
+    /**
+     * Creates and starts a timer that updates the position of all packets every 10 ms
+     */
+    private void startTimer() {
+        Timer timer = new Timer(10, e -> {
+            for (Map.Entry<JLabel, Map.Entry<JButton, JButton>> packet : packets.entrySet()) {
+                JLabel label = packet.getKey();
+                Point start = packet.getValue().getKey().getLocation();
+                Point end = packet.getValue().getValue().getLocation();
+                start.x += 20;
+                start.y += 20;
+                end.x += 20;
+                end.y += 20;
+                if(label.getLocation() == end || (label.getLocation().x - end.x < 5 && label.getLocation().y - end.y < 5)) {
+                    updatePacketCounter(devices.inverse().get(packets.get(packet.getKey()).getValue()), 1);
+                    packets.remove(packet.getKey());
+                    packetToTime.remove(packet.getKey());
+                    remove(label);
+                    break;
+                }
+                long duration = System.currentTimeMillis() - packetToTime.get(label);
+                float progress = (float) duration / (float) PACKET_TIME;
+                if (progress > 1f) {
+                    progress = 1f;
+                }
+                int x = start.x + Math.round((end.x - start.x) * progress);
+                int y = start.y + Math.round((end.y - start.y) * progress);
+
+                label.setLocation(x, y);
+            }
+        });
+        timer.start();
+    }
+
+    public void updatePacketCounter(final String deviceID, final Integer packetCount) {
+        Integer current = Integer.valueOf(idToPackets.get(deviceID).getText());
+        current += packetCount;
+        if(current <= 25 && current >= 0) {
+            idToPackets.get(deviceID).setText(String.valueOf(current));
+        }
+        //TODO: implement more
     }
 }

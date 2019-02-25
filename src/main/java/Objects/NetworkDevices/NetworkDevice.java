@@ -1,5 +1,6 @@
 package Objects.NetworkDevices;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,16 +16,17 @@ public class NetworkDevice {
     private Integer max_packet;
     private List<String> packets;
 
-    public NetworkDevice(final Integer speed, final String team,
+    public NetworkDevice(final Integer speed,
                     final List<String> connections,
                     final Boolean hidden, final Integer max_packet,
                     final String id) {
         this.speed = speed;
-        this.team = team;
+        this.team = id.substring(id.indexOf(".") + 1, id.lastIndexOf("."));
         this.connections = connections;
         this.hidden = hidden;
         this.max_packet = max_packet;
         this.id = id;
+        this.packets = new ArrayList<>();
     }
 
     /**
