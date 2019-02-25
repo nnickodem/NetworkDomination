@@ -47,14 +47,15 @@ public class Level extends JPanel {
     private Map<JLabel, Map.Entry<JButton, JButton>> packets = new HashMap<>();
     private BiMap<String, JButton> devices = HashBiMap.create();
     private Map<JLabel, Long> packetToTime = new HashMap<>();
+	private GameLevel gameLevel;
     private Map<String, JLabel> idToPackets = new HashMap<>();
 
     /**
      * Constructs the level JPanel
-     * @param level
+     * @param gameLevel
      */
-    public Level(final GameLevel level) {
-
+    public Level(final GameLevel gameLevel) {
+        this.gameLevel = gameLevel;
         List<Map.Entry<JButton, JButton>> deviceConnections = new ArrayList<>();
         String temp;
         String deviceType;
@@ -63,19 +64,19 @@ public class Level extends JPanel {
         this.setLayout(null);
         setBackground(Color.DARK_GRAY);
 
-        for(int i = 0; i < level.getLevelMap().length; i++) {
-            for(int k = 0; k < level.getLevelMap()[i].length; k++) {
-                temp = level.getLevelMap()[i][k];
+        for(int i = 0; i < gameLevel.getLevelMap().length; i++) {
+            for(int k = 0; k < gameLevel.getLevelMap()[i].length; k++) {
+                temp = gameLevel.getLevelMap()[i][k];
+                final String deviceId = temp;
                 if(temp != null && !temp.equals("-")) {
-                    tempDevice = level.getIdToDeviceObject().get(temp);
+                    tempDevice = gameLevel.getIdToDeviceObject().get(temp);
                     deviceType = tempDevice.getClass().toString();
                     deviceType = tempDevice.getClass().toString().substring(deviceType.lastIndexOf(".")+1).toLowerCase();
-                    final String tempNetworkDevice = deviceType;
                     final String deviceTeams = tempDevice.getTeam();
                     final JButton button = new JButton(scaleImage(imagePath + deviceType + "/" + deviceType + tempDevice.getTeam() + ".png"));
                     devices.put(temp, button);
                     button.addActionListener(e-> {
-                        setButtonUsage(tempNetworkDevice, deviceTeams);
+                        setButtonUsage(deviceId, deviceTeams);
                         selected = button;
                         transferFocusBackward();
                     });
@@ -94,7 +95,7 @@ public class Level extends JPanel {
             }
         }
 
-        for(Map.Entry<String, String> connection : level.getConnections()) {
+        for(Map.Entry<String, String> connection : gameLevel.getConnections()) {
             deviceConnections.add(new AbstractMap.SimpleEntry<>(devices.get(connection.getKey()), devices.get(connection.getValue())));
         }
 
@@ -167,7 +168,7 @@ public class Level extends JPanel {
         packetButtons.add(crypto);
         for(JButton button : packetButtons){
             button.addActionListener(e->{
-                sendPacket();
+                    sendPacket();
                 transferFocusBackward();
             });
             button.setEnabled(false);
@@ -214,16 +215,17 @@ public class Level extends JPanel {
 
     /**
      * Sets the visibility of buttons depending on which device that you press.
-     * @param device String variable for the type of device that was clicked
+     * @param deviceId String variable for the type of device that was clicked
      * @param team String variable for the team of the selected device
      */
-    public void setButtonUsage(String device, String team){
-        if(!team.equalsIgnoreCase("Blue")){
-            packetButtons.get(0).setEnabled(false);
-        }
-        if(team.equalsIgnoreCase("Blue")){
-            packetButtons.get(0).setEnabled(true);
-        }
+    public void setButtonUsage(String deviceId, String team){
+            for(JButton button : packetButtons) {
+                if (gameLevel.getIdToDeviceObject().get(deviceId).getTeam().equals("Blue") && gameLevel.getIdToDeviceObject().get(deviceId).getPackets().contains(button.getText())) {
+                    button.setEnabled(true);
+                } else {
+                    button.setEnabled(false);
+                }
+            }
     }
 
     /**
