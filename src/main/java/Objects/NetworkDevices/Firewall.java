@@ -12,17 +12,16 @@ public class Firewall extends Router {
     /**
      * Constructor for a firewall.
      * @param speed         Packet generation speed
-     * @param team          Team device belongs to
      * @param connections   List of connected devices
      * @param hidden        Whether device is hidden by fog of war
      * @param max_packet    Max number of packets device can hold
      * @param id            Unique device ID value
      */
-    public Firewall(final Integer speed, final String team,
+    public Firewall(final Integer speed,
                     final List<String> connections,
                     final Boolean hidden, final Integer max_packet,
                     final String id) {
-        super(speed, team, connections, hidden, max_packet, id);
+        super(speed, connections, hidden, max_packet, id);
     }
 
     /**

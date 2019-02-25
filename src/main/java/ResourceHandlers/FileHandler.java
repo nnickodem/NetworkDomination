@@ -123,22 +123,22 @@ public class FileHandler { //TODO: implement save file handling, any others that
                         team = mapArray[x][y].substring(mapArray[x][y].indexOf(".") + 1, mapArray[x][y].lastIndexOf("."));
                         switch(mapArray[x][y].substring(0, mapArray[x][y].indexOf("."))) {
                             case "Switch":
-                                device = new Switch(0, team, deviceConnections, false, 0, mapArray[x][y]);
+                                device = new Switch(0, deviceConnections, false, 0, mapArray[x][y]);
                                 break;
                             case "Router":
-                                device = new Router(0, team, deviceConnections, false, 0, mapArray[x][y]);
+                                device = new Router(0, deviceConnections, false, 0, mapArray[x][y]);
                                 break;
                             case "Firewall":
-                                device = new Firewall(0, team, deviceConnections, false, 0, mapArray[x][y]);
+                                device = new Firewall(0, deviceConnections, false, 0, mapArray[x][y]);
                                 break;
                             case "Server":
-                                device = new Server(0, team, deviceConnections, false, 0, mapArray[x][y]);
+                                device = new Server(0, deviceConnections, false, 0, mapArray[x][y]);
                                 break;
                             case "PC":
-                                device = new PC(0, team, deviceConnections, false, 0, mapArray[x][y]);
+                                device = new PC(0, deviceConnections, false, 0, mapArray[x][y]);
                                 break;
                             default:
-                                device = new NetworkDevice();
+                                device = new NetworkDevice(0, null, false, 0, null);
                                 break;
                         }
                         idToDeviceObject.put(mapArray[x][y], device);

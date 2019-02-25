@@ -36,10 +36,9 @@ public class GameHandler extends Thread {
      * Calls for game updates
      */
     private void tick() {
-        if(++tick%5 == 0) {
-            //levelGui.updatePacketCounter("Switch.White.1", 1);
+        if(++tick%2 == 0) {
+            levelGui.updatePacketCounter("PC.Blue.1", 1);
         }
-        levelGui.updatePacketCounter("PC.Blue.1", 1);
         //TODO: implement
     }
 

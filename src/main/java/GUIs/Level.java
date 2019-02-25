@@ -44,7 +44,7 @@ public class Level extends JPanel {
     private final List<JButton> packetButtons = new ArrayList<JButton>();
     private List<Map.Entry<Point, Point>> lineMap;
     private JButton selected;
-    private Map<JLabel, Map.Entry<JButton, JButton>> packets = new HashMap<>(); //TODO: change to JLabel -> <JButton, JButton> so we can use bimap?
+    private Map<JLabel, Map.Entry<JButton, JButton>> packets = new HashMap<>();
     private BiMap<String, JButton> devices = HashBiMap.create();
     private Map<JLabel, Long> packetToTime = new HashMap<>();
     private Map<String, JLabel> idToPackets = new HashMap<>();
@@ -87,7 +87,7 @@ public class Level extends JPanel {
                     idToPackets.put(temp, packets);
                     this.add(packets);
                     packets.setBounds(i*125 + 70, k*125, 40, 20);
-                    packets.setText("10");
+                    packets.setText("0");
                     packets.setFont(packets.getFont().deriveFont(12.0F));
                     packets.setForeground(Color.WHITE);
                 }
@@ -230,12 +230,14 @@ public class Level extends JPanel {
      * Adds a packet to the list, starting from the currently selected device and going to the current target device
      */
     private void sendPacket() {
-        JLabel packet = new JLabel(scaleImage(packetImagePath + "botnetBlue.png"));
-        packet.setBounds(selected.getLocation().x + 20, selected.getLocation().y + 20,20, 20);
-        add(packet);
-        packets.put(packet, new AbstractMap.SimpleEntry<>(selected, devices.get("Switch.White.1")));
-        packetToTime.put(packet, System.currentTimeMillis());
-        updatePacketCounter(devices.inverse().get(selected), -1);
+        if(Integer.valueOf(idToPackets.get(devices.inverse().get(selected)).getText()) > 0) {
+            JLabel packet = new JLabel(scaleImage(packetImagePath + "botnetBlue.png"));
+            packet.setBounds(selected.getLocation().x + 20, selected.getLocation().y + 20, 20, 20);
+            add(packet);
+            packets.put(packet, new AbstractMap.SimpleEntry<>(selected, devices.get("Switch.White.1")));
+            packetToTime.put(packet, System.currentTimeMillis());
+            updatePacketCounter(devices.inverse().get(selected), -1);
+        }
     }
 
     /**
@@ -274,7 +276,10 @@ public class Level extends JPanel {
 
     public void updatePacketCounter(final String deviceID, final Integer packetCount) {
         Integer current = Integer.valueOf(idToPackets.get(deviceID).getText());
-        idToPackets.get(deviceID).setText(String.valueOf(current + packetCount));
+        current += packetCount;
+        if(current <= 25 && current >= 0) {
+            idToPackets.get(deviceID).setText(String.valueOf(current));
+        }
         //TODO: implement more
     }
 }

@@ -14,16 +14,16 @@ public class Server extends NetworkDevice {
     /**
      * Constructor for a Server
      * @param speed         Packet generation speed
-     * @param team          Team device belongs to
      * @param connections   List of connected devices
      * @param hidden        Whether device is hidden by fog of war
      * @param max_packet    Max number of packets device can hold
      * @param id            Unique device ID value
      */
-    public Server(final Integer speed, final String team,
+    public Server(final Integer speed,
                   final List<String> connections,
                   final Boolean hidden, final Integer max_packet,
                   final String id) {
-        super(speed, team, connections, hidden, max_packet, id);
+        super(speed, connections, hidden, max_packet, id);
+        setPackets(Arrays.asList("ICMP"));
     }
 }
