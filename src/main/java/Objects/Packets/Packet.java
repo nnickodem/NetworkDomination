@@ -10,6 +10,12 @@ public class Packet {
     private Integer cost;
     private Integer stealth;
 
+    public Packet(final String team) {
+        this.team = team;
+        this.cost = 0;
+        this.stealth = 0;
+    }
+
     /**
      * Sets the team which the packet belongs to.
      * @param team The team which the packet belongs to.

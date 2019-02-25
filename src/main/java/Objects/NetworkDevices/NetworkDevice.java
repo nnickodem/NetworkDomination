@@ -15,6 +15,17 @@ public class NetworkDevice {
     private Integer max_packet;
     private List<String> packets;
 
+    public NetworkDevice(final Integer speed, final String team,
+                    final List<String> connections,
+                    final Boolean hidden, final Integer max_packet,
+                    final String id) {
+        this.speed = speed;
+        this.team = team;
+        this.connections = connections;
+        this.hidden = hidden;
+        this.max_packet = max_packet;
+        this.id = id;
+    }
 
     /**
      * Returns the unique device ID
@@ -35,7 +46,7 @@ public class NetworkDevice {
      * Gets the last of packet types the device can send.
      * @return The list of packet types the device can send.
      */
-    public List getPackets() {
+    public List<String> getPackets() {
         return packets;
     }
 

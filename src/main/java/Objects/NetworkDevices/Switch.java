@@ -23,12 +23,7 @@ public class Switch extends NetworkDevice {
               final List<String> connections,
               final Boolean hidden, final Integer max_packet,
               final String id) {
-        setSpeed(speed);
-        setTeam(team);
-        setConnections(connections);
-        setHidden(hidden);
-        setMaxPacket(max_packet);
-        setId(id);
+        super(speed, team, connections, hidden, max_packet, id);
     }
     //TODO: Switch specific
 
