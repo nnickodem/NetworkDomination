@@ -20,6 +20,8 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -49,6 +51,7 @@ public class Level extends JPanel {
     private Map<JLabel, Long> packetToTime = new HashMap<>();
 	private GameLevel gameLevel;
     private Map<String, JLabel> idToPackets = new HashMap<>();
+    private JButton targetDevice;
 
     /**
      * Constructs the level JPanel
@@ -80,6 +83,14 @@ public class Level extends JPanel {
                         selected = button;
                         transferFocusBackward();
                     });
+                    button.addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+                            if(e.isMetaDown()) {
+                                targetDevice = button;
+                            }
+                        }
+                    });
                     this.add(button);
                     button.setBounds(i*125, k*125, 60,60);
                     button.setContentAreaFilled(false);
@@ -98,7 +109,6 @@ public class Level extends JPanel {
         for(Map.Entry<String, String> connection : gameLevel.getConnections()) {
             deviceConnections.add(new AbstractMap.SimpleEntry<>(devices.get(connection.getKey()), devices.get(connection.getValue())));
         }
-
         listCoordinates(deviceConnections);
         createSideComponent();
         startTimer();
@@ -168,7 +178,7 @@ public class Level extends JPanel {
         packetButtons.add(crypto);
         for(JButton button : packetButtons){
             button.addActionListener(e->{
-                    sendPacket();
+                    sendPacket(targetDevice);
                 transferFocusBackward();
             });
             button.setEnabled(false);
@@ -231,12 +241,12 @@ public class Level extends JPanel {
     /**
      * Adds a packet to the list, starting from the currently selected device and going to the current target device
      */
-    private void sendPacket() {
-        if(Integer.valueOf(idToPackets.get(devices.inverse().get(selected)).getText()) > 0) {
+    private void sendPacket(JButton target) {
+        if(target != null && Integer.valueOf(idToPackets.get(devices.inverse().get(selected)).getText()) > 0) {
             JLabel packet = new JLabel(scaleImage(packetImagePath + "botnetBlue.png"));
             packet.setBounds(selected.getLocation().x + 20, selected.getLocation().y + 20, 20, 20);
             add(packet);
-            packets.put(packet, new AbstractMap.SimpleEntry<>(selected, devices.get("Switch.White.1")));
+            packets.put(packet, new AbstractMap.SimpleEntry<>(selected, target));
             packetToTime.put(packet, System.currentTimeMillis());
             updatePacketCounter(devices.inverse().get(selected), -1);
         }
