@@ -9,3 +9,8 @@
 Server.Blue.1,Switch.White.1
 Switch.White.1,PC.Blue.2
 Switch.White.1,PC.Blue.1
+*
+Server.Blue.1,3,25
+Switch.White.1,5,20
+PC.Blue.2,2,15
+PC.Blue.1,3,15
