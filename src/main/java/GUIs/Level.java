@@ -2,6 +2,7 @@ package GUIs;
 
 import Objects.GameLevel;
 import Objects.NetworkDevices.NetworkDevice;
+import Objects.Packets.PacketInfo;
 import ResourceHandlers.FileHandler;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
@@ -48,9 +49,9 @@ public class Level extends JPanel {
     private final List<JButton> packetButtons = new ArrayList<JButton>();
     private List<Map.Entry<Point, Point>> lineMap;
     private JButton selected;
-    private Map<JLabel, Map.Entry<JButton, JButton>> packets = new HashMap<>();
     private BiMap<String, JButton> devices = HashBiMap.create();
-    private Map<JLabel, Long> packetToTime = new HashMap<>();
+    private Map<JLabel, PacketInfo> packetToInfo = new HashMap<>();
+    //TODO: maybe create a basic packet info object to store time, team, type?
 	private GameLevel gameLevel;
     private Map<String, JLabel> idToPackets = new HashMap<>();
     private JButton targetDevice;
@@ -244,12 +245,13 @@ public class Level extends JPanel {
      */
     private void sendPacket(final String packetType, final JButton target) {
         if(target != null && Integer.valueOf(idToPackets.get(devices.inverse().get(selected)).getText()) > 0) {
-            JLabel packet = new JLabel(scaleImage(packetImagePath + packetType + "/" + packetType + "Blue.png", 30));
+            JLabel packet = new JLabel(scaleImage(packetImagePath + packetType + "/" + packetType + "Red.png", 30));
             packet.setBounds(selected.getLocation().x + 20, selected.getLocation().y + 20, 30, 30);
             add(packet);
-            packets.put(packet, new AbstractMap.SimpleEntry<>(selected, target));
-            packetToTime.put(packet, System.currentTimeMillis());
-            updatePacketCounter(devices.inverse().get(selected), -1);
+            PacketInfo packetInfo = new PacketInfo(System.currentTimeMillis(), "Red", packetType, selected, target);
+            packetToInfo.put(packet, packetInfo);
+            updatePacketCounter(devices.inverse().get(selected), "", -1);
+            System.out.println();
         }
     }
 
@@ -258,22 +260,21 @@ public class Level extends JPanel {
      */
     private void startTimer() {
         Timer timer = new Timer(10, e -> {
-            for (Map.Entry<JLabel, Map.Entry<JButton, JButton>> packet : packets.entrySet()) {
+            for (Map.Entry<JLabel, PacketInfo> packet : packetToInfo.entrySet()) {
                 JLabel label = packet.getKey();
-                Point start = packet.getValue().getKey().getLocation();
-                Point end = packet.getValue().getValue().getLocation();
+                Point start = packet.getValue().getSource().getLocation();
+                Point end = packet.getValue().getTarget().getLocation();
                 start.x += 15;
                 start.y += 15;
                 end.x += 15;
                 end.y += 15;
                 if(label.getLocation() == end || (Math.abs(label.getLocation().x - end.x) < 10 && Math.abs(label.getLocation().y - end.y) < 10)) {
-                    updatePacketCounter(devices.inverse().get(packets.get(packet.getKey()).getValue()), 1);
-                    packets.remove(packet.getKey());
-                    packetToTime.remove(packet.getKey());
+                    updatePacketCounter(devices.inverse().get(packet.getValue().getTarget()), packet.getValue().getTeam(),1);
+                    packetToInfo.remove(packet.getKey());
                     remove(label);
                     break;
                 }
-                long duration = System.currentTimeMillis() - packetToTime.get(label);
+                long duration = System.currentTimeMillis() - packetToInfo.get(label).getTime();
                 float progress = (float) duration / (float) PACKET_TIME;
                 if (progress > 1f) {
                     progress = 1f;
@@ -287,11 +288,17 @@ public class Level extends JPanel {
         timer.start();
     }
 
-    public void updatePacketCounter(final String deviceID, final Integer packetCount) {
+    public void updatePacketCounter(final String deviceID, final String packetTeam, final Integer packetCount) {
         Integer current = Integer.valueOf(idToPackets.get(deviceID).getText());
-        current += packetCount;
-        if(current <= gameLevel.getIdToDeviceObject().get(deviceID).getMaxPacket() && current >= 0) {
+        NetworkDevice device = gameLevel.getIdToDeviceObject().get(deviceID);
+        current -= packetCount;
+        if(current <= device.getMaxPacket() && current >= 0) {
             idToPackets.get(deviceID).setText(String.valueOf(current));
+        }
+        //System.out.println(packet.toString());
+        if(current == 0 && device.getTeam() != packetTeam) {
+            devices.get(deviceID).setIcon(scaleImage(imagePath + device.getType() + "/" + device.getType() + packetTeam + ".png", 60));
+            //TODO: more conversion like setting packet count, etc?
         }
         //TODO: implement more
     }
