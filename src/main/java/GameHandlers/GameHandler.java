@@ -28,9 +28,7 @@ public class GameHandler extends Thread {
      */
     @Override
     public void run() {
-        Timer timer = new Timer(200, e -> {
-            tick();
-        });
+        Timer timer = new Timer(200, e -> tick());
         timer.start();
     }
 

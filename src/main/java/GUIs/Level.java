@@ -221,7 +221,7 @@ public class Level extends JPanel {
         panel.setBackground(Color.lightGray);
         //reset container to read the new components added
         revalidate();
-        panel.setBounds((int)screenWidth - 150, 0, 150, (int)screenHeight);
+        panel.setBounds((int)screenWidth - 130, 0, 130, (int)screenHeight);
     }
 
     /**
