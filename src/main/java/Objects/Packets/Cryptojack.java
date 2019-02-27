@@ -5,13 +5,13 @@ package Objects.Packets;
  * NetworkDevices into crypto-currency
  * generators.
  */
-public class Crypto extends Packet {
+public class Cryptojack extends Packet {
 
     /**
      * Constructor for the Crypto packet type.
      * @param team Team that owns the packet.
      */
-    public Crypto(final String team) {
+    public Cryptojack(final String team) {
         super(team);
         setCost(13);
         setStealth(0);

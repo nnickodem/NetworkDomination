@@ -15,6 +15,7 @@ public class NetworkDevice {
     private Boolean hidden;
     private Integer max_packet;
     private List<String> packets;
+    private String type;
 
     public NetworkDevice(final Integer speed,
                     final List<String> connections,
@@ -27,6 +28,7 @@ public class NetworkDevice {
         this.max_packet = max_packet;
         this.id = id;
         this.packets = new ArrayList<>();
+        this.type = getClass().toString().substring(getClass().toString().lastIndexOf(".") + 1);
     }
 
     /**
@@ -139,5 +141,9 @@ public class NetworkDevice {
      */
     public void setConnections(final List<String> connections) {
         this.connections = connections;
+    }
+
+    public String getType() {
+        return type;
     }
 }
