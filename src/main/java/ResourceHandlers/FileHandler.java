@@ -35,23 +35,27 @@ public class FileHandler { //TODO: implement save file handling, any others that
 
     private static final Logger errorLogger = Logger.getLogger("errorLogger");
     private static final String levelFilePath = "resources/levels/";
+    private static Font gameFont;
 
     /**
      * Creates and registers the game's custom font
      * @return font
      */
-    public static Font loadFont() {
+    public static void loadFont() {
         try {
             GraphicsEnvironment ge =
                     GraphicsEnvironment.getLocalGraphicsEnvironment();
-            Font gameFont = Font.createFont(Font.TRUETYPE_FONT, new File("resources/gameFont.ttf"));
-            System.out.println(gameFont.toString());
-            ge.registerFont(gameFont);
-            return gameFont;
+            Font font = Font.createFont(Font.TRUETYPE_FONT, new File("resources/gameFont.ttf"));
+            System.out.println(font.toString());
+            ge.registerFont(font);
+            gameFont = font;
         } catch (IOException| FontFormatException e) {
             //Handle exception
-            return null;
         }
+    }
+
+    public static Font getGameFont() {
+        return gameFont;
     }
 
     /**

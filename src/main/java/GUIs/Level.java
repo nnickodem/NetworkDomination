@@ -2,6 +2,7 @@ package GUIs;
 
 import Objects.GameLevel;
 import Objects.NetworkDevices.NetworkDevice;
+import ResourceHandlers.FileHandler;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
@@ -15,6 +16,7 @@ import javax.swing.Timer;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -264,7 +266,7 @@ public class Level extends JPanel {
                 start.y += 15;
                 end.x += 15;
                 end.y += 15;
-                if(label.getLocation() == end || (label.getLocation().x - end.x < 5 && label.getLocation().y - end.y < 5)) {
+                if(label.getLocation() == end || (Math.abs(label.getLocation().x - end.x) < 10 && Math.abs(label.getLocation().y - end.y) < 10)) {
                     updatePacketCounter(devices.inverse().get(packets.get(packet.getKey()).getValue()), 1);
                     packets.remove(packet.getKey());
                     packetToTime.remove(packet.getKey());
