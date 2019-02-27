@@ -51,7 +51,6 @@ public class Level extends JPanel {
     private JButton selected;
     private BiMap<String, JButton> devices = HashBiMap.create();
     private Map<JLabel, PacketInfo> packetToInfo = new HashMap<>();
-    //TODO: maybe create a basic packet info object to store time, team, type?
 	private GameLevel gameLevel;
     private Map<String, JLabel> idToPackets = new HashMap<>();
     private JButton targetDevice;
@@ -251,7 +250,6 @@ public class Level extends JPanel {
             PacketInfo packetInfo = new PacketInfo(System.currentTimeMillis(), team, packetType, selected, target);
             packetToInfo.put(packet, packetInfo);
             updatePacketCounter(devices.inverse().get(selected), team, -1);
-            System.out.println();
         }
     }
 
@@ -299,11 +297,9 @@ public class Level extends JPanel {
         if(current <= device.getMaxPacket() && current >= 0) {
             idToPackets.get(deviceID).setText(String.valueOf(current));
         }
-        //System.out.println(packet.toString());
-        if(current == 0 && device.getTeam() != packetTeam) {
+        if(current == 0 && !device.getTeam().equals(packetTeam)) {
             devices.get(deviceID).setIcon(scaleImage(imagePath + device.getType() + "/" + device.getType() + packetTeam + ".png", 60));
-            //TODO: more conversion like setting packet count, etc?
+            device.setTeam(packetTeam);
         }
-        //TODO: implement more
     }
 }

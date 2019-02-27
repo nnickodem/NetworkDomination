@@ -94,7 +94,7 @@ public class MainMenu extends JFrame {
         playButton.setPreferredSize(buttonSize);
         playButton.setFont(FileHandler.getGameFont().deriveFont(Font.PLAIN, 15));
         //TODO: move this object creation somewhere else?
-        GameLevel level = FileHandler.readLevel(1);
+        GameLevel level = FileHandler.readLevel("1");
         Level levelGui = new Level(level);
         GameHandler gameHandler = new GameHandler(level, levelGui);
         playButton.addActionListener(e -> {

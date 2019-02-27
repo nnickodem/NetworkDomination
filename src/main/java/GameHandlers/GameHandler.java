@@ -2,8 +2,10 @@ package GameHandlers;
 
 import GUIs.Level;
 import Objects.GameLevel;
+import Objects.NetworkDevices.NetworkDevice;
 
 import javax.swing.Timer;
+import java.util.Map;
 import java.util.logging.Logger;
 
 /**
@@ -36,10 +38,12 @@ public class GameHandler extends Thread {
      * Calls for game updates
      */
     private void tick() {
-        if(++tick%2 == 0) {
-            levelGui.updatePacketCounter("PC.Blue.1", "Blue",1);
+        tick++;
+        for(Map.Entry<String, NetworkDevice> device : level.getIdToDeviceObject().entrySet()) {
+            if(!device.getValue().getTeam().equals("White") && device.getValue().getSpeed() != 0 && tick%device.getValue().getSpeed() == 0) {
+                levelGui.updatePacketCounter(device.getKey(), device.getValue().getTeam(),1);
+            }
         }
-        //TODO: implement
     }
 
 }

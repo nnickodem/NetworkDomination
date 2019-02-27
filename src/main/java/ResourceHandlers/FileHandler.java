@@ -46,7 +46,6 @@ public class FileHandler { //TODO: implement save file handling, any others that
             GraphicsEnvironment ge =
                     GraphicsEnvironment.getLocalGraphicsEnvironment();
             Font font = Font.createFont(Font.TRUETYPE_FONT, new File("resources/gameFont.ttf"));
-            System.out.println(font.toString());
             ge.registerFont(font);
             gameFont = font;
         } catch (IOException| FontFormatException e) {
@@ -92,11 +91,11 @@ public class FileHandler { //TODO: implement save file handling, any others that
 
     /**
      * Reads a given level file and converts the information to a GameLevel object
-     * @param levelNum level number TODO: change to level String?
+     * @param levelName level name
      * @return GameLevel object
      */
     //TODO: throws exception to stop program from attempting to continue?
-    public static GameLevel readLevel(int levelNum) {
+    public static GameLevel readLevel(final String levelName) {
         List<List<String>> levelMap = new ArrayList<>();
         List<Map.Entry<String, String>> mapConnections = new ArrayList<>();
         List<String> file;
@@ -104,25 +103,28 @@ public class FileHandler { //TODO: implement save file handling, any others that
         Map<String, Map.Entry<Integer, Integer>> deviceToInfo = new HashMap<>();
 
         try {
-            file = Files.readAllLines(Paths.get(levelFilePath + "level"+levelNum+".txt"));
+            file = Files.readAllLines(Paths.get(levelFilePath + "level"+ levelName +".txt"));
             String line = file.get(0);
-            while(line != null && !line.equals("*")) {
+            while(line != null && !line.contains("*")) {
                 levelMap.add(Arrays.asList(line.split(",")));
                 file.remove(0);
                 line = file.get(0);
             }
             file.remove(0);
             line = file.get(0);
-            while(line != null && !line.equals("*")) {
-                mapConnections.add(new AbstractMap.SimpleEntry<>(line.substring(0, line.indexOf(",")), line.substring(line.indexOf(",") + 1)));
+            while(line != null && !line.contains("*")) {
+                mapConnections.add(new AbstractMap.SimpleEntry<>(
+                        line.substring(0, line.indexOf(",")).replaceAll(" ", ""),
+                        line.substring(line.indexOf(",") + 1).replaceAll(" ", "")));
                 file.remove(0);
                 line = file.get(0);
             }
             file.remove(0);
             for(String l : file) {
-                deviceToInfo.put(l.substring(0, l.indexOf(",")),
-                        new AbstractMap.SimpleEntry<>(Integer.valueOf(l.substring(l.indexOf(",")+1, l.lastIndexOf(","))),
-                                Integer.valueOf(l.substring(l.lastIndexOf(",")+1))));
+                deviceToInfo.put(l.substring(0, l.indexOf(",")).replaceAll(" ", ""),
+                        new AbstractMap.SimpleEntry<>(
+                                Integer.valueOf(l.substring(l.indexOf(",")+1, l.lastIndexOf(",")).replaceAll(" ", "")),
+                                Integer.valueOf(l.substring(l.lastIndexOf(",")+1).replaceAll(" ", ""))));
             }
             GameLevel level = new GameLevel();
             String[][] mapArray = new String[levelMap.get(0).size()][levelMap.size()];
