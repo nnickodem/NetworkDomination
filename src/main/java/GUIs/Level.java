@@ -89,7 +89,13 @@ public class Level extends JPanel {
                         @Override
                         public void mouseClicked(MouseEvent e) {
                             if(e.isMetaDown()) {
+                                if(targetDevice != null) {
+                                    targetDevice.setBorder(BorderFactory.createEmptyBorder());
+                                }
+
+                                //If Button is right clicked, set the target device for sending packets
                                 targetDevice = button;
+                                button.setBorder(BorderFactory.createLineBorder(Color.CYAN,2));
                             }
                         }
                     });
@@ -97,13 +103,14 @@ public class Level extends JPanel {
                     button.setBounds(i*125, k*125, 60,60);
                     button.setContentAreaFilled(false);
                     button.setFocusPainted(false);
-                    JLabel packets = new JLabel(); //TODO: this is the first iteration of packet counters, needs to be redone
-                    idToPackets.put(temp, packets);
-                    this.add(packets);
-                    packets.setBounds(i*125 + 70, k*125, 40, 20);
-                    packets.setText("10");
-                    packets.setFont(packets.getFont().deriveFont(12.0F));
-                    packets.setForeground(Color.WHITE);
+
+                    JLabel packetCounter = new JLabel();
+                    idToPackets.put(temp, packetCounter);
+                    this.add(packetCounter);
+                    packetCounter.setBounds(i*125 + 70, k*125, 40, 20);
+                    packetCounter.setText("0");
+                    packetCounter.setFont(packetCounter.getFont().deriveFont(12.0F));
+                    packetCounter.setForeground(Color.WHITE);
                 }
             }
         }
