@@ -24,6 +24,6 @@ public class PC extends NetworkDevice {
                   final Boolean hidden, final Integer max_packet,
                   final String id) {
         super(speed, connections, hidden, max_packet, id);
-        setPackets(Arrays.asList("ICMP", "Botnet", "SYN", "Crypto"));
+        setPackets(Arrays.asList("ICMP", "Botnet", "SYN", "Cryptojack"));
     }
 }
