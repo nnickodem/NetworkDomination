@@ -20,6 +20,7 @@ import java.awt.event.KeyListener;
 
 import static java.awt.event.KeyEvent.VK_ESCAPE;
 import static java.lang.System.exit;
+import static java.lang.System.load;
 
 /**
  * Creates the main menu gui
@@ -91,9 +92,9 @@ public class MainMenu extends JFrame {
         constraints.insets = new Insets(3,0,3,0);
         constraints.fill = GridBagConstraints.CENTER;
         playButton.setPreferredSize(buttonSize);
-        playButton.setFont(FileHandler.loadFont().deriveFont(Font.PLAIN, 15));
+        playButton.setFont(FileHandler.getGameFont().deriveFont(Font.PLAIN, 15));
         //TODO: move this object creation somewhere else?
-        GameLevel level = FileHandler.readLevel(1);
+        GameLevel level = FileHandler.readLevel("1");
         Level levelGui = new Level(level);
         GameHandler gameHandler = new GameHandler(level, levelGui);
         playButton.addActionListener(e -> {
@@ -108,12 +109,14 @@ public class MainMenu extends JFrame {
         constraints.gridy = 1;
         constraints.insets = new Insets(3,0,3,0);
         loadButton.setPreferredSize(buttonSize);
+        loadButton.setFont(FileHandler.getGameFont().deriveFont(Font.PLAIN, 15));
         mainMenu.add(loadButton, constraints);
 
         constraints.gridx = 0;
         constraints.gridy = 2;
         constraints.insets = new Insets(3,0,3,0);
         optionsButton.setPreferredSize(buttonSize);
+        optionsButton.setFont(FileHandler.getGameFont().deriveFont(Font.PLAIN, 15));
         mainMenu.add(optionsButton, constraints);
 
         exitButton.addActionListener(e-> exit(0));
@@ -121,6 +124,7 @@ public class MainMenu extends JFrame {
         constraints.gridy = 3;
         constraints.insets = new Insets(3,0,3,0);
         exitButton.setPreferredSize(buttonSize);
+        exitButton.setFont(FileHandler.getGameFont().deriveFont(Font.PLAIN, 15));
         mainMenu.add(exitButton, constraints);
 
         //Add the mainMenu panel to the frame and set the window size

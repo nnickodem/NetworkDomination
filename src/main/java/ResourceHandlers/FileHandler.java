@@ -35,23 +35,26 @@ public class FileHandler { //TODO: implement save file handling, any others that
 
     private static final Logger errorLogger = Logger.getLogger("errorLogger");
     private static final String levelFilePath = "resources/levels/";
+    private static Font gameFont;
 
     /**
      * Creates and registers the game's custom font
      * @return font
      */
-    public static Font loadFont() {
+    public static void loadFont() {
         try {
             GraphicsEnvironment ge =
                     GraphicsEnvironment.getLocalGraphicsEnvironment();
-            Font gameFont = Font.createFont(Font.TRUETYPE_FONT, new File("resources/gameFont.ttf"));
-            System.out.println(gameFont.toString());
-            ge.registerFont(gameFont);
-            return gameFont;
+            Font font = Font.createFont(Font.TRUETYPE_FONT, new File("resources/gameFont.ttf"));
+            ge.registerFont(font);
+            gameFont = font;
         } catch (IOException| FontFormatException e) {
             //Handle exception
-            return null;
         }
+    }
+
+    public static Font getGameFont() {
+        return gameFont;
     }
 
     /**
@@ -88,57 +91,70 @@ public class FileHandler { //TODO: implement save file handling, any others that
 
     /**
      * Reads a given level file and converts the information to a GameLevel object
-     * @param levelNum level number TODO: change to level String?
+     * @param levelName level name
      * @return GameLevel object
      */
     //TODO: throws exception to stop program from attempting to continue?
-    public static GameLevel readLevel(int levelNum) {
+    public static GameLevel readLevel(final String levelName) {
         List<List<String>> levelMap = new ArrayList<>();
         List<Map.Entry<String, String>> mapConnections = new ArrayList<>();
         List<String> file;
         Map<String, NetworkDevice> idToDeviceObject = new HashMap<>();
+        Map<String, Map.Entry<Integer, Integer>> deviceToInfo = new HashMap<>();
 
         try {
-            file = Files.readAllLines(Paths.get(levelFilePath + "level"+levelNum+".txt"));
+            file = Files.readAllLines(Paths.get(levelFilePath + "level"+ levelName +".txt"));
             String line = file.get(0);
-            while(line != null && !line.equals("*")) {
+            while(line != null && !line.contains("*")) {
                 levelMap.add(Arrays.asList(line.split(",")));
                 file.remove(0);
                 line = file.get(0);
             }
             file.remove(0);
+            line = file.get(0);
+            while(line != null && !line.contains("*")) {
+                mapConnections.add(new AbstractMap.SimpleEntry<>(
+                        line.substring(0, line.indexOf(",")).replaceAll(" ", ""),
+                        line.substring(line.indexOf(",") + 1).replaceAll(" ", "")));
+                file.remove(0);
+                line = file.get(0);
+            }
+            file.remove(0);
             for(String l : file) {
-                mapConnections.add(new AbstractMap.SimpleEntry<>(l.substring(0, l.indexOf(",")), l.substring(l.indexOf(",") + 1)));
+                deviceToInfo.put(l.substring(0, l.indexOf(",")).replaceAll(" ", ""),
+                        new AbstractMap.SimpleEntry<>(
+                                Integer.valueOf(l.substring(l.indexOf(",")+1, l.lastIndexOf(",")).replaceAll(" ", "")),
+                                Integer.valueOf(l.substring(l.lastIndexOf(",")+1).replaceAll(" ", ""))));
             }
             GameLevel level = new GameLevel();
             String[][] mapArray = new String[levelMap.get(0).size()][levelMap.size()];
             NetworkDevice device;
-            String team;
             List<String> deviceConnections;
+            Map.Entry<Integer, Integer> deviceInfo;
             for(int y = 0; y < levelMap.size(); y++) {
                 for(int x = 0; x < levelMap.get(0).size(); x++) {
                     mapArray[x][y] = levelMap.get(y).get(x);
                     deviceConnections = getDeviceConnections(mapConnections, mapArray[x][y]);
+                    deviceInfo = deviceToInfo.get(mapArray[x][y]);
                     if(mapArray[x][y] != null && !mapArray[x][y].equals("-")) {
-                        team = mapArray[x][y].substring(mapArray[x][y].indexOf(".") + 1, mapArray[x][y].lastIndexOf("."));
                         switch(mapArray[x][y].substring(0, mapArray[x][y].indexOf("."))) {
                             case "Switch":
-                                device = new Switch(0, deviceConnections, false, 0, mapArray[x][y]);
+                                device = new Switch(deviceInfo.getKey(), deviceConnections, false, deviceInfo.getValue(), mapArray[x][y]);
                                 break;
                             case "Router":
-                                device = new Router(0, deviceConnections, false, 0, mapArray[x][y]);
+                                device = new Router(deviceInfo.getKey(), deviceConnections, false, deviceInfo.getValue(), mapArray[x][y]);
                                 break;
                             case "Firewall":
-                                device = new Firewall(0, deviceConnections, false, 0, mapArray[x][y]);
+                                device = new Firewall(deviceInfo.getKey(), deviceConnections, false, deviceInfo.getValue(), mapArray[x][y]);
                                 break;
                             case "Server":
-                                device = new Server(0, deviceConnections, false, 0, mapArray[x][y]);
+                                device = new Server(deviceInfo.getKey(), deviceConnections, false, deviceInfo.getValue(), mapArray[x][y]);
                                 break;
                             case "PC":
-                                device = new PC(0, deviceConnections, false, 0, mapArray[x][y]);
+                                device = new PC(deviceInfo.getKey(), deviceConnections, false, deviceInfo.getValue(), mapArray[x][y]);
                                 break;
                             default:
-                                device = new NetworkDevice(0, null, false, 0, null);
+                                device = new NetworkDevice(deviceInfo.getKey(), deviceConnections, false, deviceInfo.getValue(), mapArray[x][y]);
                                 break;
                         }
                         idToDeviceObject.put(mapArray[x][y], device);

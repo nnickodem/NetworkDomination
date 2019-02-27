@@ -1,4 +1,5 @@
 import GUIs.MainMenu;
+import ResourceHandlers.FileHandler;
 import ResourceHandlers.LogHandler;
 
 import javax.swing.SwingUtilities;
@@ -14,6 +15,7 @@ public class main {
     public static void main(String args[]) {
         Thread.setDefaultUncaughtExceptionHandler((t, e) -> logger.log(Level.SEVERE, "Uncaught exception",new Exception(e)));
         LogHandler.setup();
+        FileHandler.loadFont();
         // set look and feel to the system and feel
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
