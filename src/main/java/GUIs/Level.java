@@ -180,7 +180,7 @@ public class Level extends JPanel {
         packetButtons.add(crypto);
         for(JButton button : packetButtons){
             button.addActionListener(e->{
-                    sendPacket(button.getText().toLowerCase(), targetDevice);
+                    sendPacket(button.getText().toLowerCase(), targetDevice, "Blue");
                 transferFocusBackward();
             });
             button.setEnabled(true);
@@ -243,14 +243,14 @@ public class Level extends JPanel {
     /**
      * Adds a packet to the list, starting from the currently selected device and going to the current target device
      */
-    private void sendPacket(final String packetType, final JButton target) {
+    private void sendPacket(final String packetType, final JButton target, final String team) {
         if(target != null && Integer.valueOf(idToPackets.get(devices.inverse().get(selected)).getText()) > 0) {
-            JLabel packet = new JLabel(scaleImage(packetImagePath + packetType + "/" + packetType + "Red.png", 30));
+            JLabel packet = new JLabel(scaleImage(packetImagePath + packetType + "/" + packetType + team + ".png", 30));
             packet.setBounds(selected.getLocation().x + 20, selected.getLocation().y + 20, 30, 30);
             add(packet);
-            PacketInfo packetInfo = new PacketInfo(System.currentTimeMillis(), "Red", packetType, selected, target);
+            PacketInfo packetInfo = new PacketInfo(System.currentTimeMillis(), team, packetType, selected, target);
             packetToInfo.put(packet, packetInfo);
-            updatePacketCounter(devices.inverse().get(selected), "", -1);
+            updatePacketCounter(devices.inverse().get(selected), team, -1);
             System.out.println();
         }
     }
@@ -291,7 +291,11 @@ public class Level extends JPanel {
     public void updatePacketCounter(final String deviceID, final String packetTeam, final Integer packetCount) {
         Integer current = Integer.valueOf(idToPackets.get(deviceID).getText());
         NetworkDevice device = gameLevel.getIdToDeviceObject().get(deviceID);
-        current -= packetCount;
+        if(packetTeam.equals(device.getTeam())) {
+            current += packetCount;
+        } else {
+            current -= packetCount;
+        }
         if(current <= device.getMaxPacket() && current >= 0) {
             idToPackets.get(deviceID).setText(String.valueOf(current));
         }
