@@ -52,7 +52,6 @@ public class Level extends JPanel {
 	private GameLevel gameLevel;
     private Map<String, JLabel> idToPackets = new HashMap<>();
     private JButton targetDevice;
-    private JButton tempButton;
 
     /**
      * Constructs the level JPanel
@@ -88,10 +87,9 @@ public class Level extends JPanel {
                         @Override
                         public void mouseClicked(MouseEvent e) {
                             if(e.isMetaDown()) {
-                                if(tempButton != null){
-                                    tempButton.setBorder(BorderFactory.createEmptyBorder());
+                                if(targetDevice != null) {
+                                    targetDevice.setBorder(BorderFactory.createEmptyBorder());
                                 }
-                                tempButton = button;
 
                                 //If Button is right clicked, set the target device for sending packets
                                 targetDevice = button;
