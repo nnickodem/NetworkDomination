@@ -16,11 +16,13 @@ import javax.swing.Timer;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
@@ -52,6 +54,7 @@ public class LevelGUI extends JPanel {
 	private Map<String, JLabel> idToPacketCounter = new HashMap<>();
 	private JButton selectedDevice; //TODO: get rid of somehow?
 	private JButton targetDevice;
+	int upgradeNumber = 1; //demo for upgrade button TODO: remove
 
 	/**
 	 * Constructs the level JPanel
@@ -69,7 +72,7 @@ public class LevelGUI extends JPanel {
 			for(int k = 0; k < gameLevel.getLevelMap()[i].length; k++) {
 				String deviceId = gameLevel.getLevelMap()[i][k];
 				if(deviceId != null && !deviceId.equals("-")) {
-          createDeviceButton(deviceId, new Point(i, k));
+					createDeviceButton(deviceId, new Point(i, k));
 				}
 			}
 		}
@@ -102,7 +105,7 @@ public class LevelGUI extends JPanel {
 	 */
 	private void createDeviceButton(final String deviceID, final Point coordinate) {
 		NetworkDevice device = gameLevel.getIdToDeviceObject().get(deviceID);
-		JButton deviceButton = new JButton(scaleImage(deviceImagePath + device.getType() + "/" + device.getType() + device.getTeam() + ".png", 60));
+		JButton deviceButton = new JButton(scaleImage(deviceImagePath + device.getType() + "/" + device.getType() + device.getTeam() + ".png", 60, 60));
 
 		idToDeviceButton.put(deviceID, deviceButton);
 		deviceButton.addActionListener(e -> {
@@ -139,10 +142,10 @@ public class LevelGUI extends JPanel {
 	 * @param imageFile
 	 * @return imageIcon
 	 */
-	private ImageIcon scaleImage(final String imageFile, final Integer size){
+	private ImageIcon scaleImage(final String imageFile, final Integer width, final Integer height){
 		ImageIcon imageIcon = new ImageIcon(imageFile);
 		Image image = imageIcon.getImage();
-		Image newImage = image.getScaledInstance(size,size, Image.SCALE_SMOOTH);
+		Image newImage = image.getScaledInstance(width, height, Image.SCALE_SMOOTH);
 		imageIcon = new ImageIcon(newImage);
 		return imageIcon;
 	}
@@ -205,16 +208,28 @@ public class LevelGUI extends JPanel {
 
 		List<String> upgrades = Arrays.asList("Upgrade 1", "Upgrade 2");
 		for(String upgrade : upgrades) {
-			JButton upgradeButton = new JButton(upgrade);
-			upgradeButton.setPreferredSize(buttonSize);
+			JButton upgradeButton = new JButton(scaleImage("resources/ui/upgradeButton/upgradeButton1.png", 120, 60));
+			upgradeButton.setPreferredSize(new Dimension(120, 60));
 			upgradePanel.add(upgradeButton);
+			upgradeButton.setContentAreaFilled(false);
+			upgradeButton.setFocusPainted(false);
+			JLabel upgradeLabel = new JLabel(upgrade);
+			upgradeLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+			upgradeLabel.setForeground(Color.WHITE);
+			upgradeLabel.setAlignmentY(.3f);
+			upgradeButton.add(upgradeLabel);
+			upgradeButton.addActionListener(e -> { //TODO: remove, demo for button
+				JButton button = (JButton) e.getSource();
+				upgradeNumber = (upgradeNumber + 1) % 4;
+				button.setIcon(scaleImage("resources/ui/upgradeButton/upgradeButton" + upgradeNumber + ".png", 120, 60));
+			});
 		}
 		upgradePanel.setBorder(BorderFactory.createEtchedBorder());
 
 		containerPanel.add(packetPanel);
 		containerPanel.add(upgradePanel);
 		containerPanel.setBackground(Color.lightGray);
-		containerPanel.setBounds((int)screenWidth - 130, 0, 130, (int)screenHeight);
+		containerPanel.setBounds((int)screenWidth - 140, 0, 140, (int)screenHeight);
 		add(containerPanel);
 
 		//reset container to read the new components added
@@ -245,7 +260,7 @@ public class LevelGUI extends JPanel {
 	private void sendPacket(final String packetType, final JButton source, final JButton target, final String team) {
 		String packetCounter = idToPacketCounter.get(idToDeviceButton.inverse().get(source)).getText();
 		if(target != null && Integer.valueOf(packetCounter.substring(0,packetCounter.indexOf("/"))) > 0) {
-			JLabel packet = new JLabel(scaleImage(packetImagePath + packetType + "/" + packetType + team + ".png", 30));
+			JLabel packet = new JLabel(scaleImage(packetImagePath + packetType + "/" + packetType + team + ".png", 30, 30));
 			packet.setBounds(source.getLocation().x + 20, source.getLocation().y + 20, 30, 30);
 			add(packet);
 			PacketInfo packetInfo = new PacketInfo(System.currentTimeMillis(), team, packetType, source, target);
@@ -317,7 +332,7 @@ public class LevelGUI extends JPanel {
 		if(current <= device.getMaxPacket() && current >= 0) {
 			idToPacketCounter.get(deviceID).setText(String.valueOf(current) + "/" + device.getMaxPacket());
 		} else if(current < 0 && !device.getTeam().equals(packetTeam)) {
-			idToDeviceButton.get(deviceID).setIcon(scaleImage(deviceImagePath + device.getType() + "/" + device.getType() + packetTeam + ".png", 60));
+			idToDeviceButton.get(deviceID).setIcon(scaleImage(deviceImagePath + device.getType() + "/" + device.getType() + packetTeam + ".png", 60, 60));
 			device.setTeam(packetTeam);
 			device.setTarget(null);
 		}
