@@ -11,14 +11,6 @@ import java.util.List;
  */
 public class PC extends NetworkDevice {
 
-    /**
-     * Constructor for a PC
-     * @param speed         Packet generation speed
-     * @param connections   List of connected devices
-     * @param hidden        Whether device is hidden by fog of war
-     * @param max_packet    Max number of packets device can hold
-     * @param id            Unique device ID value
-     */
     public PC(final Integer speed,
                   final List<String> connections,
                   final Boolean hidden, final Integer max_packet,

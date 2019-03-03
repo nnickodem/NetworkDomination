@@ -37,5 +37,4 @@ public class PacketInfo {
     public JButton getTarget() {
         return target;
     }
-
 }

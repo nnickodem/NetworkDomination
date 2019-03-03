@@ -14,28 +14,23 @@ public class GameLevel {
     private List<Map.Entry<String,String>> connections;
     private Map<String, NetworkDevice> idToDeviceObject;
 
-    public String[][] getLevelMap() {
-        return levelMap;
+    public GameLevel(final String [][] levelMap,
+                     final List<Map.Entry<String, String>> connections,
+                     final Map<String, NetworkDevice> idToDeviceObject) {
+        this.levelMap = levelMap;
+        this.connections = connections;
+        this.idToDeviceObject = idToDeviceObject;
     }
 
-    public void setLevelMap(final String[][] levelMap) {
-        this.levelMap = levelMap;
+    public String[][] getLevelMap() {
+        return levelMap;
     }
 
     public List<Map.Entry<String, String>> getConnections() {
         return connections;
     }
 
-    public void setConnections(final List<Map.Entry<String, String>> connections) {
-        this.connections = connections;
-    }
-
     public Map<String, NetworkDevice> getIdToDeviceObject() {
         return idToDeviceObject;
     }
-
-    public void setIdToDeviceObject(final Map<String, NetworkDevice> idToDeviceObject) {
-        this.idToDeviceObject = idToDeviceObject;
-    }
-
 }

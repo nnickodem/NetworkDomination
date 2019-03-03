@@ -6,14 +6,9 @@ package Objects.Packets;
  */
 public class SYN extends Packet {
 
-    /**
-     * Constructor for SYN packet type.
-     * @param team Team that owns the packet.
-     */
     public SYN(final String team) {
         super(team);
         setCost(1);
         setStealth(1);
     }
-
 }

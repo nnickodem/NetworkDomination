@@ -38,7 +38,7 @@ public class GameHandler extends Thread {
     }
 
     /**
-     * Calls for game updates
+     * Updates packet counters with generated packets and sends a packet when a device has a target
      */
     private void tick() {
         tick++;
@@ -46,7 +46,9 @@ public class GameHandler extends Thread {
             if(!device.getValue().getTeam().equals("White") && device.getValue().getSpeed() != 0 && tick%device.getValue().getSpeed() == 0) {
                 levelGui.updatePacketCounter(device.getKey(), device.getValue().getTeam(),1);
             }
+            if(device.getValue().getTarget() != null) {
+                levelGui.sendPacket("botnet", device.getValue().getId(), device.getValue().getTarget(), device.getValue().getTeam());
+            }
         }
     }
-
 }

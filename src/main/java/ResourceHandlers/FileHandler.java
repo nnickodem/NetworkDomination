@@ -39,7 +39,6 @@ public class FileHandler { //TODO: implement save file handling, any others that
 
     /**
      * Creates and registers the game's custom font
-     * @return font
      */
     public static void loadFont() {
         try {
@@ -105,6 +104,7 @@ public class FileHandler { //TODO: implement save file handling, any others that
         try {
             file = Files.readAllLines(Paths.get(levelFilePath + "level"+ levelName +".txt"));
             String line = file.get(0);
+            //Converts level map from text file to a 2-d array
             while(line != null && !line.contains("*")) {
                 levelMap.add(Arrays.asList(line.split(",")));
                 file.remove(0);
@@ -112,6 +112,7 @@ public class FileHandler { //TODO: implement save file handling, any others that
             }
             file.remove(0);
             line = file.get(0);
+            //Converts text file connections to a map of deviceId -> deviceId
             while(line != null && !line.contains("*")) {
                 mapConnections.add(new AbstractMap.SimpleEntry<>(
                         line.substring(0, line.indexOf(",")).replaceAll(" ", ""),
@@ -120,58 +121,43 @@ public class FileHandler { //TODO: implement save file handling, any others that
                 line = file.get(0);
             }
             file.remove(0);
+            //Converts text file device settings (speed, max_packet, etc.) into a map of deviceId -> settings
             for(String l : file) {
                 deviceToInfo.put(l.substring(0, l.indexOf(",")).replaceAll(" ", ""),
                         new AbstractMap.SimpleEntry<>(
                                 Integer.valueOf(l.substring(l.indexOf(",")+1, l.lastIndexOf(",")).replaceAll(" ", "")),
                                 Integer.valueOf(l.substring(l.lastIndexOf(",")+1).replaceAll(" ", ""))));
             }
-            GameLevel level = new GameLevel();
             String[][] mapArray = new String[levelMap.get(0).size()][levelMap.size()];
-            NetworkDevice device;
             List<String> deviceConnections;
-            Map.Entry<Integer, Integer> deviceInfo;
+            Map.Entry<Integer, Integer> deviceSettings;
+            String deviceId;
+            //Converts gathered information into a map of deviceId -> NetworkDevice object
             for(int y = 0; y < levelMap.size(); y++) {
                 for(int x = 0; x < levelMap.get(0).size(); x++) {
-                    mapArray[x][y] = levelMap.get(y).get(x);
-                    deviceConnections = getDeviceConnections(mapConnections, mapArray[x][y]);
-                    deviceInfo = deviceToInfo.get(mapArray[x][y]);
-                    if(mapArray[x][y] != null && !mapArray[x][y].equals("-")) {
-                        switch(mapArray[x][y].substring(0, mapArray[x][y].indexOf("."))) {
-                            case "Switch":
-                                device = new Switch(deviceInfo.getKey(), deviceConnections, false, deviceInfo.getValue(), mapArray[x][y]);
-                                break;
-                            case "Router":
-                                device = new Router(deviceInfo.getKey(), deviceConnections, false, deviceInfo.getValue(), mapArray[x][y]);
-                                break;
-                            case "Firewall":
-                                device = new Firewall(deviceInfo.getKey(), deviceConnections, false, deviceInfo.getValue(), mapArray[x][y]);
-                                break;
-                            case "Server":
-                                device = new Server(deviceInfo.getKey(), deviceConnections, false, deviceInfo.getValue(), mapArray[x][y]);
-                                break;
-                            case "PC":
-                                device = new PC(deviceInfo.getKey(), deviceConnections, false, deviceInfo.getValue(), mapArray[x][y]);
-                                break;
-                            default:
-                                device = new NetworkDevice(deviceInfo.getKey(), deviceConnections, false, deviceInfo.getValue(), mapArray[x][y]);
-                                break;
-                        }
-                        idToDeviceObject.put(mapArray[x][y], device);
+                    deviceId = levelMap.get(y).get(x);
+                    mapArray[x][y] = deviceId;
+                    deviceConnections = getDeviceConnections(mapConnections, deviceId);
+                    deviceSettings = deviceToInfo.get(deviceId);
+                    if(deviceConnections != null && !deviceId.equals("-")) {
+                        idToDeviceObject.put(deviceId, createDevice(deviceId, deviceSettings, deviceConnections));
                     }
                 }
             }
-            level.setLevelMap(mapArray);
-            level.setConnections(mapConnections);
-            level.setIdToDeviceObject(idToDeviceObject);
 
-            return level;
+            return new GameLevel(mapArray, mapConnections, idToDeviceObject);
         } catch (Exception e) {
             errorLogger.log(Level.SEVERE, "Error reading level file", e);
             return null;
         }
     }
 
+    /**
+     * Finds all connections a given device has
+     * @param mapConnections map of all connections between devices
+     * @param deviceId device ID
+     * @return List of all device IDs the given device is connected to
+     */
     private static List<String> getDeviceConnections(List<Map.Entry<String, String>> mapConnections, String deviceId) {
         List<String> deviceConnections = new ArrayList<>();
         for(Map.Entry<String, String> connection : mapConnections) {
@@ -182,6 +168,39 @@ public class FileHandler { //TODO: implement save file handling, any others that
             }
         }
         return deviceConnections;
+    }
+
+    /**
+     * Creates and returns a new NetworkDevice object using the given parameters
+     * @param deviceId deviceId
+     * @param deviceSettings device settings (speed, max_packet, etc)
+     * @param deviceConnections connections the device has (other device ids)
+     * @return constructed NetworkDevice object
+     */
+    private static NetworkDevice createDevice(final String deviceId, final Map.Entry<Integer, Integer> deviceSettings, final List<String> deviceConnections) {
+        NetworkDevice device;
+        switch(deviceId.substring(0, deviceId.indexOf("."))) {
+            case "Switch":
+                device = new Switch(deviceSettings.getKey(), deviceConnections, false, deviceSettings.getValue(), deviceId);
+                break;
+            case "Router":
+                device = new Router(deviceSettings.getKey(), deviceConnections, false, deviceSettings.getValue(), deviceId);
+                break;
+            case "Firewall":
+                device = new Firewall(deviceSettings.getKey(), deviceConnections, false, deviceSettings.getValue(), deviceId);
+                break;
+            case "Server":
+                device = new Server(deviceSettings.getKey(), deviceConnections, false, deviceSettings.getValue(), deviceId);
+                device.setTarget("Switch.White.1"); //TODO: remove eventually, this is just for testing
+                break;
+            case "PC":
+                device = new PC(deviceSettings.getKey(), deviceConnections, false, deviceSettings.getValue(), deviceId);
+                break;
+            default:
+                device = new NetworkDevice(deviceSettings.getKey(), deviceConnections, false, deviceSettings.getValue(), deviceId);
+                break;
+        }
+        return device;
     }
 
 }

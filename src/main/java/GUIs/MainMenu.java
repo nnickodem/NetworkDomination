@@ -20,7 +20,6 @@ import java.awt.event.KeyListener;
 
 import static java.awt.event.KeyEvent.VK_ESCAPE;
 import static java.lang.System.exit;
-import static java.lang.System.load;
 
 /**
  * Creates the main menu gui
@@ -104,6 +103,7 @@ public class MainMenu extends JFrame {
         playButton.setPreferredSize(buttonSize);
         playButton.setFont(FileHandler.getGameFont().deriveFont(Font.PLAIN, 15));
         //TODO: move this object creation somewhere else?
+
         playButton.addActionListener(e -> {
             GameLevel level = FileHandler.readLevel("1");
             Level levelGUI = new Level(level);
