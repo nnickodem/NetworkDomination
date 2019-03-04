@@ -11,11 +11,11 @@ import java.util.List;
  */
 public class Switch extends NetworkDevice {
 
-    public Switch(final Integer speed,
-              final List<String> connections,
-              final Boolean hidden, final Integer max_packet,
-              final String id) {
-        super(speed, connections, hidden, max_packet, id);
-    }
-    //TODO: Switch specific
+	public Switch(final Integer speed,
+				  final List<String> connections,
+				  final Boolean hidden, final Integer max_packet,
+				  final String id) {
+		super(speed, connections, hidden, max_packet, id);
+	}
+	//TODO: Switch specific
 }

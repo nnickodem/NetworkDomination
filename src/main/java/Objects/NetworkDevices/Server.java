@@ -12,11 +12,11 @@ import java.util.List;
  */
 public class Server extends NetworkDevice {
 
-    public Server(final Integer speed,
-                  final List<String> connections,
-                  final Boolean hidden, final Integer max_packet,
-                  final String id) {
-        super(speed, connections, hidden, max_packet, id);
-        setPackets(Arrays.asList("ICMP"));
-    }
+	public Server(final Integer speed,
+				  final List<String> connections,
+				  final Boolean hidden, final Integer max_packet,
+				  final String id) {
+		super(speed, connections, hidden, max_packet, id);
+		setPackets(Arrays.asList("ICMP"));
+	}
 }

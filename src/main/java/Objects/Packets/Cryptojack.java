@@ -7,9 +7,9 @@ package Objects.Packets;
  */
 public class Cryptojack extends Packet {
 
-    public Cryptojack(final String team) {
-        super(team);
-        setCost(13);
-        setStealth(0);
-    }
+	public Cryptojack(final String team) {
+		super(team);
+		setCost(13);
+		setStealth(0);
+	}
 }

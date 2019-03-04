@@ -7,9 +7,9 @@ package Objects.Packets;
  */
 public class ICMP extends Packet {
 
-    public ICMP(final String team) {
-        super(team);
-        setCost(1);
-        setStealth(1);
-    }
+	public ICMP(final String team) {
+		super(team);
+		setCost(1);
+		setStealth(1);
+	}
 }

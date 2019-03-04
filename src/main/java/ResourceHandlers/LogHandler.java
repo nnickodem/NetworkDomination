@@ -12,20 +12,20 @@ import java.util.logging.SimpleFormatter;
  */
 public class LogHandler {
 
-    private static final Logger errorLogger = Logger.getLogger("errorLogger");
+	private static final Logger errorLogger = Logger.getLogger("errorLogger");
 
-    /**
-     * Sets up custom logger
-     */
-    public static void setup() {
-        Handler fileHandler;
-        try {
-            fileHandler = new FileHandler("errorLog.log", true);
-            errorLogger.addHandler(fileHandler);
-            fileHandler.setLevel(Level.ALL);
-            fileHandler.setFormatter(new SimpleFormatter());
-        } catch (IOException e) {
-            errorLogger.log(Level.SEVERE, "Exception occurred during logging setup!", e);
-        }
-    }
+	/**
+	 * Sets up custom logger
+	 */
+	public static void setup() {
+		Handler fileHandler;
+		try {
+			fileHandler = new FileHandler("errorLog.log", true);
+			errorLogger.addHandler(fileHandler);
+			fileHandler.setLevel(Level.ALL);
+			fileHandler.setFormatter(new SimpleFormatter());
+		} catch (IOException e) {
+			errorLogger.log(Level.SEVERE, "Exception occurred during logging setup!", e);
+		}
+	}
 }

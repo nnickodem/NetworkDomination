@@ -25,14 +25,14 @@ import static java.lang.System.exit;
  * Creates the main menu gui
  */
 public class MainMenu extends JFrame {
-    private JButton playButton = new JButton("New Game");
-    private JButton loadButton = new JButton("Load Game");
-    private JButton optionsButton = new JButton("Settings");
-    private JButton exitButton = new JButton("Exit");
-    private JButton saveButton = new JButton("Save Game");
-    private JButton returnToMainMenu = new JButton("Return to Main Menu");
-    private Dimension buttonSize = new Dimension(150, 40);
-    private Dimension dimMax = Toolkit.getDefaultToolkit().getScreenSize();
+	private JButton playButton = new JButton("New Game");
+	private JButton loadButton = new JButton("Load Game");
+	private JButton optionsButton = new JButton("Settings");
+	private JButton exitButton = new JButton("Exit");
+	private JButton saveButton = new JButton("Save Game");
+	private JButton returnToMainMenu = new JButton("Return to Main Menu");
+	private Dimension buttonSize = new Dimension(150, 40);
+	private Dimension dimMax = Toolkit.getDefaultToolkit().getScreenSize();
     private GameHandler gameHandler;
 
     /**
@@ -86,23 +86,23 @@ public class MainMenu extends JFrame {
             @Override
             public void keyTyped(KeyEvent e) {
 
-            }
-            @Override
-            public void keyReleased(KeyEvent e) {
+			}
+			@Override
+			public void keyReleased(KeyEvent e) {
 
-            }
-        });
-        mainMenu.setBorder(BorderFactory.createEmptyBorder());
-        mainMenu.setBackground(Color.DARK_GRAY);
-        GridBagConstraints constraints = new GridBagConstraints();
+			}
+		});
+		mainMenu.setBorder(BorderFactory.createEmptyBorder());
+		mainMenu.setBackground(Color.DARK_GRAY);
+		GridBagConstraints constraints = new GridBagConstraints();
 
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        constraints.insets = new Insets(3,0,3,0);
-        constraints.fill = GridBagConstraints.CENTER;
-        playButton.setPreferredSize(buttonSize);
-        playButton.setFont(FileHandler.getGameFont().deriveFont(Font.PLAIN, 15));
-        //TODO: move this object creation somewhere else?
+		constraints.gridx = 0;
+		constraints.gridy = 0;
+		constraints.insets = new Insets(3,0,3,0);
+		constraints.fill = GridBagConstraints.CENTER;
+		playButton.setPreferredSize(buttonSize);
+		playButton.setFont(FileHandler.getGameFont().deriveFont(Font.PLAIN, 15));
+		//TODO: move this object creation somewhere else?
 
         playButton.addActionListener(e -> {
             GameLevel level = FileHandler.readLevel("1");
@@ -117,35 +117,35 @@ public class MainMenu extends JFrame {
         });
         mainMenu.add(playButton, constraints);
 
-        constraints.gridx = 0;
-        constraints.gridy = 1;
-        constraints.insets = new Insets(3,0,3,0);
-        loadButton.setPreferredSize(buttonSize);
-        loadButton.setFont(FileHandler.getGameFont().deriveFont(Font.PLAIN, 15));
-        mainMenu.add(loadButton, constraints);
+		constraints.gridx = 0;
+		constraints.gridy = 1;
+		constraints.insets = new Insets(3,0,3,0);
+		loadButton.setPreferredSize(buttonSize);
+		loadButton.setFont(FileHandler.getGameFont().deriveFont(Font.PLAIN, 15));
+		mainMenu.add(loadButton, constraints);
 
-        constraints.gridx = 0;
-        constraints.gridy = 2;
-        constraints.insets = new Insets(3,0,3,0);
-        optionsButton.setPreferredSize(buttonSize);
-        optionsButton.setFont(FileHandler.getGameFont().deriveFont(Font.PLAIN, 15));
-        mainMenu.add(optionsButton, constraints);
+		constraints.gridx = 0;
+		constraints.gridy = 2;
+		constraints.insets = new Insets(3,0,3,0);
+		optionsButton.setPreferredSize(buttonSize);
+		optionsButton.setFont(FileHandler.getGameFont().deriveFont(Font.PLAIN, 15));
+		mainMenu.add(optionsButton, constraints);
 
-        exitButton.addActionListener(e-> exit(0));
-        constraints.gridx = 0;
-        constraints.gridy = 3;
-        constraints.insets = new Insets(3,0,3,0);
-        exitButton.setPreferredSize(buttonSize);
-        exitButton.setFont(FileHandler.getGameFont().deriveFont(Font.PLAIN, 15));
-        mainMenu.add(exitButton, constraints);
+		exitButton.addActionListener(e-> exit(0));
+		constraints.gridx = 0;
+		constraints.gridy = 3;
+		constraints.insets = new Insets(3,0,3,0);
+		exitButton.setPreferredSize(buttonSize);
+		exitButton.setFont(FileHandler.getGameFont().deriveFont(Font.PLAIN, 15));
+		mainMenu.add(exitButton, constraints);
 
-        //Add the mainMenu panel to the frame and set the window size
-        setFocusable(true);
-        getContentPane().add(mainMenu);
-        getContentPane().setBackground(Color.DARK_GRAY);
+		//Add the mainMenu panel to the frame and set the window size
+		setFocusable(true);
+		getContentPane().add(mainMenu);
+		getContentPane().setBackground(Color.DARK_GRAY);
 
-        setMaximumSize(dimMax);
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    }
+		setMaximumSize(dimMax);
+		setExtendedState(JFrame.MAXIMIZED_BOTH);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
 }

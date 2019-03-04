@@ -11,11 +11,11 @@ import java.util.List;
  */
 public class PC extends NetworkDevice {
 
-    public PC(final Integer speed,
-                  final List<String> connections,
-                  final Boolean hidden, final Integer max_packet,
-                  final String id) {
-        super(speed, connections, hidden, max_packet, id);
-        setPackets(Arrays.asList("ICMP", "Botnet", "SYN", "Cryptojack"));
-    }
+	public PC(final Integer speed,
+			  final List<String> connections,
+			  final Boolean hidden, final Integer max_packet,
+			  final String id) {
+		super(speed, connections, hidden, max_packet, id);
+		setPackets(Arrays.asList("ICMP", "Botnet", "SYN", "Cryptojack"));
+	}
 }
