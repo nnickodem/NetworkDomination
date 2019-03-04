@@ -40,7 +40,7 @@ public class LevelGUI extends JPanel {
 
 	private static final Logger logger = Logger.getLogger("errorLogger");
 	private static final int PACKET_TIME = 2000;
-	private final String imagePath = "resources/objects/NetworkDevices/";
+	private final String deviceImagePath = "resources/objects/NetworkDevices/";
 	private final String packetImagePath = "resources/objects/Packets/";
 	private final Dimension buttonSize = new Dimension(100,60);
 	private final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -60,46 +60,16 @@ public class LevelGUI extends JPanel {
 	public LevelGUI(final GameLevel gameLevel) {
 		this.gameLevel = gameLevel;
 
-		this.setLayout(null);
+		setLayout(null);
 		setBackground(Color.DARK_GRAY);
 
 		List<Map.Entry<JButton, JButton>> deviceConnections = new ArrayList<>();
 
 		for(int i = 0; i < gameLevel.getLevelMap().length; i++) {
 			for(int k = 0; k < gameLevel.getLevelMap()[i].length; k++) {
-				final String deviceId = gameLevel.getLevelMap()[i][k];
+				String deviceId = gameLevel.getLevelMap()[i][k];
 				if(deviceId != null && !deviceId.equals("-")) {
-					final NetworkDevice device = gameLevel.getIdToDeviceObject().get(deviceId);
-					final JButton deviceButton = new JButton(scaleImage(imagePath + device.getType() + "/" + device.getType() + device.getTeam() + ".png", 60));
-
-					idToDeviceButton.put(deviceId, deviceButton);
-					deviceButton.addActionListener(e -> {
-						setButtonUsage(deviceId);
-						selectedDevice = deviceButton;
-						transferFocusBackward();
-						updateTargetSelection(idToDeviceButton.get(device.getTarget()));
-					});
-					deviceButton.addMouseListener(new MouseAdapter() {
-						@Override
-						public void mouseClicked(MouseEvent e) {
-							if(e.isMetaDown()) {
-								updateTargetSelection(deviceButton);
-								gameLevel.getIdToDeviceObject().get(idToDeviceButton.inverse().get(selectedDevice)).setTarget(idToDeviceButton.inverse().get(deviceButton));
-							}
-						}
-					});
-					deviceButton.setBounds(i*125, k*125, 60,60);
-					deviceButton.setContentAreaFilled(false);
-					deviceButton.setFocusPainted(false);
-					this.add(deviceButton);
-
-					JLabel packetCounter = new JLabel();
-					idToPacketCounter.put(deviceId, packetCounter);
-					packetCounter.setBounds(i*125 + 70, k*125, 40, 20);
-					packetCounter.setText("10/" + device.getMaxPacket());
-					packetCounter.setFont(packetCounter.getFont().deriveFont(12.0F));
-					packetCounter.setForeground(Color.WHITE);
-					this.add(packetCounter);
+          createDeviceButton(deviceId, new Point(i, k));
 				}
 			}
 		}
@@ -126,6 +96,45 @@ public class LevelGUI extends JPanel {
 	}
 
 	/**
+	 * Creates a device button and accompanying packet counter, adds them to the JPanel
+	 * @param deviceID device ID
+	 * @param coordinate coordinate of device on the original level map
+	 */
+	private void createDeviceButton(final String deviceID, final Point coordinate) {
+		NetworkDevice device = gameLevel.getIdToDeviceObject().get(deviceID);
+		JButton deviceButton = new JButton(scaleImage(deviceImagePath + device.getType() + "/" + device.getType() + device.getTeam() + ".png", 60));
+
+		idToDeviceButton.put(deviceID, deviceButton);
+		deviceButton.addActionListener(e -> {
+			setButtonUsage(deviceID);
+			selectedDevice = deviceButton;
+			transferFocusBackward();
+			updateTargetSelection(idToDeviceButton.get(device.getTarget()));
+		});
+		deviceButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(e.isMetaDown()) {
+					updateTargetSelection(deviceButton);
+					gameLevel.getIdToDeviceObject().get(idToDeviceButton.inverse().get(selectedDevice)).setTarget(idToDeviceButton.inverse().get(deviceButton));
+				}
+			}
+		});
+		deviceButton.setBounds(coordinate.x*125, coordinate.y*125, 60,60);
+		deviceButton.setContentAreaFilled(false);
+		deviceButton.setFocusPainted(false);
+		add(deviceButton);
+
+		JLabel packetCounter = new JLabel();
+		idToPacketCounter.put(deviceID, packetCounter);
+		packetCounter.setBounds(coordinate.x*125 + 70, coordinate.y*125, 40, 20);
+		packetCounter.setText("10/" + device.getMaxPacket());
+		packetCounter.setFont(packetCounter.getFont().deriveFont(12.0F));
+		packetCounter.setForeground(Color.WHITE);
+		add(packetCounter);
+	}
+
+	/**
 	 * Scales the image files that are loaded into the proper game image size wanted
 	 * @param imageFile
 	 * @return imageIcon
@@ -143,12 +152,10 @@ public class LevelGUI extends JPanel {
 	 * @param connections List of connections between buttons
 	 */
 	private void mapConnections(final List<Map.Entry<JButton, JButton>> connections){
-		Point tempA;
-		Point tempB;
 		lineMap = new ArrayList<>();
 		for(Map.Entry<JButton, JButton> connection : connections){
-			tempA = connection.getKey().getLocation();
-			tempB = connection.getValue().getLocation();
+			Point tempA = connection.getKey().getLocation();
+			Point tempB = connection.getValue().getLocation();
 			tempA = new Point((int)tempA.getX() + 30, (int)tempA.getY() + 30);
 			tempB = new Point((int)tempB.getX() + 30, (int)tempB.getY() + 30);
 			lineMap.add(new AbstractMap.SimpleEntry<>(tempA, tempB));
@@ -163,10 +170,9 @@ public class LevelGUI extends JPanel {
 	protected void paintComponent(final Graphics g){
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
-		Line2D line2D;
 		g2d.setStroke(new BasicStroke(4));
 		for(Map.Entry<Point, Point> entry : lineMap){
-			line2D = new Line2D.Double(entry.getKey(), entry.getValue());
+			Line2D line2D = new Line2D.Double(entry.getKey(), entry.getValue());
 			g2d.draw(line2D);
 		}
 	}
@@ -311,7 +317,7 @@ public class LevelGUI extends JPanel {
 		if(current <= device.getMaxPacket() && current >= 0) {
 			idToPacketCounter.get(deviceID).setText(String.valueOf(current) + "/" + device.getMaxPacket());
 		} else if(current < 0 && !device.getTeam().equals(packetTeam)) {
-			idToDeviceButton.get(deviceID).setIcon(scaleImage(imagePath + device.getType() + "/" + device.getType() + packetTeam + ".png", 60));
+			idToDeviceButton.get(deviceID).setIcon(scaleImage(deviceImagePath + device.getType() + "/" + device.getType() + packetTeam + ".png", 60));
 			device.setTeam(packetTeam);
 			device.setTarget(null);
 		}
