@@ -75,7 +75,7 @@ public class Level extends JPanel {
                 final String deviceId = temp;
                 if(temp != null && !temp.equals("-")) {
                     tempDevice = gameLevel.getIdToDeviceObject().get(temp);
-                    deviceType = tempDevice.getClass().toString();
+                    deviceType = tempDevice .getClass().toString();
                     deviceType = tempDevice.getClass().toString().substring(deviceType.lastIndexOf(".")+1).toLowerCase();
                     final String deviceTeams = tempDevice.getTeam();
                     final JButton button = new JButton(scaleImage(imagePath + deviceType + "/" + deviceType + tempDevice.getTeam() + ".png", 60));
@@ -92,7 +92,6 @@ public class Level extends JPanel {
                                 if(targetDevice != null) {
                                     targetDevice.setBorder(BorderFactory.createEmptyBorder());
                                 }
-
                                 //If Button is right clicked, set the target device for sending packets
                                 targetDevice = button;
                                 button.setBorder(BorderFactory.createLineBorder(Color.CYAN,2));
@@ -108,9 +107,21 @@ public class Level extends JPanel {
                     idToPackets.put(temp, packetCounter);
                     this.add(packetCounter);
                     packetCounter.setBounds(i*125 + 70, k*125, 40, 20);
-                    packetCounter.setText("0");
+                    packetCounter.setText("1");
                     packetCounter.setFont(packetCounter.getFont().deriveFont(12.0F));
                     packetCounter.setForeground(Color.WHITE);
+
+                    JLabel levelScore = new JLabel("Level Score: " + 0);
+                    levelScore.setBounds(25,0,200,50);
+                    levelScore.setFont(levelScore.getFont().deriveFont(24.0F));
+                    levelScore.setForeground(Color.WHITE);
+                    this.add(levelScore);
+
+                    JLabel globalScore = new JLabel("Global Score: " + "0");
+                    globalScore.setBounds(25, 25, 200, 50);
+                    globalScore.setFont(globalScore.getFont().deriveFont(24.0F));
+                    globalScore.setForeground(Color.WHITE);
+                    this.add(globalScore);
                 }
             }
         }
@@ -189,7 +200,7 @@ public class Level extends JPanel {
                     sendPacket(button.getText().toLowerCase(), targetDevice, "Blue");
                 transferFocusBackward();
             });
-            button.setEnabled(true);
+            button.setEnabled(false);
         }
 
         JButton upgradeButton1 = new JButton("Upgrade 1");
