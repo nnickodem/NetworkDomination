@@ -5,6 +5,4 @@ package GameHandlers;
  */
 public class DeviceHandler {
 
-
-
 }

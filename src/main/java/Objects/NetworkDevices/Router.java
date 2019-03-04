@@ -12,27 +12,19 @@ import java.util.List;
  */
 public class Router extends NetworkDevice {
 
-    /**
-     * Constructor for a Router
-     * @param speed         Packet generation speed
-     * @param connections   List of connected devices
-     * @param hidden        Whether device is hidden by fog of war
-     * @param max_packet    Max number of packets device can hold
-     * @param id            Unique device ID value
-     */
-    public Router(final Integer speed,
-                    final List<String> connections,
-                    final Boolean hidden, final Integer max_packet,
-                    final String id) {
-        super(speed, connections, hidden, max_packet, id);
-        setPackets(Arrays.asList("ICMP"));
-    }
+	public Router(final Integer speed,
+				  final List<String> connections,
+				  final Boolean hidden, final Integer max_packet,
+				  final String id) {
+		super(speed, connections, hidden, max_packet, id);
+		setPackets(Arrays.asList("ICMP"));
+	}
 
-    public void filterPackets() {
-        //TODO: No idea how to implement this
-    }
+	public void filterPackets() {
+		//TODO: implement
+	}
+
+	//TODO: router specific attributes
+	//route table? interface ips?
 }
-
-    //TODO: router specific attributes
-    //route table? interface ips?
 
