@@ -115,13 +115,13 @@ public class Level extends JPanel {
                     levelScore.setBounds(25,0,200,50);
                     levelScore.setFont(levelScore.getFont().deriveFont(24.0F));
                     levelScore.setForeground(Color.WHITE);
-                    this.add(levelScore);
+                    add(levelScore);
 
                     JLabel globalScore = new JLabel("Global Score: " + "0");
                     globalScore.setBounds(25, 25, 200, 50);
                     globalScore.setFont(globalScore.getFont().deriveFont(24.0F));
                     globalScore.setForeground(Color.WHITE);
-                    this.add(globalScore);
+                    add(globalScore);
                 }
             }
         }

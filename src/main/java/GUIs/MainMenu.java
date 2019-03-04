@@ -106,11 +106,11 @@ public class MainMenu extends JFrame {
         //TODO: move this object creation somewhere else?
         playButton.addActionListener(e -> {
             GameLevel level = FileHandler.readLevel("1");
-            Level levelGui = new Level(level);
-            gameHandler = new GameHandler(level, levelGui);
+            Level levelGUI = new Level(level);
+            gameHandler = new GameHandler(level, levelGUI);
             setTitle("Network Domination - Level 1");
-            add(levelGui);
-            setContentPane(levelGui);
+            add(levelGUI);
+            setContentPane(levelGUI);
             remove(mainMenu);
             mainMenu.setVisible(false);
             gameHandler.run();
