@@ -26,15 +26,17 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  * Loads the level gui dynamically
  */
-public class Level extends JPanel {
+public class LevelGUI extends JPanel {
 
 	private static final Logger logger = Logger.getLogger("errorLogger");
 	private static final int PACKET_TIME = 2000;
@@ -44,7 +46,7 @@ public class Level extends JPanel {
 	private final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	private final double screenWidth = screenSize.getWidth();
 	private final double screenHeight = screenSize.getHeight();
-	private final List<JButton> packetButtons = new ArrayList<JButton>();
+	private final List<JButton> packetButtons = new ArrayList<>(); //TODO: Get rid of?
 	private GameLevel gameLevel;
 	private List<Map.Entry<Point, Point>> lineMap;
 	private BiMap<String, JButton> idToDeviceButton = HashBiMap.create();
@@ -57,26 +59,24 @@ public class Level extends JPanel {
 	 * Constructs the level JPanel
 	 * @param gameLevel game level object
 	 */
-	public Level(final GameLevel gameLevel) {
+	public LevelGUI(final GameLevel gameLevel) {
 		this.gameLevel = gameLevel;
-		List<Map.Entry<JButton, JButton>> deviceConnections = new ArrayList<>();
-		String deviceType;
 
 		this.setLayout(null);
 		setBackground(Color.DARK_GRAY);
+
+		List<Map.Entry<JButton, JButton>> deviceConnections = new ArrayList<>();
 
 		for(int i = 0; i < gameLevel.getLevelMap().length; i++) {
 			for(int k = 0; k < gameLevel.getLevelMap()[i].length; k++) {
 				final String deviceId = gameLevel.getLevelMap()[i][k];
 				if(deviceId != null && !deviceId.equals("-")) {
 					final NetworkDevice device = gameLevel.getIdToDeviceObject().get(deviceId);
-					deviceType = device.getType();
-					final String deviceTeam = device.getTeam();
-					final JButton deviceButton = new JButton(scaleImage(imagePath + deviceType + "/" + deviceType + device.getTeam() + ".png", 60));
+					final JButton deviceButton = new JButton(scaleImage(imagePath + device.getType() + "/" + device.getType() + device.getTeam() + ".png", 60));
 
 					idToDeviceButton.put(deviceId, deviceButton);
-					deviceButton.addActionListener(e-> {
-						setButtonUsage(deviceId, deviceTeam);
+					deviceButton.addActionListener(e -> {
+						setButtonUsage(deviceId);
 						selectedDevice = deviceButton;
 						transferFocusBackward();
 						updateTargetSelection(idToDeviceButton.get(device.getTarget()));
@@ -90,18 +90,21 @@ public class Level extends JPanel {
 							}
 						}
 					});
-					this.add(deviceButton);
 					deviceButton.setBounds(i*125, k*125, 60,60);
 					deviceButton.setContentAreaFilled(false);
 					deviceButton.setFocusPainted(false);
+					this.add(deviceButton);
 
-                    JLabel packetCounter = new JLabel();
-                    idToPacketCounter.put(deviceId, packetCounter);
-                    add(packetCounter);
-                    packetCounter.setBounds(i*125 + 70, k*125, 40, 20);
-                    packetCounter.setText("1");
-                    packetCounter.setFont(packetCounter.getFont().deriveFont(12.0F));
-                    packetCounter.setForeground(Color.WHITE);
+					JLabel packetCounter = new JLabel();
+					idToPacketCounter.put(deviceId, packetCounter);
+					packetCounter.setBounds(i*125 + 70, k*125, 40, 20);
+					packetCounter.setText("10");
+					packetCounter.setFont(packetCounter.getFont().deriveFont(12.0F));
+					packetCounter.setForeground(Color.WHITE);
+					this.add(packetCounter);
+				}
+			}
+		}
 
                     JLabel levelScore = new JLabel("Level Score: " + 0);
                     levelScore.setBounds(25,0,200,50);
@@ -121,12 +124,11 @@ public class Level extends JPanel {
 		for(Map.Entry<String, String> connection : gameLevel.getConnections()) {
 			deviceConnections.add(new AbstractMap.SimpleEntry<>(idToDeviceButton.get(connection.getKey()), idToDeviceButton.get(connection.getValue())));
 		}
-		listCoordinates(deviceConnections);
+		mapConnections(deviceConnections);
 		createSideComponent();
 		packetTimer();
+		logger.log(Level.INFO, "Level GUI created");
 	}
-
-	//Scales the image files that are loaded in to the proper game image size wanted
 
 	/**
 	 * Scales the image files that are loaded into the proper game image size wanted
@@ -145,7 +147,7 @@ public class Level extends JPanel {
 	 * Creates a Map of coordinates of each network device.
 	 * @param connections List of connections between buttons
 	 */
-	private void listCoordinates(final List<Map.Entry<JButton, JButton>> connections){
+	private void mapConnections(final List<Map.Entry<JButton, JButton>> connections){
 		Point tempA;
 		Point tempB;
 		lineMap = new ArrayList<>();
@@ -160,17 +162,17 @@ public class Level extends JPanel {
 
 	/**
 	 * Paints a line between two buttons depending on the entries in the lineMap map.
-	 * @param g
+	 * @param g Graphics object
 	 */
 	@Override
 	protected void paintComponent(final Graphics g){
 		super.paintComponent(g);
-		Graphics g2d = (Graphics2D) g;
+		Graphics2D g2d = (Graphics2D) g;
 		Line2D line2D;
-		((Graphics2D) g2d).setStroke(new BasicStroke(4));
+		g2d.setStroke(new BasicStroke(4));
 		for(Map.Entry<Point, Point> entry : lineMap){
 			line2D = new Line2D.Double(entry.getKey(), entry.getValue());
-			((Graphics2D) g2d).draw(line2D);
+			g2d.draw(line2D);
 		}
 	}
 
@@ -178,69 +180,50 @@ public class Level extends JPanel {
 	 * Creates the side panel on the level which has two panels. One panel with buttons for sending packets and one
 	 * panel for upgrading a network device.
 	 */
-	private void createSideComponent(){
-        /*JButton botNet = new JButton("Botnet");
-        packetButtons.add(botNet);*/
-		JButton ICMP = new JButton("ICMP");
-		packetButtons.add(ICMP);
-		JButton SYN = new JButton("SYN");
-		packetButtons.add(SYN);
-		JButton crypto = new JButton("CryptoJack");
-		packetButtons.add(crypto);
-		for(JButton button : packetButtons){
-			button.addActionListener(e->{
-				sendPacket(button.getText().toLowerCase(), selectedDevice, targetDevice, "Blue");
+	private void createSideComponent() {
+		JPanel containerPanel = new JPanel();
+		containerPanel.setLayout(new BoxLayout(containerPanel, BoxLayout.PAGE_AXIS));
+		JPanel packetPanel = new JPanel();
+		JPanel upgradePanel = new JPanel();
+
+		List<String> packetTypes = Arrays.asList("ICMP", "SYN", "CryptoJack"); //TODO: add toggle button for sending botnets?
+		for(String packetType : packetTypes){
+			JButton packetButton = new JButton(packetType);
+			packetButtons.add(packetButton);
+			packetButton.addActionListener(e -> {
+				sendPacket(packetType.toLowerCase(), selectedDevice, targetDevice, "Blue");
 				transferFocusBackward();
 			});
-			button.setEnabled(false);
+			packetButton.setEnabled(false);
+			packetButton.setPreferredSize(buttonSize);
+			packetPanel.add(packetButton);
 		}
+		packetPanel.setBorder(BorderFactory.createEtchedBorder());
 
-		JButton upgradeButton1 = new JButton("Upgrade 1");
-		JButton upgradeButton2 = new JButton("Upgrade 2");
+		List<String> upgrades = Arrays.asList("Upgrade 1", "Upgrade 2");
+		for(String upgrade : upgrades) {
+			JButton upgradeButton = new JButton(upgrade);
+			upgradeButton.setPreferredSize(buttonSize);
+			upgradePanel.add(upgradeButton);
+		}
+		upgradePanel.setBorder(BorderFactory.createEtchedBorder());
 
-		JPanel panel = new JPanel();
-		panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
-		JPanel packetTypes = new JPanel();
-		JPanel upgradeButtons = new JPanel();
-		this.add(panel);
-		panel.add(packetTypes);
-		panel.add(upgradeButtons);
+		containerPanel.add(packetPanel);
+		containerPanel.add(upgradePanel);
+		containerPanel.setBackground(Color.lightGray);
+		containerPanel.setBounds((int)screenWidth - 130, 0, 130, (int)screenHeight);
+		add(containerPanel);
 
-		//botNet.setPreferredSize(buttonSize);
-		//packetTypes.add(botNet);
-
-		ICMP.setPreferredSize(buttonSize);
-		packetTypes.add(ICMP);
-
-		SYN.setPreferredSize(buttonSize);
-		packetTypes.add(SYN);
-
-		crypto.setPreferredSize(buttonSize);
-		packetTypes.add(crypto);
-
-		packetTypes.setBorder(BorderFactory.createEtchedBorder());
-
-		//Add upgrade buttons to the upgradePanel
-		upgradeButton1.setPreferredSize(buttonSize);
-		upgradeButtons.add(upgradeButton1);
-
-		upgradeButton2.setPreferredSize(buttonSize);
-		upgradeButtons.add(upgradeButton2);
-		upgradeButtons.setBorder(BorderFactory.createEtchedBorder());
-
-		panel.setBackground(Color.lightGray);
 		//reset container to read the new components added
 		revalidate();
-		panel.setBounds((int)screenWidth - 130, 0, 130, (int)screenHeight);
 	}
 
 	/**
 	 * Sets the visibility of buttons depending on which device that you press.
 	 * @param deviceId String variable for the type of device that was clicked
-	 * @param team String variable for the team of the selected device
 	 */
-	private void setButtonUsage(final String deviceId, final String team){
-		for(JButton button : packetButtons) {
+	private void setButtonUsage(final String deviceId){
+		for(JButton button : packetButtons) { //TODO: change Blue to player's team
 			if (gameLevel.getIdToDeviceObject().get(deviceId).getTeam().equals("Blue") && gameLevel.getIdToDeviceObject().get(deviceId).getPackets().contains(button.getText())) {
 				button.setEnabled(true);
 			} else {
@@ -328,10 +311,10 @@ public class Level extends JPanel {
 		}
 		if(current <= device.getMaxPacket() && current >= 0) {
 			idToPacketCounter.get(deviceID).setText(String.valueOf(current));
-		}
-		if(current == 0 && !device.getTeam().equals(packetTeam)) {
+		} else if(current < 0 && !device.getTeam().equals(packetTeam)) {
 			idToDeviceButton.get(deviceID).setIcon(scaleImage(imagePath + device.getType() + "/" + device.getType() + packetTeam + ".png", 60));
 			device.setTeam(packetTeam);
+			device.setTarget(null);
 		}
 	}
 

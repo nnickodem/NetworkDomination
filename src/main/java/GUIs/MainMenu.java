@@ -35,23 +35,22 @@ public class MainMenu extends JFrame {
 	private Dimension dimMax = Toolkit.getDefaultToolkit().getScreenSize();
     private GameHandler gameHandler;
 
-    /**
-     * Constructs the main menu JPanel
-     */
-    public MainMenu(){
-        JPanel mainMenu = new JPanel(new GridBagLayout());
-        setMaximumSize(dimMax);
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setTitle("Network Domination");
-        addKeyListener(new KeyListener() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (!mainMenu.isVisible()) {
-                    if (e.getKeyCode() == VK_ESCAPE) {
-                        //Create JFrame and JPanel instances
-                        JFrame pauseFrame = new JFrame();
-                        JPanel pausePanel = new JPanel();
+	/**
+	 * Constructs the main menu JPanel
+	 */
+	public MainMenu() {
+		JPanel mainMenu = new JPanel(new GridBagLayout());
+		setMaximumSize(dimMax);
+		setExtendedState(JFrame.MAXIMIZED_BOTH);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setTitle("Network Domination");
+		addKeyListener(new KeyListener() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == VK_ESCAPE){
+					//Create JFrame and JPanel instances
+					JFrame pauseFrame = new JFrame();
+					JPanel pausePanel = new JPanel();
 
                         //Add Save button to pause menu
                         saveButton.setPreferredSize(buttonSize);

@@ -33,23 +33,19 @@ import java.util.logging.Logger;
  */
 public class FileHandler { //TODO: implement save file handling, any others that are needed
 
-	private static final Logger errorLogger = Logger.getLogger("errorLogger");
+	private static final Logger logger = Logger.getLogger("errorLogger");
 	private static final String levelFilePath = "resources/levels/";
 	private static Font gameFont;
 
 	/**
 	 * Creates and registers the game's custom font
 	 */
-	public static void loadFont() {
-		try {
-			GraphicsEnvironment ge =
-					GraphicsEnvironment.getLocalGraphicsEnvironment();
-			Font font = Font.createFont(Font.TRUETYPE_FONT, new File("resources/gameFont.ttf"));
-			ge.registerFont(font);
-			gameFont = font;
-		} catch (IOException| FontFormatException e) {
-			//Handle exception
-		}
+	public static void loadFont() throws Exception {
+		GraphicsEnvironment ge =
+				GraphicsEnvironment.getLocalGraphicsEnvironment();
+		Font font = Font.createFont(Font.TRUETYPE_FONT, new File("resources/gameFont.ttf"));
+		ge.registerFont(font);
+		gameFont = font;
 	}
 
 	public static Font getGameFont() {
@@ -83,9 +79,8 @@ public class FileHandler { //TODO: implement save file handling, any others that
 				line = "";
 			}
 		} catch (Exception e) {
-			errorLogger.log(Level.SEVERE,"Error writing level file", e);
+			logger.log(Level.SEVERE,"Error writing level file", e);
 		}
-
 	}
 
 	/**
@@ -147,7 +142,7 @@ public class FileHandler { //TODO: implement save file handling, any others that
 
 			return new GameLevel(mapArray, mapConnections, idToDeviceObject);
 		} catch (Exception e) {
-			errorLogger.log(Level.SEVERE, "Error reading level file", e);
+			logger.log(Level.SEVERE, "Error reading level file", e);
 			return null;
 		}
 	}
@@ -202,5 +197,4 @@ public class FileHandler { //TODO: implement save file handling, any others that
 		}
 		return device;
 	}
-
 }

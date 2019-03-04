@@ -1,6 +1,6 @@
 package GameHandlers;
 
-import GUIs.Level;
+import GUIs.LevelGUI;
 import Objects.GameLevel;
 import Objects.NetworkDevices.NetworkDevice;
 
@@ -15,11 +15,11 @@ public class GameHandler extends Thread {
 
 	private static final Logger logger = Logger.getLogger("errorLogger");
 	private GameLevel level;
-	private Level levelGui;
+	private LevelGUI levelGui;
 	private Integer tick = 0;
     private Timer timer;
 
-	public GameHandler(final GameLevel level, final Level levelGui) {
+	public GameHandler(final GameLevel level, final LevelGUI levelGui) {
 		this.level = level;
 		this.levelGui = levelGui;
 	}

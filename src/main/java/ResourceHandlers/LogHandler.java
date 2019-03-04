@@ -12,7 +12,7 @@ import java.util.logging.SimpleFormatter;
  */
 public class LogHandler {
 
-	private static final Logger errorLogger = Logger.getLogger("errorLogger");
+	private static final Logger logger = Logger.getLogger("errorLogger");
 
 	/**
 	 * Sets up custom logger
@@ -21,11 +21,11 @@ public class LogHandler {
 		Handler fileHandler;
 		try {
 			fileHandler = new FileHandler("errorLog.log", true);
-			errorLogger.addHandler(fileHandler);
+			logger.addHandler(fileHandler);
 			fileHandler.setLevel(Level.ALL);
 			fileHandler.setFormatter(new SimpleFormatter());
 		} catch (IOException e) {
-			errorLogger.log(Level.SEVERE, "Exception occurred during logging setup!", e);
+			logger.log(Level.SEVERE, "Exception occurred during logging setup!", e);
 		}
 	}
 }
