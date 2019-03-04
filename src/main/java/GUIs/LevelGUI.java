@@ -44,8 +44,6 @@ public class LevelGUI extends JPanel {
 	private final String packetImagePath = "resources/objects/Packets/";
 	private final Dimension buttonSize = new Dimension(100,60);
 	private final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-	private final double screenWidth = screenSize.getWidth();
-	private final double screenHeight = screenSize.getHeight();
 	private final List<JButton> packetButtons = new ArrayList<>(); //TODO: Get rid of?
 	private GameLevel gameLevel;
 	private List<Map.Entry<Point, Point>> lineMap;
@@ -98,7 +96,7 @@ public class LevelGUI extends JPanel {
 					JLabel packetCounter = new JLabel();
 					idToPacketCounter.put(deviceId, packetCounter);
 					packetCounter.setBounds(i*125 + 70, k*125, 40, 20);
-					packetCounter.setText("10");
+					packetCounter.setText("10/" + device.getMaxPacket());
 					packetCounter.setFont(packetCounter.getFont().deriveFont(12.0F));
 					packetCounter.setForeground(Color.WHITE);
 					this.add(packetCounter);
@@ -178,6 +176,8 @@ public class LevelGUI extends JPanel {
 	 * panel for upgrading a network device.
 	 */
 	private void createSideComponent() {
+		final double screenWidth = screenSize.getWidth();
+		final double screenHeight = screenSize.getHeight();
 		JPanel containerPanel = new JPanel();
 		containerPanel.setLayout(new BoxLayout(containerPanel, BoxLayout.PAGE_AXIS));
 		JPanel packetPanel = new JPanel();
@@ -237,7 +237,8 @@ public class LevelGUI extends JPanel {
 	 * @param team source device team
 	 */
 	private void sendPacket(final String packetType, final JButton source, final JButton target, final String team) {
-		if(target != null && Integer.valueOf(idToPacketCounter.get(idToDeviceButton.inverse().get(source)).getText()) > 0) {
+		String packetCounter = idToPacketCounter.get(idToDeviceButton.inverse().get(source)).getText();
+		if(target != null && Integer.valueOf(packetCounter.substring(0,packetCounter.indexOf("/"))) > 0) {
 			JLabel packet = new JLabel(scaleImage(packetImagePath + packetType + "/" + packetType + team + ".png", 30));
 			packet.setBounds(source.getLocation().x + 20, source.getLocation().y + 20, 30, 30);
 			add(packet);
@@ -299,7 +300,8 @@ public class LevelGUI extends JPanel {
 	 * @param packetCount number of packets
 	 */
 	public void updatePacketCounter(final String deviceID, final String packetTeam, final Integer packetCount) {
-		Integer current = Integer.valueOf(idToPacketCounter.get(deviceID).getText());
+		String packetCounter = idToPacketCounter.get(deviceID).getText();
+		Integer current = Integer.valueOf(packetCounter.substring(0,packetCounter.indexOf("/")));
 		NetworkDevice device = gameLevel.getIdToDeviceObject().get(deviceID);
 		if(packetTeam.equals(device.getTeam())) {
 			current += packetCount;
@@ -307,7 +309,7 @@ public class LevelGUI extends JPanel {
 			current -= packetCount;
 		}
 		if(current <= device.getMaxPacket() && current >= 0) {
-			idToPacketCounter.get(deviceID).setText(String.valueOf(current));
+			idToPacketCounter.get(deviceID).setText(String.valueOf(current) + "/" + device.getMaxPacket());
 		} else if(current < 0 && !device.getTeam().equals(packetTeam)) {
 			idToDeviceButton.get(deviceID).setIcon(scaleImage(imagePath + device.getType() + "/" + device.getType() + packetTeam + ".png", 60));
 			device.setTeam(packetTeam);
