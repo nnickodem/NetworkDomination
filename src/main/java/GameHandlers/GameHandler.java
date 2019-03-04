@@ -17,6 +17,7 @@ public class GameHandler extends Thread {
     private GameLevel level;
     private Level levelGui;
     private Integer tick = 0;
+    private Timer timer;
 
     public GameHandler(final GameLevel level, final Level levelGui) {
         this.level = level;
@@ -28,8 +29,12 @@ public class GameHandler extends Thread {
      */
     @Override
     public void run() {
-        Timer timer = new Timer(200, e -> tick());
+        timer = new Timer(200, e -> tick());
         timer.start();
+    }
+
+    public void stopTimer(){
+        timer.stop();
     }
 
     /**
