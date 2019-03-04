@@ -17,7 +17,7 @@ public class GameHandler extends Thread {
 	private GameLevel level;
 	private LevelGUI levelGui;
 	private Integer tick = 0;
-    private Timer timer;
+	private Timer timer;
 
 	public GameHandler(final GameLevel level, final LevelGUI levelGui) {
 		this.level = level;
@@ -33,11 +33,9 @@ public class GameHandler extends Thread {
 		timer.start();
 	}
 
-    }
-
-    public void stopTimer(){
-        timer.stop();
-    }
+	public void stopTimer(){
+		timer.stop();
+	}
 
 	/**
 	 * Updates packet counters with generated packets and sends a packet when a device has a target

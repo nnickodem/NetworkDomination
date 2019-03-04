@@ -106,20 +106,17 @@ public class LevelGUI extends JPanel {
 			}
 		}
 
-                    JLabel levelScore = new JLabel("Level Score: " + 0);
-                    levelScore.setBounds(25,0,200,50);
-                    levelScore.setFont(levelScore.getFont().deriveFont(24.0F));
-                    levelScore.setForeground(Color.WHITE);
-                    add(levelScore);
+		JLabel levelScore = new JLabel("Level Score: " + 0);
+		levelScore.setBounds(25,0,200,50);
+		levelScore.setFont(levelScore.getFont().deriveFont(24.0F));
+		levelScore.setForeground(Color.WHITE);
+		add(levelScore);
 
-                    JLabel globalScore = new JLabel("Global Score: " + "0");
-                    globalScore.setBounds(25, 25, 200, 50);
-                    globalScore.setFont(globalScore.getFont().deriveFont(24.0F));
-                    globalScore.setForeground(Color.WHITE);
-                    add(globalScore);
-                }
-            }
-        }
+		JLabel globalScore = new JLabel("Global Score: " + "0");
+		globalScore.setBounds(25, 25, 200, 50);
+		globalScore.setFont(globalScore.getFont().deriveFont(24.0F));
+		globalScore.setForeground(Color.WHITE);
+		add(globalScore);
 
 		for(Map.Entry<String, String> connection : gameLevel.getConnections()) {
 			deviceConnections.add(new AbstractMap.SimpleEntry<>(idToDeviceButton.get(connection.getKey()), idToDeviceButton.get(connection.getValue())));

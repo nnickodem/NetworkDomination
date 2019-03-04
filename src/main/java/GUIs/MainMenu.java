@@ -33,7 +33,7 @@ public class MainMenu extends JFrame {
 	private JButton returnToMainMenu = new JButton("Return to Main Menu");
 	private Dimension buttonSize = new Dimension(150, 40);
 	private Dimension dimMax = Toolkit.getDefaultToolkit().getScreenSize();
-    private GameHandler gameHandler;
+	private GameHandler gameHandler;
 
 	/**
 	 * Constructs the main menu JPanel
@@ -47,43 +47,45 @@ public class MainMenu extends JFrame {
 		addKeyListener(new KeyListener() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				if(e.getKeyCode() == VK_ESCAPE){
-					//Create JFrame and JPanel instances
-					JFrame pauseFrame = new JFrame();
-					JPanel pausePanel = new JPanel();
+				if (!mainMenu.isVisible()) {
+					if (e.getKeyCode() == VK_ESCAPE) {
+						//Create JFrame and JPanel instances
+						JFrame pauseFrame = new JFrame();
+						JPanel pausePanel = new JPanel();
 
-                        //Add Save button to pause menu
-                        saveButton.setPreferredSize(buttonSize);
-                        pausePanel.add(saveButton);
+						//Add Save button to pause menu
+						saveButton.setPreferredSize(buttonSize);
+						pausePanel.add(saveButton);
 
-                        //Add return to main menu button to pause menu
-                        returnToMainMenu.setPreferredSize(buttonSize);
-                        returnToMainMenu.addActionListener(e1 -> {
-                            mainMenu.setVisible(true);
-                            pauseFrame.dispose();
-                            setContentPane(mainMenu);
-                            gameHandler.stopTimer();
-                        });
-                        pausePanel.add(returnToMainMenu);
+						//Add return to main menu button to pause menu
+						returnToMainMenu.setPreferredSize(buttonSize);
+						returnToMainMenu.addActionListener(e1 -> {
+							mainMenu.setVisible(true);
+							pauseFrame.dispose();
+							setContentPane(mainMenu);
+							gameHandler.stopTimer();
+						});
+						pausePanel.add(returnToMainMenu);
 
-                        //Add Exit button to pause menu
-                        JButton pauseExitButton = new JButton("Exit");
-                        pauseExitButton.setPreferredSize(buttonSize);
-                        pauseExitButton.addActionListener(e1->{
-                            exit(0);
-                        });
-                        pausePanel.add(pauseExitButton);
+						//Add Exit button to pause menu
+						JButton pauseExitButton = new JButton("Exit");
+						pauseExitButton.setPreferredSize(buttonSize);
+						pauseExitButton.addActionListener(e1 -> {
+							exit(0);
+						});
+						pausePanel.add(pauseExitButton);
 
-                        //Add the JFrame criteria
-                        pauseFrame.setSize(new Dimension(250, 300));
-                        pauseFrame.add(pausePanel);
-                        pauseFrame.setLocationRelativeTo(null);
-                        pauseFrame.setVisible(true);
-                    }
-                }
-            }
-            @Override
-            public void keyTyped(KeyEvent e) {
+						//Add the JFrame criteria
+						pauseFrame.setSize(new Dimension(250, 300));
+						pauseFrame.add(pausePanel);
+						pauseFrame.setLocationRelativeTo(null);
+						pauseFrame.setVisible(true);
+					}
+				}
+			}
+
+			@Override
+			public void keyTyped(KeyEvent e) {
 
 			}
 			@Override
@@ -103,18 +105,18 @@ public class MainMenu extends JFrame {
 		playButton.setFont(FileHandler.getGameFont().deriveFont(Font.PLAIN, 15));
 		//TODO: move this object creation somewhere else?
 
-        playButton.addActionListener(e -> {
-            GameLevel level = FileHandler.readLevel("1");
-            Level levelGUI = new Level(level);
-            gameHandler = new GameHandler(level, levelGUI);
-            setTitle("Network Domination - Level 1");
-            add(levelGUI);
-            setContentPane(levelGUI);
-            remove(mainMenu);
-            mainMenu.setVisible(false);
-            gameHandler.run();
-        });
-        mainMenu.add(playButton, constraints);
+		playButton.addActionListener(e -> {
+			GameLevel level = FileHandler.readLevel("1");
+			LevelGUI levelGUI = new LevelGUI(level);
+			gameHandler = new GameHandler(level, levelGUI);
+			setTitle("Network Domination - Level 1");
+			add(levelGUI);
+			setContentPane(levelGUI);
+			remove(mainMenu);
+			mainMenu.setVisible(false);
+			gameHandler.run();
+		});
+		mainMenu.add(playButton, constraints);
 
 		constraints.gridx = 0;
 		constraints.gridy = 1;
