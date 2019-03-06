@@ -21,8 +21,8 @@ public class Switch extends NetworkDevice {
     public Switch(final Integer speed,
               final List<String> connections,
               final Boolean hidden, final Integer max_packet,
-              final String id) {
-        super(speed, connections, hidden, max_packet, id);
+              final String id, final Integer index) {
+        super(speed, connections, hidden, max_packet, id, index);
     }
     //TODO: Switch specific
 

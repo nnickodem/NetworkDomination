@@ -36,6 +36,8 @@ public class FileHandler { //TODO: implement save file handling, any others that
     private static final Logger errorLogger = Logger.getLogger("errorLogger");
     private static final String levelFilePath = "resources/levels/";
     private static Font gameFont;
+    private static Integer index = -1;  //Starts at -1, because it iterates before the switch statement.  First index
+                                        //applied will be 0.
 
     /**
      * Creates and registers the game's custom font
@@ -137,24 +139,25 @@ public class FileHandler { //TODO: implement save file handling, any others that
                     deviceConnections = getDeviceConnections(mapConnections, mapArray[x][y]);
                     deviceInfo = deviceToInfo.get(mapArray[x][y]);
                     if(mapArray[x][y] != null && !mapArray[x][y].equals("-")) {
+                        index++;
                         switch(mapArray[x][y].substring(0, mapArray[x][y].indexOf("."))) {
                             case "Switch":
-                                device = new Switch(deviceInfo.getKey(), deviceConnections, false, deviceInfo.getValue(), mapArray[x][y]);
+                                device = new Switch(deviceInfo.getKey(), deviceConnections, false, deviceInfo.getValue(), mapArray[x][y], index);
                                 break;
                             case "Router":
-                                device = new Router(deviceInfo.getKey(), deviceConnections, false, deviceInfo.getValue(), mapArray[x][y]);
+                                device = new Router(deviceInfo.getKey(), deviceConnections, false, deviceInfo.getValue(), mapArray[x][y], index);
                                 break;
                             case "Firewall":
-                                device = new Firewall(deviceInfo.getKey(), deviceConnections, false, deviceInfo.getValue(), mapArray[x][y]);
+                                device = new Firewall(deviceInfo.getKey(), deviceConnections, false, deviceInfo.getValue(), mapArray[x][y], index);
                                 break;
                             case "Server":
-                                device = new Server(deviceInfo.getKey(), deviceConnections, false, deviceInfo.getValue(), mapArray[x][y]);
+                                device = new Server(deviceInfo.getKey(), deviceConnections, false, deviceInfo.getValue(), mapArray[x][y], index);
                                 break;
                             case "PC":
-                                device = new PC(deviceInfo.getKey(), deviceConnections, false, deviceInfo.getValue(), mapArray[x][y]);
+                                device = new PC(deviceInfo.getKey(), deviceConnections, false, deviceInfo.getValue(), mapArray[x][y], index);
                                 break;
                             default:
-                                device = new NetworkDevice(deviceInfo.getKey(), deviceConnections, false, deviceInfo.getValue(), mapArray[x][y]);
+                                device = new NetworkDevice(deviceInfo.getKey(), deviceConnections, false, deviceInfo.getValue(), mapArray[x][y], index);
                                 break;
                         }
                         idToDeviceObject.put(mapArray[x][y], device);
