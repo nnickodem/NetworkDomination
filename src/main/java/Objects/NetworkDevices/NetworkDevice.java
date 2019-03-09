@@ -34,6 +34,14 @@ public class NetworkDevice {
     }
 
     /**
+     * Returns the index of the device
+     * Used for pathing between devices.
+     * @return Device index.
+     */
+    public Integer getIndex() {
+        return this.index;
+    }
+    /**
      * Returns the unique device ID
      * @return Unique device ID
      */
