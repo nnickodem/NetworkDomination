@@ -17,7 +17,7 @@ public class NetworkDevice {
 	private List<String> packets;
 	private String type;
 	private String target;
-  private Integer index;
+	private Integer index;
 
 	public NetworkDevice(final Integer speed,
 						 final List<String> connections,
@@ -31,7 +31,7 @@ public class NetworkDevice {
 		this.id = id;
 		this.packets = new ArrayList<>();
 		this.type = getClass().toString().substring(getClass().toString().lastIndexOf(".") + 1);
-    this.index = index;
+		this.index = index;
 	}
 
 	public String getId() {
@@ -102,8 +102,8 @@ public class NetworkDevice {
 	public void setTarget(final String target) {
 		this.target = target;
 	}
-  
-  public Integer getIndex() {
-    return index;
+
+	public Integer getIndex() {
+	return index;
   }
 }

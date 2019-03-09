@@ -33,11 +33,9 @@ import java.util.logging.Logger;
  */
 public class FileHandler { //TODO: implement save file handling, any others that are needed
 
-    private static final Logger errorLogger = Logger.getLogger("errorLogger");
-    private static final String levelFilePath = "resources/levels/";
-    private static Font gameFont;
-    private static Integer index = -1;  //Starts at -1, because it iterates before the switch statement.  First index
-                                        //applied will be 0.
+	private static final Logger logger = Logger.getLogger("errorLogger");
+	private static final String levelFilePath = "resources/levels/";
+	private static Font gameFont;
 
 	/**
 	 * Creates and registers the game's custom font
@@ -128,16 +126,16 @@ public class FileHandler { //TODO: implement save file handling, any others that
 			String[][] mapArray = new String[levelMap.get(0).size()][levelMap.size()];
 			List<String> deviceConnections;
 			Map.Entry<Integer, Integer> deviceSettings;
-			String deviceId;
+			int index = 0;
 			//Converts gathered information into a map of deviceId -> NetworkDevice object
 			for(int y = 0; y < levelMap.size(); y++) {
 				for(int x = 0; x < levelMap.get(0).size(); x++) {
-					deviceId = levelMap.get(y).get(x);
+					String deviceId = levelMap.get(y).get(x);
 					mapArray[x][y] = deviceId;
 					deviceConnections = getDeviceConnections(mapConnections, deviceId);
 					deviceSettings = deviceToInfo.get(deviceId);
 					if(deviceConnections != null && !deviceId.equals("-")) {
-						idToDeviceObject.put(deviceId, createDevice(deviceId, deviceSettings, deviceConnections));
+						idToDeviceObject.put(deviceId, createDevice(deviceId, deviceSettings, deviceConnections, index++));
 					}
 				}
 			}
@@ -174,9 +172,8 @@ public class FileHandler { //TODO: implement save file handling, any others that
 	 * @param deviceConnections connections the device has (other device ids)
 	 * @return constructed NetworkDevice object
 	 */
-	private static NetworkDevice createDevice(final String deviceId, final Map.Entry<Integer, Integer> deviceSettings, final List<String> deviceConnections) {
+	private static NetworkDevice createDevice(final String deviceId, final Map.Entry<Integer, Integer> deviceSettings, final List<String> deviceConnections, final int index) {
 		NetworkDevice device;
-    index++;
 		switch(deviceId.substring(0, deviceId.indexOf("."))) {
 			case "Switch":
 				device = new Switch(deviceSettings.getKey(), deviceConnections, false, deviceSettings.getValue(), deviceId, index);
