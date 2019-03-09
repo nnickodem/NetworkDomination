@@ -11,7 +11,7 @@ import java.util.List;
  * Only able to send ICMP packets.
  */
 public class Router extends NetworkDevice {
-
+  
     /**
      * Constructor for a Router
      * @param speed         Packet generation speed
@@ -28,11 +28,11 @@ public class Router extends NetworkDevice {
         setPackets(Arrays.asList("ICMP"));
     }
 
-    public void filterPackets() {
-        //TODO: No idea how to implement this
-    }
-}
+	public void filterPackets() {
+		//TODO: implement
+	}
 
-    //TODO: router specific attributes
-    //route table? interface ips?
+	//TODO: router specific attributes
+	//route table? interface ips?
+}
 

@@ -10,7 +10,7 @@ import java.util.List;
  * of packets.
  */
 public class PC extends NetworkDevice {
-
+  
     /**
      * Constructor for a PC
      * @param speed         Packet generation speed

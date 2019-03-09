@@ -10,6 +10,7 @@ import java.util.List;
  * packets.
  */
 public class Switch extends NetworkDevice {
+
     /**
      * Constructor for a Switch.
      * @param speed         Packet generation speed
@@ -25,5 +26,4 @@ public class Switch extends NetworkDevice {
         super(speed, connections, hidden, max_packet, id, index);
     }
     //TODO: Switch specific
-
 }

@@ -6,14 +6,9 @@ package Objects.Packets;
  */
 public class Botnet extends Packet {
 
-    /**
-     * Constructor for the Botnet packet type.
-     * @param team Team that owns the packet.
-     */
-    public Botnet(final String team) {
-        super(team);
-        setCost(1);
-        setStealth(0);
-    }
-
+	public Botnet(final String team) {
+		super(team);
+		setCost(1);
+		setStealth(0);
+	}
 }

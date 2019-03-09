@@ -11,6 +11,7 @@ import java.util.List;
  * packets.
  */
 public class Server extends NetworkDevice {
+  
     /**
      * Constructor for a Server
      * @param speed         Packet generation speed
