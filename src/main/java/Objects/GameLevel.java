@@ -42,14 +42,14 @@ public class GameLevel {
 	}
 
 	public String getDescription() {
-    return description; 
-  }
+    		return description; 
+  	}
 
 	public List<String> getPrimaryObjectives() {
-    return primaryObjectives; 
-  }
+    		return primaryObjectives; 
+  	}
 
 	public List<String> getSecondaryObjectives() {
-    return secondaryObjectives; 
-  }
+    		return secondaryObjectives; 
+  	}
 }
