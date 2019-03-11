@@ -1,5 +1,6 @@
 package GUIs;
 
+import GameHandlers.DeviceHandler;
 import Objects.GameLevel;
 import Objects.NetworkDevices.NetworkDevice;
 import Objects.Packets.PacketInfo;
@@ -55,6 +56,7 @@ public class LevelGUI extends JPanel {
 	private Map<String, JLabel> idToPacketCounter = new HashMap<>();
 	private JButton selectedDevice; //TODO: get rid of somehow?
 	private JButton targetDevice;
+	int upgradeNumber = 1; //demo for upgrade button TODO: remove
 
 	/**
 	 * Constructs the level JPanel
@@ -74,7 +76,7 @@ public class LevelGUI extends JPanel {
 			for(int k = 0; k < gameLevel.getLevelMap()[i].length; k++) {
 				String deviceId = gameLevel.getLevelMap()[i][k];
 				if(deviceId != null && !deviceId.equals("-")) {
-          createDeviceButton(deviceId, new Point(i, k));
+					createDeviceButton(deviceId, new Point(i, k));
 				}
 			}
 		}
@@ -107,7 +109,7 @@ public class LevelGUI extends JPanel {
 	 */
 	private void createDeviceButton(final String deviceID, final Point coordinate) {
 		NetworkDevice device = gameLevel.getIdToDeviceObject().get(deviceID);
-		JButton deviceButton = new JButton(scaleImage(deviceImagePath + device.getType() + "/" + device.getType() + device.getTeam() + ".png", 60));
+		JButton deviceButton = new JButton(scaleImage(deviceImagePath + device.getType() + "/" + device.getType() + device.getTeam() + ".png", 60, 60));
 
 		idToDeviceButton.put(deviceID, deviceButton);
 		deviceButton.addActionListener(e -> {
@@ -144,10 +146,10 @@ public class LevelGUI extends JPanel {
 	 * @param imageFile
 	 * @return imageIcon
 	 */
-	private ImageIcon scaleImage(final String imageFile, final Integer size){
+	private ImageIcon scaleImage(final String imageFile, final Integer width, final Integer height){
 		ImageIcon imageIcon = new ImageIcon(imageFile);
 		Image image = imageIcon.getImage();
-		Image newImage = image.getScaledInstance(size,size, Image.SCALE_SMOOTH);
+		Image newImage = image.getScaledInstance(width, height, Image.SCALE_SMOOTH);
 		imageIcon = new ImageIcon(newImage);
 		return imageIcon;
 	}
@@ -210,16 +212,27 @@ public class LevelGUI extends JPanel {
 
 		List<String> upgrades = Arrays.asList("Upgrade 1", "Upgrade 2");
 		for(String upgrade : upgrades) {
-			JButton upgradeButton = new JButton(upgrade);
-			upgradeButton.setPreferredSize(buttonSize);
+			JButton upgradeButton = new JButton(scaleImage("resources/ui/upgradeButton/upgradeButton1.png", 120, 60));
+			upgradeButton.setPreferredSize(new Dimension(120, 60));
 			upgradePanel.add(upgradeButton);
+			upgradeButton.setContentAreaFilled(false);
+			upgradeButton.setFocusPainted(false);
+			JLabel upgradeLabel = new JLabel(upgrade);
+			upgradeLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+			upgradeLabel.setForeground(Color.WHITE);
+			upgradeLabel.setAlignmentY(.3f);
+			upgradeButton.add(upgradeLabel);
+			upgradeButton.addActionListener(e -> { //TODO: remove, demo for button
+				upgradeNumber = (upgradeNumber + 1) % 4;
+				upgradeButton.setIcon(scaleImage("resources/ui/upgradeButton/upgradeButton" + upgradeNumber + ".png", 120, 60));
+			});
 		}
 		upgradePanel.setBorder(BorderFactory.createEtchedBorder());
 
 		containerPanel.add(packetPanel);
 		containerPanel.add(upgradePanel);
 		containerPanel.setBackground(Color.lightGray);
-		containerPanel.setBounds((int)screenWidth - 130, 0, 130, (int)screenHeight);
+		containerPanel.setBounds((int)screenWidth - 140, 0, 140, (int)screenHeight);
 		add(containerPanel);
 
 		//reset container to read the new components added
@@ -250,10 +263,15 @@ public class LevelGUI extends JPanel {
 	private void sendPacket(final String packetType, final JButton source, final JButton target, final String team) {
 		String packetCounter = idToPacketCounter.get(idToDeviceButton.inverse().get(source)).getText();
 		if(target != null && Integer.valueOf(packetCounter.substring(0,packetCounter.indexOf("/"))) > 0) {
-			JLabel packet = new JLabel(scaleImage(packetImagePath + packetType + "/" + packetType + team + ".png", 30));
+			JLabel packet = new JLabel(scaleImage(packetImagePath + packetType + "/" + packetType + team + ".png", 30, 30));
 			packet.setBounds(source.getLocation().x + 20, source.getLocation().y + 20, 30, 30);
 			add(packet);
-			PacketInfo packetInfo = new PacketInfo(System.currentTimeMillis(), team, packetType, source, target);
+			List<String> path = DeviceHandler.path(idToDeviceButton.inverse().get(source), idToDeviceButton.inverse().get(target), gameLevel);
+			List<JButton> buttonPath = new ArrayList<>();
+			for(String hop : path) {
+				buttonPath.add(idToDeviceButton.get(hop));
+			}
+			PacketInfo packetInfo = new PacketInfo(System.currentTimeMillis(), team, packetType, source, buttonPath);
 			packetToInfo.put(packet, packetInfo);
 			updatePacketCounter(idToDeviceButton.inverse().get(source), team, -1);
 		}
@@ -277,17 +295,24 @@ public class LevelGUI extends JPanel {
 		Timer timer = new Timer(10, e -> {
 			for (Map.Entry<JLabel, PacketInfo> packet : packetToInfo.entrySet()) {
 				JLabel label = packet.getKey();
-				Point start = packet.getValue().getSource().getLocation();
-				Point end = packet.getValue().getTarget().getLocation();
+				PacketInfo packetInfo = packet.getValue();
+				Point start = packetInfo.getSource().getLocation();
+				Point end = packetInfo.getPath().get(0).getLocation();
 				start.x += 15;
 				start.y += 15;
 				end.x += 15;
 				end.y += 15;
 				if(label.getLocation() == end || (Math.abs(label.getLocation().x - end.x) < 10 && Math.abs(label.getLocation().y - end.y) < 10)) {
-					updatePacketCounter(idToDeviceButton.inverse().get(packet.getValue().getTarget()), packet.getValue().getTeam(),1);
-					packetToInfo.remove(packet.getKey());
-					remove(label);
-					break;
+					if(packetInfo.getPath().size() <= 1) {
+						updatePacketCounter(idToDeviceButton.inverse().get(packetInfo.getPath().get(0)), packetInfo.getTeam(), 1);
+						packetToInfo.remove(packet.getKey());
+						remove(label);
+						break;
+					} else {
+						packetInfo.setSource(packetInfo.getPath().get(0));
+						packetInfo.getPath().remove(0);
+						packetInfo.setTime(System.currentTimeMillis());
+					}
 				}
 				long duration = System.currentTimeMillis() - packetToInfo.get(label).getTime();
 				float progress = (float) duration / (float) PACKET_TIME; //TODO: pre-calculate based on distance
@@ -322,7 +347,7 @@ public class LevelGUI extends JPanel {
 		if(current <= device.getMaxPacket() && current >= 0) {
 			idToPacketCounter.get(deviceID).setText(String.valueOf(current) + "/" + device.getMaxPacket());
 		} else if(current < 0 && !device.getTeam().equals(packetTeam)) {
-			idToDeviceButton.get(deviceID).setIcon(scaleImage(deviceImagePath + device.getType() + "/" + device.getType() + packetTeam + ".png", 60));
+			idToDeviceButton.get(deviceID).setIcon(scaleImage(deviceImagePath + device.getType() + "/" + device.getType() + packetTeam + ".png", 60, 60));
 			device.setTeam(packetTeam);
 			device.setTarget(null);
 		}
