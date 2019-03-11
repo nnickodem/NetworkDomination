@@ -17,11 +17,12 @@ public class NetworkDevice {
 	private List<String> packets;
 	private String type;
 	private String target;
+	private Integer index;
 
 	public NetworkDevice(final Integer speed,
 						 final List<String> connections,
 						 final Boolean hidden, final Integer max_packet,
-						 final String id) {
+						 final String id, final Integer index) {
 		this.speed = speed;
 		this.team = id.substring(id.indexOf(".") + 1, id.lastIndexOf("."));
 		this.connections = connections;
@@ -30,6 +31,7 @@ public class NetworkDevice {
 		this.id = id;
 		this.packets = new ArrayList<>();
 		this.type = getClass().toString().substring(getClass().toString().lastIndexOf(".") + 1);
+		this.index = index;
 	}
 
 	public String getId() {
@@ -100,4 +102,8 @@ public class NetworkDevice {
 	public void setTarget(final String target) {
 		this.target = target;
 	}
+
+	public Integer getIndex() {
+	return index;
+  }
 }

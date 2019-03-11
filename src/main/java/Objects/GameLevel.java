@@ -41,9 +41,15 @@ public class GameLevel {
 		return idToDeviceObject;
 	}
 
-	public String getDescription() { return description; }
+	public String getDescription() {
+    return description; 
+  }
 
-	public List<String> getPrimaryObjectives() { return primaryObjectives; }
+	public List<String> getPrimaryObjectives() {
+    return primaryObjectives; 
+  }
 
-	public List<String> getSecondaryObjectives() { return secondaryObjectives; }
+	public List<String> getSecondaryObjectives() {
+    return secondaryObjectives; 
+  }
 }

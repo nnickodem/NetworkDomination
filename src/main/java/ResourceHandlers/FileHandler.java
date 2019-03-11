@@ -157,16 +157,16 @@ public class FileHandler { //TODO: implement save file handling, any others that
 			String[][] mapArray = new String[levelMap.get(0).size()][levelMap.size()];
 			List<String> deviceConnections;
 			Map.Entry<Integer, Integer> deviceSettings;
-			String deviceId;
+			int index = 0;
 			//Converts gathered information into a map of deviceId -> NetworkDevice object
 			for(int y = 0; y < levelMap.size(); y++) {
 				for(int x = 0; x < levelMap.get(0).size(); x++) {
-					deviceId = levelMap.get(y).get(x);
+					String deviceId = levelMap.get(y).get(x);
 					mapArray[x][y] = deviceId;
 					deviceConnections = getDeviceConnections(mapConnections, deviceId);
 					deviceSettings = deviceToInfo.get(deviceId);
 					if(deviceConnections != null && !deviceId.equals("-")) {
-						idToDeviceObject.put(deviceId, createDevice(deviceId, deviceSettings, deviceConnections));
+						idToDeviceObject.put(deviceId, createDevice(deviceId, deviceSettings, deviceConnections, index++));
 					}
 				}
 			}
@@ -203,27 +203,27 @@ public class FileHandler { //TODO: implement save file handling, any others that
 	 * @param deviceConnections connections the device has (other device ids)
 	 * @return constructed NetworkDevice object
 	 */
-	private static NetworkDevice createDevice(final String deviceId, final Map.Entry<Integer, Integer> deviceSettings, final List<String> deviceConnections) {
+	private static NetworkDevice createDevice(final String deviceId, final Map.Entry<Integer, Integer> deviceSettings, final List<String> deviceConnections, final int index) {
 		NetworkDevice device;
 		switch(deviceId.substring(0, deviceId.indexOf("."))) {
 			case "Switch":
-				device = new Switch(deviceSettings.getKey(), deviceConnections, false, deviceSettings.getValue(), deviceId);
+				device = new Switch(deviceSettings.getKey(), deviceConnections, false, deviceSettings.getValue(), deviceId, index);
 				break;
 			case "Router":
-				device = new Router(deviceSettings.getKey(), deviceConnections, false, deviceSettings.getValue(), deviceId);
+				device = new Router(deviceSettings.getKey(), deviceConnections, false, deviceSettings.getValue(), deviceId, index);
 				break;
 			case "Firewall":
-				device = new Firewall(deviceSettings.getKey(), deviceConnections, false, deviceSettings.getValue(), deviceId);
+				device = new Firewall(deviceSettings.getKey(), deviceConnections, false, deviceSettings.getValue(), deviceId, index);
 				break;
 			case "Server":
-				device = new Server(deviceSettings.getKey(), deviceConnections, false, deviceSettings.getValue(), deviceId);
+				device = new Server(deviceSettings.getKey(), deviceConnections, false, deviceSettings.getValue(), deviceId, index);
 				device.setTarget("Switch.White.1"); //TODO: remove eventually, this is just for testing
 				break;
 			case "PC":
-				device = new PC(deviceSettings.getKey(), deviceConnections, false, deviceSettings.getValue(), deviceId);
+				device = new PC(deviceSettings.getKey(), deviceConnections, false, deviceSettings.getValue(), deviceId, index);
 				break;
 			default:
-				device = new NetworkDevice(deviceSettings.getKey(), deviceConnections, false, deviceSettings.getValue(), deviceId);
+				device = new NetworkDevice(deviceSettings.getKey(), deviceConnections, false, deviceSettings.getValue(), deviceId, index);
 				break;
 		}
 		return device;
