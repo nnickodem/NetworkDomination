@@ -1,6 +1,7 @@
 package Objects.Packets;
 
 import javax.swing.JButton;
+import java.util.List;
 
 public class PacketInfo {
 
@@ -8,18 +9,23 @@ public class PacketInfo {
 	private String team;
 	private String type;
 	private JButton source;
-	private JButton target;
+	private List<JButton> path;
 
-	public PacketInfo(final Long time, final String team, final String type, final JButton source, final JButton target) {
+	public PacketInfo(final Long time, final String team, final String type, final JButton source, final List<JButton> path) {
 		this.time = time;
 		this.team = team;
 		this.type = type;
 		this.source = source;
-		this.target = target;
+		this.path = path;
 	}
 
 	public Long getTime() {
 		return time;
+	}
+
+
+	public void setTime(final Long time) {
+		this.time = time;
 	}
 
 	public String getTeam() {
@@ -34,7 +40,15 @@ public class PacketInfo {
 		return source;
 	}
 
-	public JButton getTarget() {
-		return target;
+	public void setSource(final JButton source) {
+		this.source = source;
+	}
+
+	public List<JButton> getPath() {
+		return path;
+	}
+
+	public void setPath(final List<JButton> path) {
+		this.path = path;
 	}
 }

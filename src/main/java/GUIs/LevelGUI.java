@@ -1,5 +1,6 @@
 package GUIs;
 
+import GameHandlers.DeviceHandler;
 import Objects.GameLevel;
 import Objects.NetworkDevices.NetworkDevice;
 import Objects.Packets.PacketInfo;
@@ -22,7 +23,6 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
@@ -219,9 +219,8 @@ public class LevelGUI extends JPanel {
 			upgradeLabel.setAlignmentY(.3f);
 			upgradeButton.add(upgradeLabel);
 			upgradeButton.addActionListener(e -> { //TODO: remove, demo for button
-				JButton button = (JButton) e.getSource();
 				upgradeNumber = (upgradeNumber + 1) % 4;
-				button.setIcon(scaleImage("resources/ui/upgradeButton/upgradeButton" + upgradeNumber + ".png", 120, 60));
+				upgradeButton.setIcon(scaleImage("resources/ui/upgradeButton/upgradeButton" + upgradeNumber + ".png", 120, 60));
 			});
 		}
 		upgradePanel.setBorder(BorderFactory.createEtchedBorder());
@@ -263,7 +262,12 @@ public class LevelGUI extends JPanel {
 			JLabel packet = new JLabel(scaleImage(packetImagePath + packetType + "/" + packetType + team + ".png", 30, 30));
 			packet.setBounds(source.getLocation().x + 20, source.getLocation().y + 20, 30, 30);
 			add(packet);
-			PacketInfo packetInfo = new PacketInfo(System.currentTimeMillis(), team, packetType, source, target);
+			List<String> path = DeviceHandler.path(idToDeviceButton.inverse().get(source), idToDeviceButton.inverse().get(target), gameLevel);
+			List<JButton> buttonPath = new ArrayList<>();
+			for(String hop : path) {
+				buttonPath.add(idToDeviceButton.get(hop));
+			}
+			PacketInfo packetInfo = new PacketInfo(System.currentTimeMillis(), team, packetType, source, buttonPath);
 			packetToInfo.put(packet, packetInfo);
 			updatePacketCounter(idToDeviceButton.inverse().get(source), team, -1);
 		}
@@ -287,17 +291,24 @@ public class LevelGUI extends JPanel {
 		Timer timer = new Timer(10, e -> {
 			for (Map.Entry<JLabel, PacketInfo> packet : packetToInfo.entrySet()) {
 				JLabel label = packet.getKey();
-				Point start = packet.getValue().getSource().getLocation();
-				Point end = packet.getValue().getTarget().getLocation();
+				PacketInfo packetInfo = packet.getValue();
+				Point start = packetInfo.getSource().getLocation();
+				Point end = packetInfo.getPath().get(0).getLocation();
 				start.x += 15;
 				start.y += 15;
 				end.x += 15;
 				end.y += 15;
 				if(label.getLocation() == end || (Math.abs(label.getLocation().x - end.x) < 10 && Math.abs(label.getLocation().y - end.y) < 10)) {
-					updatePacketCounter(idToDeviceButton.inverse().get(packet.getValue().getTarget()), packet.getValue().getTeam(),1);
-					packetToInfo.remove(packet.getKey());
-					remove(label);
-					break;
+					if(packetInfo.getPath().size() <= 1) {
+						updatePacketCounter(idToDeviceButton.inverse().get(packetInfo.getPath().get(0)), packetInfo.getTeam(), 1);
+						packetToInfo.remove(packet.getKey());
+						remove(label);
+						break;
+					} else {
+						packetInfo.setSource(packetInfo.getPath().get(0));
+						packetInfo.getPath().remove(0);
+						packetInfo.setTime(System.currentTimeMillis());
+					}
 				}
 				long duration = System.currentTimeMillis() - packetToInfo.get(label).getTime();
 				float progress = (float) duration / (float) PACKET_TIME; //TODO: pre-calculate based on distance
