@@ -357,13 +357,13 @@ public class LevelGUI extends JPanel {
 		JLabel primaryObjectivesTitle = new JLabel("Primary Objectives");
 		primaryObjectivesTitle.setFont(new Font(Font.DIALOG, Font.BOLD, 24));
 		descriptionPanel.add(primaryObjectivesTitle);
-		JLabel primaryObjectives = new JLabel(gameLevel.getPrimaryObjectives());
+		JLabel primaryObjectives = new JLabel(String.join("",gameLevel.getPrimaryObjectives()));
 		descriptionPanel.add(primaryObjectives);
 
 		JLabel secondaryObjectivesTitle = new JLabel("Secondary Objectives");
 		secondaryObjectivesTitle.setFont(new Font(Font.DIALOG, Font.BOLD, 24));
 		descriptionPanel.add(secondaryObjectivesTitle);
-		JLabel secondaryObjectives = new JLabel(gameLevel.getSecondaryObjectives());
+		JLabel secondaryObjectives = new JLabel(String.join("",gameLevel.getSecondaryObjectives()));
 		descriptionPanel.add(secondaryObjectives);
 
 		JButton close = new JButton("Close");

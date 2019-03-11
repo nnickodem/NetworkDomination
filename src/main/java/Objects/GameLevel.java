@@ -14,13 +14,13 @@ public class GameLevel {
 	private List<Map.Entry<String,String>> connections;
 	private Map<String, NetworkDevice> idToDeviceObject;
 	private String description;
-	private String primaryObjectives;
-	private String secondaryObjectives;
+	private List<String> primaryObjectives;
+	private List<String> secondaryObjectives;
 
 	public GameLevel(final String [][] levelMap,
 					 final List<Map.Entry<String, String>> connections,
 					 final Map<String, NetworkDevice> idToDeviceObject, String description,
-					 String primaryObjectives, String secondaryObjectives) {
+					 List<String> primaryObjectives, List<String> secondaryObjectives) {
 		this.levelMap = levelMap;
 		this.connections = connections;
 		this.idToDeviceObject = idToDeviceObject;
@@ -43,7 +43,7 @@ public class GameLevel {
 
 	public String getDescription() { return description; }
 
-	public String getPrimaryObjectives() { return primaryObjectives; }
+	public List<String> getPrimaryObjectives() { return primaryObjectives; }
 
-	public String getSecondaryObjectives() { return secondaryObjectives; }
+	public List<String> getSecondaryObjectives() { return secondaryObjectives; }
 }

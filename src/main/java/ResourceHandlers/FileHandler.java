@@ -96,8 +96,8 @@ public class FileHandler { //TODO: implement save file handling, any others that
 		Map<String, NetworkDevice> idToDeviceObject = new HashMap<>();
 		Map<String, Map.Entry<Integer, Integer>> deviceToInfo = new HashMap<>();
 		String description = "";
-		String mainObjectives = "";
-		String secondaryObjectives = "";
+		List<String> mainObjectives = new ArrayList<>();
+		List<String> secondaryObjectives = new ArrayList<>();
 
 		try {
 			file = Files.readAllLines(Paths.get(levelFilePath + "level"+ levelName +".txt"));
@@ -133,7 +133,7 @@ public class FileHandler { //TODO: implement save file handling, any others that
 			//Get the Description of the desired level
 			line = file.get(0);
 			while(line != null && !line.contains("*")){
-				description = line;
+				description += line + "<br\\>";
 				file.remove(0);
 				line = file.get(0);
 			}
@@ -141,7 +141,7 @@ public class FileHandler { //TODO: implement save file handling, any others that
 			//Get the Main Objectives of the desired level
 			line = file.get(0);
 			while(line != null && !line.contains("*")){
-				mainObjectives = line;
+				mainObjectives.add(line);
 				file.remove(0);
 				line = file.get(0);
 			}
@@ -149,7 +149,7 @@ public class FileHandler { //TODO: implement save file handling, any others that
 			//Get the Secondary Objectives of the desired level
 			line = file.get(0);
 			while(line != null && !line.contains("*")){
-				secondaryObjectives = line;
+				secondaryObjectives.add(line);
 				file.remove(0);
 				line = file.get(0);
 			}
@@ -171,7 +171,6 @@ public class FileHandler { //TODO: implement save file handling, any others that
 				}
 			}
 
-			System.out.println(description);
 			return new GameLevel(mapArray, mapConnections, idToDeviceObject, description, mainObjectives, secondaryObjectives);
 		} catch (Exception e) {
 			logger.log(Level.SEVERE, "Error reading level file", e);
