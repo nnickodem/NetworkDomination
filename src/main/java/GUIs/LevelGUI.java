@@ -16,8 +16,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.EtchedBorder;
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -373,29 +376,40 @@ public class LevelGUI extends JPanel {
 		descriptionPanel.setLayout(new BoxLayout(descriptionPanel, BoxLayout.PAGE_AXIS));
 		levelDescription.add(descriptionPanel);
 
-		JLabel descriptionTitle = new JLabel("Level Description");
-		descriptionTitle.setFont(new Font(Font.DIALOG, Font.BOLD, 24));
-		descriptionPanel.add(descriptionTitle);
-		JLabel description = new JLabel("<html>" + gameLevel.getDescription() + "</html>");
-		descriptionPanel.add(description);
+		List<String> titles = Arrays.asList("Level Description", "Primary Objectives" ,"Secondary Objectives");
 
-		JLabel primaryObjectivesTitle = new JLabel("Primary Objectives");
-		primaryObjectivesTitle.setFont(new Font(Font.DIALOG, Font.BOLD, 24));
-		descriptionPanel.add(primaryObjectivesTitle);
-		JLabel primaryObjectives = new JLabel(String.join("",gameLevel.getPrimaryObjectives()));
-		descriptionPanel.add(primaryObjectives);
+		for(String title : titles) {
 
-		JLabel secondaryObjectivesTitle = new JLabel("Secondary Objectives");
-		secondaryObjectivesTitle.setFont(new Font(Font.DIALOG, Font.BOLD, 24));
-		descriptionPanel.add(secondaryObjectivesTitle);
-		JLabel secondaryObjectives = new JLabel(String.join("",gameLevel.getSecondaryObjectives()));
-		descriptionPanel.add(secondaryObjectives);
+			JLabel descriptionTitle = new JLabel("<html>" + title + "</html>");
+			descriptionTitle.setBorder(new EmptyBorder(0,70,0,70));
+			descriptionTitle.setFont(new Font(Font.DIALOG, Font.BOLD, 24));
+			descriptionPanel.add(descriptionTitle);
 
+			String text;
+			switch(title){
+				case "Level Description":
+					text = gameLevel.getDescription();
+					break;
+				case "Primary Objectives":
+					text = String.join("",gameLevel.getPrimaryObjectives());
+					break;
+				case "Secondary Objectives":
+					text = String.join("",gameLevel.getSecondaryObjectives());
+					break;
+				default:
+					text = "";
+			}
+			JLabel description = new JLabel("<html><div style='font-size: 12px'>" + text + "</div></html>");
+			description.setBorder(new EmptyBorder(0, 40, 0, 70));
+			descriptionPanel.add(description);
+		}
+
+		JPanel closePanel = new JPanel();
 		JButton close = new JButton("Close");
 		close.setSize(buttonSize);
-		close.setHorizontalAlignment(SwingConstants.CENTER);
 		close.addActionListener(e-> levelDescription.dispose());
-		descriptionPanel.add(close);
+		closePanel.add(close);
+		descriptionPanel.add(closePanel);
 
 		levelDescription.setVisible(true);
 		levelDescription.setSize(500,500);
