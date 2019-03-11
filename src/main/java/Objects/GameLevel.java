@@ -17,13 +17,20 @@ public class GameLevel {
 	private Map<String, NetworkDevice> idToDeviceObject;
 	private Map<Integer, String> indexToId;
 	private int[][] adjacencyMatrix;
+	private String description;
+	private List<String> primaryObjectives;
+	private List<String> secondaryObjectives;
 
 	public GameLevel(final String [][] levelMap,
 					 final List<Map.Entry<String, String>> connections,
-					 final Map<String, NetworkDevice> idToDeviceObject) {
+					 final Map<String, NetworkDevice> idToDeviceObject, String description,
+					 List<String> primaryObjectives, List<String> secondaryObjectives) {
 		this.levelMap = levelMap;
 		this.connections = connections;
 		this.idToDeviceObject = idToDeviceObject;
+    this.description = description;
+		this.primaryObjectives = primaryObjectives;
+		this.secondaryObjectives = secondaryObjectives;
 		generateAdjacencyMatrix();
 	}
 
@@ -63,4 +70,16 @@ public class GameLevel {
 	public int[][] getAdjacencyMatrix() {
 		return adjacencyMatrix;
 	}
+  
+	public String getDescription() {
+    		return description; 
+  	}
+
+	public List<String> getPrimaryObjectives() {
+    		return primaryObjectives; 
+  	}
+
+	public List<String> getSecondaryObjectives() {
+    		return secondaryObjectives; 
+  	}
 }
