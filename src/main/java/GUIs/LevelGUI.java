@@ -10,12 +10,15 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -62,6 +65,8 @@ public class LevelGUI extends JPanel {
 
 		setLayout(null);
 		setBackground(Color.DARK_GRAY);
+
+		preLevelDialog();
 
 		List<Map.Entry<JButton, JButton>> deviceConnections = new ArrayList<>();
 
@@ -335,5 +340,41 @@ public class LevelGUI extends JPanel {
 		if(deviceButton != null) {
 			deviceButton.setBorder(BorderFactory.createLineBorder(Color.CYAN, 2));
 		}
+	}
+
+	private void preLevelDialog(){
+		JFrame levelDescription = new JFrame();
+		JPanel descriptionPanel = new JPanel();
+		descriptionPanel.setLayout(new BoxLayout(descriptionPanel, BoxLayout.PAGE_AXIS));
+		levelDescription.add(descriptionPanel);
+
+		JLabel descriptionTitle = new JLabel("Level Description");
+		descriptionTitle.setFont(new Font(Font.DIALOG, Font.BOLD, 24));
+		descriptionPanel.add(descriptionTitle);
+		JLabel description = new JLabel("<html>" + gameLevel.getDescription() + "</html>");
+		descriptionPanel.add(description);
+
+		JLabel primaryObjectivesTitle = new JLabel("Primary Objectives");
+		primaryObjectivesTitle.setFont(new Font(Font.DIALOG, Font.BOLD, 24));
+		descriptionPanel.add(primaryObjectivesTitle);
+		JLabel primaryObjectives = new JLabel(gameLevel.getPrimaryObjectives());
+		descriptionPanel.add(primaryObjectives);
+
+		JLabel secondaryObjectivesTitle = new JLabel("Secondary Objectives");
+		secondaryObjectivesTitle.setFont(new Font(Font.DIALOG, Font.BOLD, 24));
+		descriptionPanel.add(secondaryObjectivesTitle);
+		JLabel secondaryObjectives = new JLabel(gameLevel.getSecondaryObjectives());
+		descriptionPanel.add(secondaryObjectives);
+
+		JButton close = new JButton("Close");
+		close.setSize(buttonSize);
+		close.setHorizontalAlignment(SwingConstants.CENTER);
+		close.addActionListener(e-> levelDescription.dispose());
+		descriptionPanel.add(close);
+
+		levelDescription.setVisible(true);
+		levelDescription.setSize(500,500);
+		levelDescription.setLocationRelativeTo(null);
+		levelDescription.setResizable(false);
 	}
 }

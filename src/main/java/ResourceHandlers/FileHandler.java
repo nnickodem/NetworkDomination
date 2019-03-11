@@ -95,6 +95,9 @@ public class FileHandler { //TODO: implement save file handling, any others that
 		List<String> file;
 		Map<String, NetworkDevice> idToDeviceObject = new HashMap<>();
 		Map<String, Map.Entry<Integer, Integer>> deviceToInfo = new HashMap<>();
+		String description = "";
+		String mainObjectives = "";
+		String secondaryObjectives = "";
 
 		try {
 			file = Files.readAllLines(Paths.get(levelFilePath + "level"+ levelName +".txt"));
@@ -117,12 +120,40 @@ public class FileHandler { //TODO: implement save file handling, any others that
 			}
 			file.remove(0);
 			//Converts text file device settings (speed, max_packet, etc.) into a map of deviceId -> settings
-			for(String l : file) {
-				deviceToInfo.put(l.substring(0, l.indexOf(",")).replaceAll(" ", ""),
+			line = file.get(0);
+			while(line != null && !line.contains("*")){
+				deviceToInfo.put(line.substring(0, line.indexOf(",")).replaceAll(" ", ""),
 						new AbstractMap.SimpleEntry<>(
-								Integer.valueOf(l.substring(l.indexOf(",")+1, l.lastIndexOf(",")).replaceAll(" ", "")),
-								Integer.valueOf(l.substring(l.lastIndexOf(",")+1).replaceAll(" ", ""))));
+								Integer.valueOf(line.substring(line.indexOf(",")+1, line.lastIndexOf(",")).replaceAll(" ", "")),
+								Integer.valueOf(line.substring(line.lastIndexOf(",")+1).replaceAll(" ", ""))));
+				file.remove(0);
+				line = file.get(0);
 			}
+			file.remove(0);
+			//Get the Description of the desired level
+			line = file.get(0);
+			while(line != null && !line.contains("*")){
+				description = line;
+				file.remove(0);
+				line = file.get(0);
+			}
+			file.remove(0);
+			//Get the Main Objectives of the desired level
+			line = file.get(0);
+			while(line != null && !line.contains("*")){
+				mainObjectives = line;
+				file.remove(0);
+				line = file.get(0);
+			}
+			file.remove(0);
+			//Get the Secondary Objectives of the desired level
+			line = file.get(0);
+			while(line != null && !line.contains("*")){
+				secondaryObjectives = line;
+				file.remove(0);
+				line = file.get(0);
+			}
+
 			String[][] mapArray = new String[levelMap.get(0).size()][levelMap.size()];
 			List<String> deviceConnections;
 			Map.Entry<Integer, Integer> deviceSettings;
@@ -140,7 +171,8 @@ public class FileHandler { //TODO: implement save file handling, any others that
 				}
 			}
 
-			return new GameLevel(mapArray, mapConnections, idToDeviceObject);
+			System.out.println(description);
+			return new GameLevel(mapArray, mapConnections, idToDeviceObject, description, mainObjectives, secondaryObjectives);
 		} catch (Exception e) {
 			logger.log(Level.SEVERE, "Error reading level file", e);
 			return null;
