@@ -59,7 +59,8 @@ public class LevelGUI extends JPanel {
 	private Map<String, JLabel> idToPacketCounter = new HashMap<>();
 	private JButton selectedDevice; //TODO: get rid of somehow?
 	private JButton targetDevice;
-	int upgradeNumber = 1; //demo for upgrade button TODO: remove
+	private int upgradeNumber = 1; //demo for upgrade button TODO: remove
+	private Integer mapVersion = 1;
 
 	/**
 	 * Constructs the level JPanel
@@ -269,7 +270,7 @@ public class LevelGUI extends JPanel {
 			JLabel packet = new JLabel(scaleImage(packetImagePath + packetType + "/" + packetType + team + ".png", 30, 30));
 			packet.setBounds(source.getLocation().x + 20, source.getLocation().y + 20, 30, 30);
 			add(packet);
-			List<String> path = DeviceHandler.path(idToDeviceButton.inverse().get(source), idToDeviceButton.inverse().get(target), gameLevel);
+			List<String> path = DeviceHandler.getPath(idToDeviceButton.inverse().get(source), idToDeviceButton.inverse().get(target), gameLevel, mapVersion);
 			List<JButton> buttonPath = new ArrayList<>();
 			for(String hop : path) {
 				buttonPath.add(idToDeviceButton.get(hop));
@@ -306,7 +307,8 @@ public class LevelGUI extends JPanel {
 				end.x += 15;
 				end.y += 15;
 				if(label.getLocation() == end || (Math.abs(label.getLocation().x - end.x) < 10 && Math.abs(label.getLocation().y - end.y) < 10)) {
-					if(packetInfo.getPath().size() <= 1) {
+					NetworkDevice target = gameLevel.getIdToDeviceObject().get(idToDeviceButton.inverse().get(packetInfo.getPath().get(0)));
+					if(packetInfo.getPath().size() <= 1 || !packetInfo.getTeam().equals(target.getTeam())) {
 						updatePacketCounter(idToDeviceButton.inverse().get(packetInfo.getPath().get(0)), packetInfo.getTeam(), 1);
 						packetToInfo.remove(packet.getKey());
 						remove(label);
@@ -353,6 +355,7 @@ public class LevelGUI extends JPanel {
 			idToDeviceButton.get(deviceID).setIcon(scaleImage(deviceImagePath + device.getType() + "/" + device.getType() + packetTeam + ".png", 60, 60));
 			device.setTeam(packetTeam);
 			device.setTarget(null);
+			mapVersion++;
 		}
 	}
 

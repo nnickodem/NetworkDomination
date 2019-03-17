@@ -1,8 +1,9 @@
 package Objects.NetworkDevices;
 
+import dijkstra.DijkstraAlgorithm;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Parent class for all physical network devices.
@@ -19,7 +20,8 @@ public class NetworkDevice {
 	private String type;
 	private String target;
 	private Integer index;
-	private Map<String, List<String>> paths;
+	private Integer mapVersion = 0;
+	private DijkstraAlgorithm dijkstra;
 
 	public NetworkDevice(final Integer speed,
 						 final List<String> connections,
@@ -109,15 +111,19 @@ public class NetworkDevice {
 		return index;
 	}
 
-	public Map<String, List<String>> getPaths() {
-		return paths;
+	public Integer getMapVersion() {
+		return mapVersion;
 	}
 
-	public void setPaths(final Map<String, List<String>> paths) {
-		this.paths = paths;
+	public void setMapVersion(final Integer pathVersion) {
+		this.mapVersion = pathVersion;
 	}
 
-	public List<String> getPath(final String targetID) {
-		return paths.get(targetID);
+	public DijkstraAlgorithm getDijkstra() {
+		return dijkstra;
+	}
+
+	public void setDijkstra(final DijkstraAlgorithm dijkstra) {
+		this.dijkstra = dijkstra;
 	}
 }

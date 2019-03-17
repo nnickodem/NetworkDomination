@@ -2,10 +2,11 @@ package GameHandlers;
 
 import Objects.GameLevel;
 import Objects.NetworkDevices.NetworkDevice;
+import dijkstra.DijkstraAlgorithm;
+import dijkstra.Edge;
+import dijkstra.Graph;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,149 +14,59 @@ import java.util.Map;
  * Currently holds path creation for packets
  *
  * Algorithm ripped from:
- * https://www.geeksforgeeks.org/printing-paths-dijkstras-shortest-path-algorithm/
+ * https://www.vogella.com/tutorials/JavaAlgorithmsDijkstra/article.html
+ *
+ * Note it has been heavily modified
  */
 public class DeviceHandler {
 
-	private static final int NO_PARENT = -1;
-
 	/**
-	 * Handles the reading/conversion of the Dijkstra algorithm's results
-	 * @param startID starting device ID
-	 * @param endID target device ID
-	 * @param gameLevel game level object
-	 * @return shortest path from startID to endID as List<String>
+	 * Get the shortest path from a source device to a target device
+	 * @param sourceId ID of source device
+	 * @param destinationId ID of target device
+	 * @param gameLevel GameLevel object
+	 * @param mapVersion version of the LevelGUIs map
+	 * @return path in List<String> form
 	 */
-	public static List<String> path(final String startID, final String endID, final GameLevel gameLevel) {
-		Map<String, NetworkDevice> idToDeviceObject = gameLevel.getIdToDeviceObject();
-		Map<Integer, String> indexToID = gameLevel.getIndexToId();
-		if(idToDeviceObject.get(startID).getPaths() == null) {
-			List<List<Integer>> paths = dijkstra(gameLevel.getAdjacencyMatrix(), idToDeviceObject.get(startID).getIndex());
-			Map<String, List<String>> idPaths = new HashMap<>();
-			for(List<Integer> path : paths) {
-				List<String> idPath = new ArrayList<>();
-				for(Integer hop : path) {
-					idPath.add(indexToID.get(hop));
-				}
-				idPaths.put(idPath.get(idPath.size()-1), idPath);
-			}
-			idToDeviceObject.get(startID).setPaths(idPaths);
+	public static List<String> getPath(final String sourceId, final String destinationId, final GameLevel gameLevel, final Integer mapVersion) {
+		NetworkDevice source = gameLevel.getIdToDeviceObject().get(sourceId);
+		DijkstraAlgorithm dijkstraAlgorithm;
+		if(mapVersion > source.getMapVersion()) {
+			dijkstraAlgorithm = createDijkstra(source.getTeam(), gameLevel);
+			dijkstraAlgorithm.execute(source.getId());
+			source.setDijkstra(dijkstraAlgorithm);
+			source.setMapVersion(mapVersion);
+		} else {
+			dijkstraAlgorithm = source.getDijkstra();
 		}
 
-		return idToDeviceObject.get(startID).getPath(endID);
+		return dijkstraAlgorithm.getPath(destinationId);
 	}
 
 	/**
-	 * Dijkstra's shortest path algorithm, determines the shortest path using an adjacency matrix
-	 * @param adjacencyMatrix adjacency matrix as int[][]
-	 * @param startVertex starting device index
-	 * @return All shortest paths from the starting device as a List<List<Integer>>
+	 * creates a new, up-to-date Dijkstra
+	 * @param sourceTeam source device's team
+	 * @param gameLevel GameLevel object
+	 * @return updated Dijkstra object
 	 */
-	private static List<List<Integer>> dijkstra(int[][] adjacencyMatrix, int startVertex) {
-		int nVertices = adjacencyMatrix[0].length;
-
-		// shortestDistances[i] will hold the
-		// shortest distance from src to i
-		int[] shortestDistances = new int[nVertices];
-
-		// added[i] will true if vertex i is
-		// included / in shortest path tree
-		// or shortest distance from src to
-		// i is finalized
-		boolean[] added = new boolean[nVertices];
-
-		// Initialize all distances as
-		// INFINITE and added[] as false
-		for (int vertexIndex = 0; vertexIndex < nVertices; vertexIndex++) {
-			shortestDistances[vertexIndex] = Integer.MAX_VALUE;
-			added[vertexIndex] = false;
-		}
-
-		// Distance of source vertex from
-		// itself is always 0
-		shortestDistances[startVertex] = 0;
-
-		// Parent array to store shortest
-		// path tree
-		int[] parents = new int[nVertices];
-
-		// The starting vertex does not
-		// have a parent
-		parents[startVertex] = NO_PARENT;
-
-		// Find shortest path for all
-		// vertices
-		for (int i = 1; i < nVertices; i++) {
-
-			// Pick the minimum distance vertex
-			// from the set of vertices not yet
-			// processed. nearestVertex is
-			// always equal to startNode in
-			// first iteration.
-			int nearestVertex = -1;
-			int shortestDistance = Integer.MAX_VALUE;
-			for (int vertexIndex = 0; vertexIndex < nVertices; vertexIndex++) {
-				if (!added[vertexIndex] && shortestDistances[vertexIndex] < shortestDistance) {
-					nearestVertex = vertexIndex;
-					shortestDistance = shortestDistances[vertexIndex];
-				}
+	private static DijkstraAlgorithm createDijkstra(final String sourceTeam, final GameLevel gameLevel) {
+		List<Edge> edges = new ArrayList<>();
+		for(Map.Entry<String, String> connection : gameLevel.getConnections()) {
+			NetworkDevice a = gameLevel.getIdToDeviceObject().get(connection.getKey());
+			NetworkDevice b = gameLevel.getIdToDeviceObject().get(connection.getValue());
+			Integer weightA = 1; //TODO: calculate based on distance
+			Integer weightB = 1;
+			if (!a.getTeam().equals(sourceTeam)) {
+				weightA = 999999;
 			}
-
-			// Mark the picked vertex as
-			// processed
-			added[nearestVertex] = true;
-
-			// Update dist value of the
-			// adjacent vertices of the
-			// picked vertex.
-			for (int vertexIndex = 0; vertexIndex < nVertices; vertexIndex++) {
-				int edgeDistance = adjacencyMatrix[nearestVertex][vertexIndex];
-
-				if (edgeDistance > 0 && ((shortestDistance + edgeDistance) < shortestDistances[vertexIndex])) {
-					parents[vertexIndex] = nearestVertex;
-					shortestDistances[vertexIndex] = shortestDistance +
-							edgeDistance;
-				}
+			if (!b.getTeam().equals(sourceTeam)) {
+				weightB = 999999;
 			}
+			Edge edgeA = new Edge(b.getId(), a.getId(), weightA);
+			Edge edgeB = new Edge(a.getId(), b.getId(), weightB);
+			edges.add(edgeA);
+			edges.add(edgeB);
 		}
-
-		return generateSolution(startVertex, shortestDistances, parents);
-	}
-
-	/**
-	 * Creates and returns a list of the shortest paths
-	 * @param startVertex starting device's index
-	 * @param distances distances (number of hops) to destination
-	 * @param parents shortest path tree
-	 * @return List of shortest paths as List<List<Integer>>
-	 */
-	private static List<List<Integer>> generateSolution(int startVertex, int[] distances, int[] parents) {
-		int nVertices = distances.length;
-		List<List<Integer>> paths = new ArrayList<>();
-
-		for (int vertexIndex = 0; vertexIndex < nVertices; vertexIndex++) {
-			if (vertexIndex != startVertex) {
-				List<Integer> path = generatePath(vertexIndex, parents, new ArrayList<>());
-				Collections.reverse(path);
-				path.remove(0);
-				paths.add(path);
-			}
-		}
-		return paths;
-	}
-
-	/**
-	 * Recursively generates and returns one of the shortest paths
-	 * @param currentVertex current vertex
-	 * @param parents shortest path tree
-	 * @param path path so far
-	 * @return path as List<Integer>
-	 */
-	private static List<Integer> generatePath(int currentVertex, int[] parents, List<Integer> path) {
-		if (currentVertex == NO_PARENT) {
-			return path;
-		}
-		path.add(currentVertex);
-		return generatePath(parents[currentVertex], parents, path);
+		return new DijkstraAlgorithm(new Graph(edges));
 	}
 }
