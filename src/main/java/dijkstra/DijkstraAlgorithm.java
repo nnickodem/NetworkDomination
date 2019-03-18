@@ -154,6 +154,7 @@ public class DijkstraAlgorithm {
 		}
 		// Put it into the correct order
 		Collections.reverse(path);
+		path.remove(0);
 		return path;
 	}
 }

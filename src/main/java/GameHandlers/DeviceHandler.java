@@ -51,16 +51,16 @@ public class DeviceHandler {
 	 */
 	private static DijkstraAlgorithm createDijkstra(final String sourceTeam, final GameLevel gameLevel) {
 		List<Edge> edges = new ArrayList<>();
-		for(Map.Entry<String, String> connection : gameLevel.getConnections()) {
-			NetworkDevice a = gameLevel.getIdToDeviceObject().get(connection.getKey());
-			NetworkDevice b = gameLevel.getIdToDeviceObject().get(connection.getValue());
-			Integer weightA = 1; //TODO: calculate based on distance
-			Integer weightB = 1;
+		for(Map.Entry<Map.Entry<String, String>, Integer> connection : gameLevel.getConnections().entrySet()) {
+			NetworkDevice a = gameLevel.getIdToDeviceObject().get(connection.getKey().getKey());
+			NetworkDevice b = gameLevel.getIdToDeviceObject().get(connection.getKey().getValue());
+			Integer weightA = connection.getValue();
+			Integer weightB = connection.getValue();
 			if (!a.getTeam().equals(sourceTeam)) {
-				weightA = 999999;
+				weightA += 999999;
 			}
 			if (!b.getTeam().equals(sourceTeam)) {
-				weightB = 999999;
+				weightB += 999999;
 			}
 			Edge edgeA = new Edge(b.getId(), a.getId(), weightA);
 			Edge edgeB = new Edge(a.getId(), b.getId(), weightB);

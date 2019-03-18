@@ -91,7 +91,7 @@ public class FileHandler { //TODO: implement save file handling, any others that
 	//TODO: throws exception to stop program from attempting to continue?
 	public static GameLevel readLevel(final String levelName) {
 		List<List<String>> levelMap = new ArrayList<>();
-		List<Map.Entry<String, String>> mapConnections = new ArrayList<>();
+		Map<Map.Entry<String, String>, Integer> mapConnections = new HashMap<>();
 		List<String> file;
 		Map<String, NetworkDevice> idToDeviceObject = new HashMap<>();
 		Map<String, Map.Entry<Integer, Integer>> deviceToInfo = new HashMap<>();
@@ -112,9 +112,14 @@ public class FileHandler { //TODO: implement save file handling, any others that
 			line = file.get(0);
 			//Converts text file connections to a map of deviceId -> deviceId
 			while(line != null && !line.contains("*")) {
-				mapConnections.add(new AbstractMap.SimpleEntry<>(
+				mapConnections.put(new AbstractMap.SimpleEntry<>(
 						line.substring(0, line.indexOf(",")).replaceAll(" ", ""),
-						line.substring(line.indexOf(",") + 1).replaceAll(" ", "")));
+						line.substring(line.indexOf(",") + 1, line.lastIndexOf(",")).replaceAll(" ", "")),
+						Integer.valueOf(line.substring(line.lastIndexOf(",") + 1).replaceAll(" ", "")));
+				mapConnections.put(new AbstractMap.SimpleEntry<>(
+						line.substring(line.indexOf(",") + 1, line.lastIndexOf(",")).replaceAll(" ", ""),
+						line.substring(0, line.indexOf(",")).replaceAll(" ", "")),
+						Integer.valueOf(line.substring(line.lastIndexOf(",") + 1).replaceAll(" ", ""))); //TODO: better way to do this?
 				file.remove(0);
 				line = file.get(0);
 			}
@@ -184,13 +189,13 @@ public class FileHandler { //TODO: implement save file handling, any others that
 	 * @param deviceId device ID
 	 * @return List of all device IDs the given device is connected to
 	 */
-	private static List<String> getDeviceConnections(List<Map.Entry<String, String>> mapConnections, String deviceId) {
+	private static List<String> getDeviceConnections(Map<Map.Entry<String, String>, Integer> mapConnections, String deviceId) {
 		List<String> deviceConnections = new ArrayList<>();
-		for(Map.Entry<String, String> connection : mapConnections) {
-			if(connection.getKey().equals(deviceId)) {
-				deviceConnections.add(connection.getValue());
-			} else if(connection.getValue().equals(deviceId)) {
-				deviceConnections.add(connection.getKey());
+		for(Map.Entry<Map.Entry<String, String>, Integer> connection : mapConnections.entrySet()) {
+			if(connection.getKey().getKey().equals(deviceId)) {
+				deviceConnections.add(connection.getKey().getValue());
+			} else if(connection.getKey().getValue().equals(deviceId)) {
+				deviceConnections.add(connection.getKey().getKey());
 			}
 		}
 		return deviceConnections;

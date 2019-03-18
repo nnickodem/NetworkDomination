@@ -42,7 +42,7 @@ import java.util.logging.Logger;
 public class LevelGUI extends JPanel {
 
 	private static final Logger logger = Logger.getLogger("errorLogger");
-	private static final int PACKET_TIME = 2000;
+	private static final int PACKET_TIME = 1300;
 	private final String deviceImagePath = "resources/objects/NetworkDevices/";
 	private final String packetImagePath = "resources/objects/Packets/";
 	private final Dimension buttonSize = new Dimension(120,60);
@@ -94,8 +94,8 @@ public class LevelGUI extends JPanel {
 		globalScore.setForeground(Color.WHITE);
 		add(globalScore);
 
-		for(Map.Entry<String, String> connection : gameLevel.getConnections()) {
-			deviceConnections.add(new AbstractMap.SimpleEntry<>(idToDeviceButton.get(connection.getKey()), idToDeviceButton.get(connection.getValue())));
+		for(Map.Entry<Map.Entry<String, String>, Integer> connection : gameLevel.getConnections().entrySet()) {
+			deviceConnections.add(new AbstractMap.SimpleEntry<>(idToDeviceButton.get(connection.getKey().getKey()), idToDeviceButton.get(connection.getKey().getValue())));
 		}
 		mapConnections(deviceConnections);
 		createSideComponent();
@@ -270,7 +270,10 @@ public class LevelGUI extends JPanel {
 			for(String hop : path) {
 				buttonPath.add(idToDeviceButton.get(hop));
 			}
-			PacketInfo packetInfo = new PacketInfo(System.currentTimeMillis(), team, packetType, source, buttonPath);
+			String sourceId = idToDeviceButton.inverse().get(source);
+			String targetId = idToDeviceButton.inverse().get(buttonPath.get(0));
+			PacketInfo packetInfo = new PacketInfo(System.currentTimeMillis(), team, packetType, source, buttonPath,
+					gameLevel.getConnections().get(new AbstractMap.SimpleEntry<>(sourceId, targetId)));
 			packetToInfo.put(packet, packetInfo);
 			updatePacketCounter(idToDeviceButton.inverse().get(source), team, -1);
 		}
@@ -312,10 +315,13 @@ public class LevelGUI extends JPanel {
 						packetInfo.setSource(packetInfo.getPath().get(0));
 						packetInfo.getPath().remove(0);
 						packetInfo.setTime(System.currentTimeMillis());
+						String sourceId = idToDeviceButton.inverse().get(packetInfo.getSource());
+						String targetId = idToDeviceButton.inverse().get(packetInfo.getPath().get(0));
+						packetInfo.setTimeToTarget(gameLevel.getConnections().get(new AbstractMap.SimpleEntry<>(sourceId, targetId)));
 					}
 				}
 				long duration = System.currentTimeMillis() - packetToInfo.get(label).getTime();
-				float progress = (float) duration / (float) PACKET_TIME; //TODO: pre-calculate based on distance
+				float progress = (float) duration / (float) (PACKET_TIME * packetInfo.getTimeToTarget());
 				if (progress > 1f) {
 					progress = 1f;
 				}
