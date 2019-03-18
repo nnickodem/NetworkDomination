@@ -1,0 +1,25 @@
+-,-,-,-,-,-,-,-,-,-,-,-
+-,-,Server.White.1,-,-,-,-,Server.White.2,-,-,-,-
+-,-,-,-,-,-,-,-,-,-,-,-
+-,-,-,-,-,Switch.White.1,-,-,-,-,-,-
+-,-,-,-,-,-,-,-,-,-,-,-
+-,-,PC.Blue.1,-,-,-,-,PC.Red.1,-,-,-,-
+-,-,-,-,-,-,-,-,-,-,-,-
+* Device 1,Device 2,Weight (Integer) (spaces are ignored, but comma is required)
+Server.White.1,Switch.White.1,2
+Server.White.2,Switch.White.1,2
+Switch.White.1,PC.Blue.1,1
+Switch.White.1,PC.Red.1,2
+* Device, speed, max_packet (spaces are ignored, commas required, speed/max_packet must be integers
+Server.White.1,5,10
+Server.White.2,5,50
+Switch.White.1,0,20
+PC.Blue.1,5,10
+PC.Red.1,4,15
+* description
+- Beat Level
+* mainObjectives
+- Fill Later
+* secondaryObjectives
+- Fill Later
+*
