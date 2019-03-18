@@ -5,13 +5,13 @@
 -,-,-,Switch.White.2,-,-,PC.White.1,-,-,PC.Blue.1,-,-
 -,-,-,-,-,-,-,-,-,-,-,-
 -,-,Server.White.1,-,-,PC.Red.1,-,-,-,-,-,-
-* Device 1,Device 2 (spaces are ignored, but comma is required)
-Router.White.1,Switch.White.1
-Switch.White.1,Switch.White.2
-Switch.White.1,PC.White.1
-Switch.White.1,PC.Blue.1
-Switch.White.2,Server.White.1
-Switch.White.2,PC.Red.1
+* Device 1,Device 2,Weight(Integer) (spaces are ignored, but comma is required)
+Router.White.1,Switch.White.1,1
+Switch.White.1,Switch.White.2,1
+Switch.White.1,PC.White.1,1
+Switch.White.1,PC.Blue.1,3
+Switch.White.2,Server.White.1,2
+Switch.White.2,PC.Red.1,2
 * Device, speed, max_packet (spaces are ignored, commas required, speed/max_packet must be integers
 Router.White.1,3,30
 Switch.White.1,0,20
