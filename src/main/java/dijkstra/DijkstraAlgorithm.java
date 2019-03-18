@@ -58,7 +58,6 @@ public class DijkstraAlgorithm {
 				unSettledNodes.add(target);
 			}
 		}
-
 	}
 
 	/**
