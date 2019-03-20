@@ -57,7 +57,6 @@ public class LevelGUI extends JPanel {
 	private JButton selectedDevice; //TODO: get rid of somehow?
 	private JButton targetDevice;
 	private int upgradeNumber = 1; //demo for upgrade button TODO: remove
-	private Integer mapVersion = 1;
 
 	/**
 	 * Constructs the level JPanel
@@ -265,7 +264,7 @@ public class LevelGUI extends JPanel {
 			JLabel packet = new JLabel(GUIUtils.scaleImage(packetImagePath + packetType + "/" + packetType + team + ".png", 30, 30));
 			packet.setBounds(source.getLocation().x + 20, source.getLocation().y + 20, 30, 30);
 			add(packet);
-			List<String> path = DeviceHandler.getPath(idToDeviceButton.inverse().get(source), idToDeviceButton.inverse().get(target), gameLevel, mapVersion);
+			List<String> path = DeviceHandler.getPath(idToDeviceButton.inverse().get(source), idToDeviceButton.inverse().get(target), gameLevel);
 			List<JButton> buttonPath = new ArrayList<>();
 			for(String hop : path) {
 				buttonPath.add(idToDeviceButton.get(hop));
@@ -356,7 +355,7 @@ public class LevelGUI extends JPanel {
 			idToDeviceButton.get(deviceID).setIcon(GUIUtils.scaleImage(deviceImagePath + device.getType() + "/" + device.getType() + packetTeam + ".png", 60, 60));
 			device.setTeam(packetTeam);
 			device.setTarget(null);
-			mapVersion++;
+			gameLevel.incrementMapVersion();
 		}
 	}
 

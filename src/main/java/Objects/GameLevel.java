@@ -2,8 +2,6 @@ package Objects;
 
 import Objects.NetworkDevices.NetworkDevice;
 
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +16,7 @@ public class GameLevel {
 	private String description;
 	private List<String> primaryObjectives;
 	private List<String> secondaryObjectives;
+	private Integer mapVersion;
 
 	public GameLevel(final String [][] levelMap,
 					 final Map<Map.Entry<String, String>, Integer> connections,
@@ -29,6 +28,7 @@ public class GameLevel {
     	this.description = description;
 		this.primaryObjectives = primaryObjectives;
 		this.secondaryObjectives = secondaryObjectives;
+		mapVersion = 1;
 	}
 
 	public String[][] getLevelMap() {
@@ -54,4 +54,12 @@ public class GameLevel {
 	public List<String> getSecondaryObjectives() {
     		return secondaryObjectives; 
   	}
+
+  	public Integer getMapVersion() {
+		return mapVersion;
+	}
+
+	public void incrementMapVersion() {
+		mapVersion++;
+	}
 }

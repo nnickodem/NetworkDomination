@@ -5,6 +5,8 @@ import Objects.GameLevel;
 import Objects.NetworkDevices.NetworkDevice;
 
 import javax.swing.Timer;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -48,6 +50,27 @@ public class GameHandler extends Thread {
 			}
 			if(device.getValue().getTarget() != null && !device.getValue().getTarget().equals(device.getValue().getId())) {
 				levelGui.sendPacket("botnet", device.getValue().getId(), device.getValue().getTarget(), device.getValue().getTeam());
+			}
+			if(tick%5 == 0) {
+				updateAI();
+			}
+		}
+	}
+
+	/**
+	 * Updates all devices on teams designated AI with nearest enemy target if they aren't already attacking
+	 */
+	private void updateAI() {
+		List<NetworkDevice> devices = new ArrayList<>();
+		for(Map.Entry<String, NetworkDevice> device : level.getIdToDeviceObject().entrySet()) {
+			if(device.getValue().getTeam().equals("Red") || device.getValue().getTeam().equals("Blue")) {
+				devices.add(device.getValue());
+			}
+		}
+
+		for(NetworkDevice device : devices) {
+			if(device.getTarget() == null || level.getIdToDeviceObject().get(device.getTarget()).getTeam().equals(device.getTeam())) {
+				device.setTarget(DeviceHandler.getNearestEnemy(device, level));
 			}
 		}
 	}

@@ -25,20 +25,11 @@ public class DeviceHandler {
 	 * @param sourceId ID of source device
 	 * @param destinationId ID of target device
 	 * @param gameLevel GameLevel object
-	 * @param mapVersion version of the LevelGUIs map
 	 * @return path in List<String> form
 	 */
-	public static List<String> getPath(final String sourceId, final String destinationId, final GameLevel gameLevel, final Integer mapVersion) {
+	public static List<String> getPath(final String sourceId, final String destinationId, final GameLevel gameLevel) {
 		NetworkDevice source = gameLevel.getIdToDeviceObject().get(sourceId);
-		DijkstraAlgorithm dijkstraAlgorithm;
-		if(mapVersion > source.getMapVersion()) {
-			dijkstraAlgorithm = createDijkstra(source.getTeam(), gameLevel);
-			dijkstraAlgorithm.execute(source.getId());
-			source.setDijkstra(dijkstraAlgorithm);
-			source.setMapVersion(mapVersion);
-		} else {
-			dijkstraAlgorithm = source.getDijkstra();
-		}
+		DijkstraAlgorithm dijkstraAlgorithm = checkAlgorithmVersion(source, gameLevel);
 
 		return dijkstraAlgorithm.getPath(destinationId);
 	}
@@ -68,5 +59,52 @@ public class DeviceHandler {
 			edges.add(edgeB);
 		}
 		return new DijkstraAlgorithm(new Graph(edges));
+	}
+
+	/**
+	 * Checks device dijksttra algorithm map version, updates if necessary
+	 * @param source Source device id
+	 * @param gameLevel GameLevel object
+	 * @return Dijkstra Algorithm
+	 */
+	private static DijkstraAlgorithm checkAlgorithmVersion(final NetworkDevice source, final GameLevel gameLevel) {
+		DijkstraAlgorithm dijkstraAlgorithm;
+		if(gameLevel.getMapVersion() > source.getMapVersion()) {
+			dijkstraAlgorithm = createDijkstra(source.getTeam(), gameLevel);
+			dijkstraAlgorithm.execute(source.getId());
+			source.setDijkstra(dijkstraAlgorithm);
+			source.setMapVersion(gameLevel.getMapVersion());
+		} else {
+			dijkstraAlgorithm = source.getDijkstra();
+		}
+		return dijkstraAlgorithm;
+	}
+
+	/**
+	 * Returns the nearest enemy id to the given device
+	 * @param source Source NetworkDevice
+	 * @param gameLevel GameLevel object
+	 * @return String id of nearest enemy
+	 */
+	public static String getNearestEnemy(final NetworkDevice source, final GameLevel gameLevel) {
+		DijkstraAlgorithm dijkstraAlgorithm = checkAlgorithmVersion(source, gameLevel);
+		List<String> enemyDevices = new ArrayList<>();
+		for(Map.Entry<String, NetworkDevice> device : gameLevel.getIdToDeviceObject().entrySet()) {
+			if(!device.getValue().getTeam().equals(source.getTeam())) {
+				enemyDevices.add(device.getKey());
+			}
+		}
+		if(enemyDevices.size() > 0) {
+			List<String> path = dijkstraAlgorithm.getPath(enemyDevices.get(0));
+			for (int i = 1; i < enemyDevices.size(); i++) {
+				List<String> newPath = dijkstraAlgorithm.getPath(enemyDevices.get(i));
+				if (newPath.size() < path.size()) {
+					path = newPath;
+				}
+			}
+			return path.get(path.size()-1);
+		} else {
+			return null;
+		}
 	}
 }
