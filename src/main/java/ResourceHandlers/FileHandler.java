@@ -222,7 +222,6 @@ public class FileHandler { //TODO: implement save file handling, any others that
 				break;
 			case "Server":
 				device = new Server(deviceSettings.getKey(), deviceConnections, false, deviceSettings.getValue(), deviceId, index);
-				device.setTarget("Switch.White.1"); //TODO: remove eventually, this is just for testing
 				break;
 			case "PC":
 				device = new PC(deviceSettings.getKey(), deviceConnections, false, deviceSettings.getValue(), deviceId, index);

@@ -26,6 +26,7 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Area;
 import java.awt.geom.Line2D;
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -183,7 +184,7 @@ public class LevelGUI extends JPanel {
 		JPanel packetPanel = new JPanel();
 		JPanel upgradePanel = new JPanel();
 
-		List<String> packetTypes = Arrays.asList("ICMP", "SYN", "CryptoJack"); //TODO: add toggle button for sending botnets?
+		List<String> packetTypes = Arrays.asList("Botnet", "ICMP", "SYN", "CryptoJack"); //TODO: add toggle button for sending botnets?
 		for(String packetType : packetTypes){
 			JButton packetButton = new JButton(GUIUtils.scaleImage("resources/ui/button/buttonBase.png", 120, 60));
 			packetButton.setPreferredSize(buttonSize);
@@ -196,10 +197,17 @@ public class LevelGUI extends JPanel {
 			packetLabel.setAlignmentY(.3f);
 			packetLabel.setAlignmentX(Label.CENTER_ALIGNMENT);
 			packetButton.add(packetLabel);
-			packetButton.addActionListener(e -> {
-				sendPacket(packetType.toLowerCase(), selectedDevice, targetDevice, "Blue");
-				transferFocusBackward();
-			});
+			if(!packetType.equals("Botnet")) {
+				packetButton.addActionListener(e -> {
+					sendPacket(packetType.toLowerCase(), selectedDevice, targetDevice, "Blue");
+					transferFocusBackward();
+				});
+			} else {
+				packetButton.addActionListener(e -> {
+					NetworkDevice device = gameLevel.getIdToDeviceObject().get(idToDeviceButton.inverse().get(selectedDevice));
+					device.setSending(!device.isSending());
+				});
+			}
 			packetButton.setEnabled(false);
 			packetPanel.add(packetButton);
 			buttonToLabel.put(packetButton, packetLabel);
@@ -307,7 +315,7 @@ public class LevelGUI extends JPanel {
 					NetworkDevice target = gameLevel.getIdToDeviceObject().get(idToDeviceButton.inverse().get(packetInfo.getPath().get(0)));
 					if(packetInfo.getPath().size() <= 1 || !packetInfo.getTeam().equals(target.getTeam())) {
 						updatePacketCounter(idToDeviceButton.inverse().get(packetInfo.getPath().get(0)), packetInfo.getTeam(), 1);
-						packetToInfo.remove(packet.getKey());
+						packetToInfo.remove(label);
 						remove(label);
 						break;
 					} else {
@@ -328,9 +336,35 @@ public class LevelGUI extends JPanel {
 				int y = start.y + Math.round((end.y - start.y) * progress);
 
 				label.setLocation(x, y);
+				JLabel intersect = checkPacketCollision(label, packetInfo.getTeam());
+				if(intersect != null) {
+					packetToInfo.remove(label);
+					remove(label);
+					packetToInfo.remove(intersect);
+					remove(intersect);
+					break;
+				}
 			}
 		});
 		timer.start();
+	}
+
+	/**
+	 * Checks for collision with a non-friendly packet
+	 * @param packetLabel packet JLabel collision is being checked against
+	 * @param team team of packet being checked
+	 * @return JLabel of packet that checked packet is intersecting
+	 */
+	private JLabel checkPacketCollision(final JLabel packetLabel, final String team) {
+		Area labelArea = new Area(packetLabel.getBounds());
+		for(Map.Entry<JLabel, PacketInfo> packet : packetToInfo.entrySet()) {
+			if(!packet.getKey().equals(packetLabel)) {
+				if(labelArea.intersects(packet.getKey().getBounds()) && !team.equals(packet.getValue().getTeam())) {
+					return packet.getKey();
+				}
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -355,6 +389,7 @@ public class LevelGUI extends JPanel {
 			idToDeviceButton.get(deviceID).setIcon(GUIUtils.scaleImage(deviceImagePath + device.getType() + "/" + device.getType() + packetTeam + ".png", 60, 60));
 			device.setTeam(packetTeam);
 			device.setTarget(null);
+			device.setSending(false);
 			gameLevel.incrementMapVersion();
 		}
 	}

@@ -48,7 +48,7 @@ public class GameHandler extends Thread {
 			if(!device.getValue().getTeam().equals("White") && device.getValue().getSpeed() != 0 && tick%device.getValue().getSpeed() == 0) {
 				levelGui.updatePacketCounter(device.getKey(), device.getValue().getTeam(),1);
 			}
-			if(device.getValue().getTarget() != null && !device.getValue().getTarget().equals(device.getValue().getId())) {
+			if(device.getValue().isSending() && device.getValue().getTarget() != null && !device.getValue().getTarget().equals(device.getValue().getId())) {
 				levelGui.sendPacket("botnet", device.getValue().getId(), device.getValue().getTarget(), device.getValue().getTeam());
 			}
 			if(tick%5 == 0) {
@@ -71,6 +71,7 @@ public class GameHandler extends Thread {
 		for(NetworkDevice device : devices) {
 			if(device.getTarget() == null || level.getIdToDeviceObject().get(device.getTarget()).getTeam().equals(device.getTeam())) {
 				device.setTarget(DeviceHandler.getNearestEnemy(device, level));
+				device.setSending(true);
 			}
 		}
 	}
