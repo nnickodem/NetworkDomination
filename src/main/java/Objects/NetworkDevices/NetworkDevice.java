@@ -22,6 +22,7 @@ public class NetworkDevice {
 	private Integer index;
 	private Integer mapVersion = 0;
 	private DijkstraAlgorithm dijkstra;
+	private boolean sending;
 
 	public NetworkDevice(final Integer speed,
 						 final List<String> connections,
@@ -36,6 +37,7 @@ public class NetworkDevice {
 		this.packets = new ArrayList<>();
 		this.type = getClass().toString().substring(getClass().toString().lastIndexOf(".") + 1);
 		this.index = index;
+		sending = false;
 	}
 
 	public String getId() {
@@ -125,5 +127,13 @@ public class NetworkDevice {
 
 	public void setDijkstra(final DijkstraAlgorithm dijkstra) {
 		this.dijkstra = dijkstra;
+	}
+
+	public boolean isSending() {
+		return sending;
+	}
+
+	public void setSending(final boolean sending) {
+		this.sending = sending;
 	}
 }
