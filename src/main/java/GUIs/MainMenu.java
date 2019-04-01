@@ -122,12 +122,12 @@ public class MainMenu extends JFrame {
 		mainMenu.setBackground(Color.DARK_GRAY);
 		GridBagConstraints constraints = new GridBagConstraints();
 
+		JButton playButton = new JButton(GUIUtils.scaleImage("resources/ui/button/buttonBase.png", 120, 60));
 		constraints.gridx = 0;
 		constraints.gridy = 0;
 		constraints.insets = new Insets(3,0,3,0);
 		constraints.fill = GridBagConstraints.CENTER;
 
-		JButton playButton = new JButton(GUIUtils.scaleImage("resources/ui/button/buttonBase.png", 120, 60));
 		playButton.setPreferredSize(buttonSize);
 		playButton.setContentAreaFilled(false);
 		playButton.setFocusPainted(false);
@@ -141,7 +141,7 @@ public class MainMenu extends JFrame {
 		//TODO: move this object creation somewhere else?
 
 		playButton.addActionListener(e -> {
-			GameLevel level = FileHandler.readLevel("1");
+			GameLevel level = FileHandler.readLevel("5");
 			LevelGUI levelGUI = new LevelGUI(level);
 			gameHandler = new GameHandler(level, levelGUI);
 			setTitle("Network Domination - Level 1");
@@ -153,11 +153,11 @@ public class MainMenu extends JFrame {
 		});
 		mainMenu.add(playButton, constraints);
 
+		JButton loadButton = new JButton(GUIUtils.scaleImage("resources/ui/button/buttonBase.png", 120, 60));
 		constraints.gridx = 0;
 		constraints.gridy = 1;
 		constraints.insets = new Insets(3,0,3,0);
 
-		JButton loadButton = new JButton(GUIUtils.scaleImage("resources/ui/button/buttonBase.png", 120, 60));
 		loadButton.setPreferredSize(buttonSize);
 		loadButton.setContentAreaFilled(false);
 		loadButton.setFocusPainted(false);
@@ -169,11 +169,11 @@ public class MainMenu extends JFrame {
 		loadButton.add(loadLabel);
 		mainMenu.add(loadButton, constraints);
 
+		JButton optionsButton = new JButton(GUIUtils.scaleImage("resources/ui/button/buttonBase.png", 120, 60));
 		constraints.gridx = 0;
 		constraints.gridy = 2;
 		constraints.insets = new Insets(3,0,3,0);
 
-		JButton optionsButton = new JButton(GUIUtils.scaleImage("resources/ui/button/buttonBase.png", 120, 60));
 		optionsButton.setPreferredSize(buttonSize);
 		optionsButton.setContentAreaFilled(false);
 		optionsButton.setFocusPainted(false);
@@ -183,6 +183,17 @@ public class MainMenu extends JFrame {
 		optionsLabel.setAlignmentY(.3f);
 		optionsLabel.setAlignmentX(Label.CENTER_ALIGNMENT);
 		optionsButton.add(optionsLabel);
+		optionsButton.addActionListener(e -> {
+			CampaignGUI campaignScreen = new CampaignGUI();
+			setTitle("Campaign Screen");
+			add(campaignScreen);
+			setContentPane(campaignScreen);
+			invalidate();
+			validate();
+			remove(mainMenu);
+			mainMenu.setVisible(false);
+
+		});
 		mainMenu.add(optionsButton, constraints);
 
 		JButton exitButton = new JButton(GUIUtils.scaleImage("resources/ui/button/buttonBase.png", 120, 60));
@@ -200,6 +211,7 @@ public class MainMenu extends JFrame {
 		exitLabel.setAlignmentY(.3f);
 		exitLabel.setAlignmentX(Label.CENTER_ALIGNMENT);
 		exitButton.add(exitLabel);
+		exitButton.addActionListener(e-> exit(0));
 		mainMenu.add(exitButton, constraints);
 
 		//Add the mainMenu panel to the frame and set the window size
