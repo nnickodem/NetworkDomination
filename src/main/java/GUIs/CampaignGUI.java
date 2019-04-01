@@ -71,6 +71,13 @@ public class CampaignGUI extends JPanel{
 		revalidate();
 	}
 
+	/**
+	 * Adds each level button to the campaign screen
+	 * @param name - name of the button
+	 * @param x - x coordinate
+	 * @param y - y coordinate
+	 * @return - level JButton
+	 */
 	private JButton addLevelButton(String name, int x, int y){
 		JButton level = new JButton(name);
 		level.setPreferredSize(buttonSize);
@@ -80,7 +87,7 @@ public class CampaignGUI extends JPanel{
 			GameLevel gameLevel = FileHandler.readLevel(level.getText().substring(6));
 			LevelGUI levelGui = new LevelGUI(gameLevel);
 			gameHandler = new GameHandler(gameLevel, levelGui);
-			invalidate();
+			revalidate();
 			setVisible(false);
 			add(levelGui);
 			JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);

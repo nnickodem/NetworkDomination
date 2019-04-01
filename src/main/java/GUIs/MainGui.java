@@ -7,9 +7,11 @@ import javax.swing.JFrame;
 import java.awt.Color;
 
 public class MainGui extends JFrame {
+
 	private MainMenu mainMenu;
 	private LevelGUI levelGUI;
 	private GameLevel level;
+
 	public MainGui(){
 		setVisible(true);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -18,6 +20,7 @@ public class MainGui extends JFrame {
 		//setBorder(BorderFactory.createEmptyBorder());
 		setBackground(Color.DARK_GRAY);
 	}
+
 	public void createMainMenu(){
 		mainMenu = new MainMenu();
 		add(new MainMenu());
@@ -26,6 +29,7 @@ public class MainGui extends JFrame {
 	public void createLevel(){
 		//add(new LevelGui());
 	}
+
 	public void createCampaignScreen(){
 		add(new CampaignGUI());
 	}
