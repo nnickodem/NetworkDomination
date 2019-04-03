@@ -17,6 +17,6 @@ public class Server extends NetworkDevice {
 				  final Boolean hidden, final Integer max_packet,
 				  final String id, final Integer index) {
         super(speed, connections, hidden, max_packet, id, index);
-        setPackets(Arrays.asList("ICMP"));
+        setPackets(Arrays.asList("ICMP", "Botnet"));
     }
 }
