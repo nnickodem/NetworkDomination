@@ -12,7 +12,7 @@ Switch.White.1,Router.White.1,1
 Router.White.1,Router.White.2,1
 Router.White.1,Router.White.3,1
 Router.White.2,Server.White.1,2
-Router.White.3,Server.White.2,0
+Router.White.3,Server.White.2,1
 Router.White.1,Router.White.4,3
 Router.White.2,Router.White.4,3
 Router.White.3,Router.White.4,3

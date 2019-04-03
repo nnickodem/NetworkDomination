@@ -63,7 +63,7 @@ public class GameHandler extends Thread {
 	private void updateAI() {
 		List<NetworkDevice> devices = new ArrayList<>();
 		for(Map.Entry<String, NetworkDevice> device : level.getIdToDeviceObject().entrySet()) {
-			if(device.getValue().getTeam().equals("Red") || device.getValue().getTeam().equals("Blue")) {
+			if(device.getValue().getTeam().equals("Red") || device.getValue().getTeam().equals("Yellow")) {
 				devices.add(device.getValue());
 			}
 		}

@@ -17,7 +17,7 @@ public class Router extends NetworkDevice {
 				  final Boolean hidden, final Integer max_packet,
 				  final String id, final Integer index) {
 		super(speed, connections, hidden, max_packet, id, index);
-		setPackets(Arrays.asList("ICMP"));
+		setPackets(Arrays.asList("ICMP", "Botnet"));
 	}
 
 	public void filterPackets() {

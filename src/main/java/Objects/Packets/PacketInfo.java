@@ -1,7 +1,6 @@
 package Objects.Packets;
 
 import javax.swing.JButton;
-import java.net.Inet4Address;
 import java.util.List;
 
 public class PacketInfo {

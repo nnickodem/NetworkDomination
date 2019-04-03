@@ -4,8 +4,6 @@ import GameHandlers.GameHandler;
 import Objects.GameLevel;
 import ResourceHandlers.FileHandler;
 
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -14,21 +12,21 @@ import javax.swing.SwingUtilities;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CampaignGUI extends JPanel{
-	private final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+public class CampaignGUI extends JPanel {
 	private final Dimension buttonSize = new Dimension(120,60);
 	private final List<JButton> levelButtons = new ArrayList<>();
 	private GameHandler gameHandler;
 
-	public CampaignGUI(){
+	public CampaignGUI() {
 		setVisible(true);
 		setLayout(null);
 		setBackground(Color.DARK_GRAY);
-		createSideComponent();
+		JPanel upgradePanel = new JPanel();
+		JPanel packetPanel = new JPanel();
+		GUIUtils.organizeSideComponent(this, packetPanel, upgradePanel);
 
 		JLabel globalScore = new JLabel("Global Score: " + "0");
 		globalScore.setBounds(25, 25, 200, 50);
@@ -44,39 +42,13 @@ public class CampaignGUI extends JPanel{
 	}
 
 	/**
-	 * Creates the side panel on the level which has two panels. One panel with buttons for sending packets and one
-	 * panel for upgrading a network device.
-	 */
-	private void createSideComponent() {
-		final double screenWidth = screenSize.getWidth();
-		final double screenHeight = screenSize.getHeight();
-		JPanel containerPanel = new JPanel();
-		containerPanel.setLayout(new BoxLayout(containerPanel, BoxLayout.PAGE_AXIS));
-		JPanel packetPanel = new JPanel();
-		JPanel upgradePanel = new JPanel();
-
-		packetPanel.setBorder(BorderFactory.createEtchedBorder());
-
-		upgradePanel.setBorder(BorderFactory.createEtchedBorder());
-
-		containerPanel.add(packetPanel);
-		containerPanel.add(upgradePanel);
-		containerPanel.setBackground(Color.lightGray);
-		containerPanel.setBounds((int)screenWidth - 140, 0, 140, (int)screenHeight);
-		add(containerPanel);
-
-		//reset container to read the new components added
-		revalidate();
-	}
-
-	/**
 	 * Adds each level button to the campaign screen
 	 * @param name - name of the button
 	 * @param x - x coordinate
 	 * @param y - y coordinate
 	 * @return - level JButton
 	 */
-	private JButton addLevelButton(String name, int x, int y){
+	private JButton addLevelButton(String name, int x, int y) {
 		JButton level = new JButton(name);
 		level.setPreferredSize(buttonSize);
 		level.setBounds(x,y,100, 50);
@@ -95,6 +67,5 @@ public class CampaignGUI extends JPanel{
 		});
 		levelButtons.add(level);
 		return level;
-
 	}
 }
