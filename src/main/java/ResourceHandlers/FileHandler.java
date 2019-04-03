@@ -31,73 +31,22 @@ import java.util.logging.Logger;
 /**
  * Handles reading/writing of various external resources including save files, level files, and fonts
  */
-public class FileHandler { //TODO: implement save file handling, any others that are needed
+public class FileHandler {
 
 	private static final Logger logger = Logger.getLogger("errorLogger");
 	private static final String levelFilePath = "resources/levels/";
-	private static Font gameFont;
-
-	/**
-	 * Creates and registers the game's custom font
-	 */
-	public static void loadFont() throws Exception {
-		GraphicsEnvironment ge =
-				GraphicsEnvironment.getLocalGraphicsEnvironment();
-		Font font = Font.createFont(Font.TRUETYPE_FONT, new File("resources/gameFont.ttf"));
-		ge.registerFont(font);
-		gameFont = font;
-	}
-
-	public static Font getGameFont() {
-		return gameFont;
-	}
-
-	/**
-	 * Writes level file
-	 */
-	//TODO: Temporary, make generic for level creator and perhaps save file
-	public static void writeLevel() {
-		String[][] level = new String[10][10];
-		for(String[] row : level) {
-			Arrays.fill(row, "-");
-		}
-		level[5][5] = "R1";
-		level[5][4] = "E0";
-		level[5][3] = "PC0";
-		level[5][6] = "E0";
-		level[5][7] = "S1";
-
-		try(Writer writer = new BufferedWriter(new OutputStreamWriter(
-				new FileOutputStream("level1.txt"), "utf-8"))) {
-			String line = "";
-			for(String[] row : level) {
-				for(String entry : row) {
-					line += entry + " ";
-				}
-				writer.write(line);
-				((BufferedWriter) writer).newLine();
-				line = "";
-			}
-		} catch (Exception e) {
-			logger.log(Level.SEVERE,"Error writing level file", e);
-		}
-	}
 
 	/**
 	 * Reads a given level file and converts the information to a GameLevel object
 	 * @param levelName level name
 	 * @return GameLevel object
 	 */
-	//TODO: throws exception to stop program from attempting to continue?
 	public static GameLevel readLevel(final String levelName) {
 		List<List<String>> levelMap = new ArrayList<>();
 		Map<Map.Entry<String, String>, Integer> mapConnections = new HashMap<>();
 		List<String> file;
 		Map<String, NetworkDevice> idToDeviceObject = new HashMap<>();
 		Map<String, Map.Entry<Integer, Integer>> deviceToInfo = new HashMap<>();
-		String description = "";
-		List<String> mainObjectives = new ArrayList<>();
-		List<String> secondaryObjectives = new ArrayList<>();
 
 		try {
 			file = Files.readAllLines(Paths.get(levelFilePath + "level"+ levelName +".txt"));
@@ -119,7 +68,7 @@ public class FileHandler { //TODO: implement save file handling, any others that
 				mapConnections.put(new AbstractMap.SimpleEntry<>(
 						line.substring(line.indexOf(",") + 1, line.lastIndexOf(",")).replaceAll(" ", ""),
 						line.substring(0, line.indexOf(",")).replaceAll(" ", "")),
-						Integer.valueOf(line.substring(line.lastIndexOf(",") + 1).replaceAll(" ", ""))); //TODO: better way to do this?
+						Integer.valueOf(line.substring(line.lastIndexOf(",") + 1).replaceAll(" ", "")));
 				file.remove(0);
 				line = file.get(0);
 			}
@@ -136,28 +85,11 @@ public class FileHandler { //TODO: implement save file handling, any others that
 			}
 			file.remove(0);
 			//Get the Description of the desired level
-			line = file.get(0);
-			while(line != null && !line.contains("*")){
-				description += line + "<br\\>";
-				file.remove(0);
-				line = file.get(0);
-			}
-			file.remove(0);
+			List<String> description = handleLevelInfo(file);
 			//Get the Main Objectives of the desired level
-			line = file.get(0);
-			while(line != null && !line.contains("*")){
-				mainObjectives.add(line);
-				file.remove(0);
-				line = file.get(0);
-			}
-			file.remove(0);
+			List<String> mainObjectives = handleLevelInfo(file);
 			//Get the Secondary Objectives of the desired level
-			line = file.get(0);
-			while(line != null && !line.contains("*")){
-				secondaryObjectives.add(line);
-				file.remove(0);
-				line = file.get(0);
-			}
+			List<String> secondaryObjectives = handleLevelInfo(file);
 
 			String[][] mapArray = new String[levelMap.get(0).size()][levelMap.size()];
 			List<String> deviceConnections;
@@ -181,6 +113,18 @@ public class FileHandler { //TODO: implement save file handling, any others that
 			logger.log(Level.SEVERE, "Error reading level file", e);
 			return null;
 		}
+	}
+
+	private static List<String> handleLevelInfo(List<String> file) {
+		List<String> infoType = new ArrayList<>();
+		String line = file.get(0);
+		while(line != null && !line.contains("*")){
+			infoType.add(line);
+			file.remove(0);
+			line = file.get(0);
+		}
+		file.remove(0);
+		return infoType;
 	}
 
 	/**
@@ -208,7 +152,8 @@ public class FileHandler { //TODO: implement save file handling, any others that
 	 * @param deviceConnections connections the device has (other device ids)
 	 * @return constructed NetworkDevice object
 	 */
-	private static NetworkDevice createDevice(final String deviceId, final Map.Entry<Integer, Integer> deviceSettings, final List<String> deviceConnections, final int index) {
+	private static NetworkDevice createDevice(final String deviceId, final Map.Entry<Integer, Integer> deviceSettings,
+											  final List<String> deviceConnections, final int index) {
 		NetworkDevice device;
 		switch(deviceId.substring(0, deviceId.indexOf("."))) {
 			case "Switch":

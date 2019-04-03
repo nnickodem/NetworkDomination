@@ -86,7 +86,6 @@ public class NetworkDevice {
 
 	public void setSpeed(final Integer speed) {
 		this.speed = speed;
-		//TODO: Check that speed value is valid.
 	}
 
 	public List<String> getConnections() {
@@ -135,5 +134,13 @@ public class NetworkDevice {
 
 	public void setSending(final boolean sending) {
 		this.sending = sending;
+	}
+
+	@Override
+	public String toString() {
+		return "NetworkDevice{" +
+				"id='" + id + '\'' +
+				", team='" + team + '\'' +
+				'}';
 	}
 }

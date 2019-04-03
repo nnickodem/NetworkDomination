@@ -56,4 +56,5 @@ public class DijkstraAlgorithmTest {
 		Edge lane = new Edge(nodes.get(sourceLocNo), nodes.get(destLocNo), duration );
 		edges.add(lane);
 	}
+
 }

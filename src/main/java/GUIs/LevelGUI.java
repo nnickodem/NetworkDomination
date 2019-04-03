@@ -47,15 +47,14 @@ public class LevelGUI extends JPanel {
 	private final String deviceImagePath = "resources/objects/NetworkDevices/";
 	private final String packetImagePath = "resources/objects/Packets/";
 	private final Dimension buttonSize = new Dimension(120,60);
-	private final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-	private final List<JButton> packetButtons = new ArrayList<>(); //TODO: Get rid of?
+	private final List<JButton> packetButtons = new ArrayList<>();
 	private GameLevel gameLevel;
 	private List<Map.Entry<Point, Point>> lineMap;
 	private BiMap<String, JButton> idToDeviceButton = HashBiMap.create();
 	private Map<JLabel, PacketInfo> packetToInfo = new HashMap<>();
 	private Map<String, JLabel> idToPacketCounter = new HashMap<>();
 	private Map<JButton, JLabel> buttonToLabel = new HashMap<>();
-	private JButton selectedDevice; //TODO: get rid of somehow?
+	private JButton selectedDevice;
 	private JButton targetDevice;
 	private int upgradeNumber = 1; //demo for upgrade button TODO: remove
 
@@ -177,14 +176,10 @@ public class LevelGUI extends JPanel {
 	 * panel for upgrading a network device.
 	 */
 	private void createSideComponent() {
-		final double screenWidth = screenSize.getWidth();
-		final double screenHeight = screenSize.getHeight();
-		JPanel containerPanel = new JPanel();
-		containerPanel.setLayout(new BoxLayout(containerPanel, BoxLayout.PAGE_AXIS));
 		JPanel packetPanel = new JPanel();
 		JPanel upgradePanel = new JPanel();
 
-		List<String> packetTypes = Arrays.asList("Botnet", "ICMP", "SYN", "CryptoJack"); //TODO: add toggle button for sending botnets?
+		List<String> packetTypes = Arrays.asList("Botnet", "ICMP", "SYN", "CryptoJack");
 		for(String packetType : packetTypes){
 			JButton packetButton = new JButton(GUIUtils.scaleImage("resources/ui/button/buttonBase.png", 120, 60));
 			packetButton.setPreferredSize(buttonSize);
@@ -222,26 +217,14 @@ public class LevelGUI extends JPanel {
 			upgradeButton.setContentAreaFilled(false);
 			upgradeButton.setFocusPainted(false);
 			JLabel upgradeLabel = new JLabel(upgrade);
-			upgradeLabel.setFont(new Font("Arial", Font.PLAIN, 18));
-			upgradeLabel.setForeground(Color.WHITE);
-			upgradeLabel.setAlignmentY(.3f);
-			upgradeLabel.setAlignmentX(Label.CENTER_ALIGNMENT);
-			upgradeButton.add(upgradeLabel);
+			GUIUtils.createButtonLabel(upgradeButton, upgradeLabel);
 			upgradeButton.addActionListener(e -> { //TODO: remove, demo for button
 				upgradeNumber = (upgradeNumber + 1) % 4;
 				upgradeButton.setIcon(GUIUtils.scaleImage("resources/ui/upgradeButton/upgradeButton" + upgradeNumber + ".png", 120, 60));
 			});
 		}
-		upgradePanel.setBorder(BorderFactory.createEtchedBorder());
 
-		containerPanel.add(packetPanel);
-		containerPanel.add(upgradePanel);
-		containerPanel.setBackground(Color.lightGray);
-		containerPanel.setBounds((int)screenWidth - 140, 0, 140, (int)screenHeight);
-		add(containerPanel);
-
-		//reset container to read the new components added
-		revalidate();
+		GUIUtils.organizeSideComponent(this, packetPanel, upgradePanel);
 	}
 
 	/**
@@ -249,7 +232,7 @@ public class LevelGUI extends JPanel {
 	 * @param deviceId String variable for the type of device that was clicked
 	 */
 	private void setButtonUsage(final String deviceId){
-		for(JButton button : packetButtons) { //TODO: change Blue to player's team
+		for(JButton button : packetButtons) {
 			if (gameLevel.getIdToDeviceObject().get(deviceId).getTeam().equals("Blue") &&
 					gameLevel.getIdToDeviceObject().get(deviceId).getPackets().contains(buttonToLabel.get(button).getText())) {
 				button.setEnabled(true);
@@ -398,7 +381,7 @@ public class LevelGUI extends JPanel {
 	 * Updated the border visual for the selected device's target
 	 * @param deviceButton target device JButton
 	 */
-	public void updateTargetSelection(final JButton deviceButton) {
+	private void updateTargetSelection(final JButton deviceButton) {
 		if(targetDevice != null) {
 			targetDevice.setBorder(BorderFactory.createEmptyBorder());
 		}
@@ -426,7 +409,7 @@ public class LevelGUI extends JPanel {
 			String text;
 			switch(title){
 				case "Level Description":
-					text = gameLevel.getDescription();
+					text = String.join("<br/>", gameLevel.getDescription());
 					break;
 				case "Primary Objectives":
 					text = String.join("",gameLevel.getPrimaryObjectives());
@@ -443,18 +426,14 @@ public class LevelGUI extends JPanel {
 		}
 
 		JPanel closePanel = new JPanel();
-		JButton close = new JButton(GUIUtils.scaleImage("resources/ui/button/buttonBase.png", 120, 60));
-		close.setContentAreaFilled(false);
-		close.setFocusPainted(false);
-		close.setSize(buttonSize);
+		JButton closeButton = new JButton(GUIUtils.scaleImage("resources/ui/button/buttonBase.png", 120, 60));
+		closeButton.setContentAreaFilled(false);
+		closeButton.setFocusPainted(false);
+		closeButton.setSize(buttonSize);
 		JLabel closeLabel = new JLabel("Close");
-		closeLabel.setFont(new Font("Arial", Font.PLAIN, 18));
-		closeLabel.setForeground(Color.WHITE);
-		closeLabel.setAlignmentY(.3f);
-		closeLabel.setAlignmentX(Label.CENTER_ALIGNMENT);
-		close.add(closeLabel);
-		close.addActionListener(e-> levelDescription.dispose());
-		closePanel.add(close);
+		GUIUtils.createButtonLabel(closeButton, closeLabel);
+		closeButton.addActionListener(e-> levelDescription.dispose());
+		closePanel.add(closeButton);
 		descriptionPanel.add(closePanel);
 
 		levelDescription.setVisible(true);

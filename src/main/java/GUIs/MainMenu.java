@@ -19,8 +19,6 @@ import java.awt.Label;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.Arrays;
-import java.util.List;
 
 import static java.awt.event.KeyEvent.VK_ESCAPE;
 import static java.lang.System.exit;
@@ -137,8 +135,6 @@ public class MainMenu extends JFrame {
 		playLabel.setAlignmentY(.3f);
 		playLabel.setAlignmentX(Label.CENTER_ALIGNMENT);
 		playButton.add(playLabel);
-
-		//TODO: move this object creation somewhere else?
 
 		playButton.addActionListener(e -> {
 			GameLevel level = FileHandler.readLevel("5");

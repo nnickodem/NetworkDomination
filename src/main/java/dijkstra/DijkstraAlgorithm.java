@@ -93,7 +93,7 @@ public class DijkstraAlgorithm {
 	}
 
 	/**
-	 *
+	 * returns the closest (shortest distance) vertex from a list of vertices
 	 * @param vertices unsettled nodes
 	 * @return
 	 */
