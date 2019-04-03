@@ -99,7 +99,7 @@ public class LevelGUI extends JPanel {
 		mapConnections(deviceConnections);
 		createSideComponent();
 		packetTimer();
-		logger.log(Level.INFO, "Level GUI created");
+		logger.log(Level.INFO, "Level GUIs created");
 	}
 
 	/**
