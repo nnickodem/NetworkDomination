@@ -75,7 +75,7 @@ public class FileHandler {
 			file.remove(0);
 			//Converts text file device settings (speed, max_packet, etc.) into a map of deviceId -> settings
 			line = file.get(0);
-			while(line != null && !line.contains("*")){
+			while(line != null && !line.contains("*")) {
 				deviceToInfo.put(line.substring(0, line.indexOf(",")).replaceAll(" ", ""),
 						new AbstractMap.SimpleEntry<>(
 								Integer.valueOf(line.substring(line.indexOf(",")+1, line.lastIndexOf(",")).replaceAll(" ", "")),
@@ -116,9 +116,9 @@ public class FileHandler {
 	}
 
 	/**
-	 * Removes one chunk of a file list and puts it into a new separate list
-	 * @param file the list of lines in the level file
-	 * @return
+	 * Removes one 'chunk' of the file list, putting it into a new separate list
+	 * @param file list of the lines in the file
+	 * @return chunk list of String lines
 	 */
 	private static List<String> handleLevelInfo(List<String> file) {
 		List<String> infoType = new ArrayList<>();

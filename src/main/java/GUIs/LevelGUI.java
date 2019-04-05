@@ -50,8 +50,8 @@ public class LevelGUI extends JPanel {
 	private List<Map.Entry<JButton, JButton>> deviceConnections = new ArrayList<>();
 	private GameLevel gameLevel;
 	private BiMap<String, JButton> idToDeviceButton = HashBiMap.create();
-	private Map<JLabel, PacketInfo> packetToInfo = new HashMap<>();
 	private Map<String, JLabel> idToPacketCounter = new HashMap<>();
+	private Map<JLabel, PacketInfo> packetToInfo = new HashMap<>();
 	private Map<JButton, JLabel> buttonToLabel = new HashMap<>();
 	private JButton selectedDevice;
 	private JButton targetDevice;
@@ -269,7 +269,7 @@ public class LevelGUI extends JPanel {
 	 */
 	private void packetTimer() {
 		Timer timer = new Timer(10, e -> {
-			for (Map.Entry<JLabel, PacketInfo> packet : packetToInfo.entrySet()) {
+			for(Map.Entry<JLabel, PacketInfo> packet : packetToInfo.entrySet()) {
 				JLabel label = packet.getKey();
 				PacketInfo packetInfo = packet.getValue();
 				Point start = packetInfo.getSource().getLocation();
