@@ -58,7 +58,7 @@ public class MainMenu extends JPanel {
 		playButton.add(playLabel);
 
 		playButton.addActionListener(e -> {
-			mainGui.initCampaignScreen(this);
+			mainGui.createCampaignScreen(this);
 		});
 		add(playButton, constraints);
 
