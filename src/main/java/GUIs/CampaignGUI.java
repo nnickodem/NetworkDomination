@@ -9,15 +9,22 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.geom.Line2D;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class CampaignGUI extends JPanel {
 	private final Dimension buttonSize = new Dimension(120,60);
 	private final List<JButton> levelButtons = new ArrayList<>();
+	List<Map.Entry<JButton, JButton>> deviceConnections = new ArrayList<>();
 	private GameHandler gameHandler;
 
 	public CampaignGUI() {
@@ -39,6 +46,13 @@ public class CampaignGUI extends JPanel {
 		add(addLevelButton("Level 3", 500, 250));
 		add(addLevelButton("Level 4", 500, 750));
 		add(addLevelButton("Level 5", 750, 500));
+
+		//Create the connections between the buttons
+		deviceConnections.add(new AbstractMap.SimpleEntry<>(levelButtons.get(0), levelButtons.get(1)));
+		deviceConnections.add(new AbstractMap.SimpleEntry<>(levelButtons.get(1), levelButtons.get(2)));
+		deviceConnections.add(new AbstractMap.SimpleEntry<>(levelButtons.get(1), levelButtons.get(3)));
+		deviceConnections.add(new AbstractMap.SimpleEntry<>(levelButtons.get(2), levelButtons.get(4)));
+		deviceConnections.add(new AbstractMap.SimpleEntry<>(levelButtons.get(3), levelButtons.get(4)));
 	}
 
 	/**
@@ -49,12 +63,12 @@ public class CampaignGUI extends JPanel {
 	 * @return - level JButton
 	 */
 	private JButton addLevelButton(String name, int x, int y) {
-		JButton level = new JButton(name);
-		level.setPreferredSize(buttonSize);
-		level.setBounds(x,y,100, 50);
-		level.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
+		JButton level = new JButton(GUIUtils.scaleImage("resources/objects/NetworkDevices/pc/pcWhite.png",60,60));
+		level.setBounds(x,y,60, 60);
+		level.setOpaque(false);
+		level.setContentAreaFilled(false);
 		level.addActionListener(e -> {
-			GameLevel gameLevel = FileHandler.readLevel(level.getText().substring(6));
+			GameLevel gameLevel = FileHandler.readLevel(name.substring(6));
 			LevelGUI levelGui = new LevelGUI(gameLevel);
 			gameHandler = new GameHandler(gameLevel, levelGui);
 			revalidate();
@@ -66,6 +80,23 @@ public class CampaignGUI extends JPanel {
 			gameHandler.run();
 		});
 		levelButtons.add(level);
+
+		GUIUtils.createCampaignLabel(level, new JLabel(name.substring(6)));
 		return level;
+	}
+
+	/**
+	 * Paints a line between two buttons depending on the entries in the lineMap map.
+	 * @param g Graphics object
+	 */
+	@Override
+	protected void paintComponent(final Graphics g){
+		super.paintComponent(g);
+		Graphics2D g2d = (Graphics2D) g;
+		g2d.setStroke(new BasicStroke(4));
+		for(Map.Entry<Point, Point> entry : GUIUtils.mapConnections(deviceConnections)){
+			Line2D line2D = new Line2D.Double(entry.getKey(), entry.getValue());
+			g2d.draw(line2D);
+		}
 	}
 }

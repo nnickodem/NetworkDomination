@@ -115,6 +115,11 @@ public class FileHandler {
 		}
 	}
 
+	/**
+	 * Removes one chunk of a file list and puts it into a new separate list
+	 * @param file the list of lines in the level file
+	 * @return
+	 */
 	private static List<String> handleLevelInfo(List<String> file) {
 		List<String> infoType = new ArrayList<>();
 		String line = file.get(0);

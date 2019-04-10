@@ -23,7 +23,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Label;
 import java.awt.Point;
-import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Area;
@@ -48,8 +47,8 @@ public class LevelGUI extends JPanel {
 	private final String packetImagePath = "resources/objects/Packets/";
 	private final Dimension buttonSize = new Dimension(120,60);
 	private final List<JButton> packetButtons = new ArrayList<>();
+	private List<Map.Entry<JButton, JButton>> deviceConnections = new ArrayList<>();
 	private GameLevel gameLevel;
-	private List<Map.Entry<Point, Point>> lineMap;
 	private BiMap<String, JButton> idToDeviceButton = HashBiMap.create();
 	private Map<JLabel, PacketInfo> packetToInfo = new HashMap<>();
 	private Map<String, JLabel> idToPacketCounter = new HashMap<>();
@@ -70,7 +69,7 @@ public class LevelGUI extends JPanel {
 
 		preLevelDialog();
 
-		List<Map.Entry<JButton, JButton>> deviceConnections = new ArrayList<>();
+		//List<Map.Entry<JButton, JButton>> deviceConnections = new ArrayList<>();
 
 		for(int i = 0; i < gameLevel.getLevelMap().length; i++) {
 			for(int k = 0; k < gameLevel.getLevelMap()[i].length; k++) {
@@ -93,10 +92,11 @@ public class LevelGUI extends JPanel {
 		globalScore.setForeground(Color.WHITE);
 		add(globalScore);
 
+		//For each connection in the connection list, it adds the connection to the deviceConnections list variable.
+		//idToDeviceButton gets the desired button from the id String.
 		for(Map.Entry<Map.Entry<String, String>, Integer> connection : gameLevel.getConnections().entrySet()) {
 			deviceConnections.add(new AbstractMap.SimpleEntry<>(idToDeviceButton.get(connection.getKey().getKey()), idToDeviceButton.get(connection.getKey().getValue())));
 		}
-		mapConnections(deviceConnections);
 		createSideComponent();
 		packetTimer();
 		logger.log(Level.INFO, "Level GUIs created");
@@ -142,21 +142,6 @@ public class LevelGUI extends JPanel {
 	}
 
 	/**
-	 * Creates a Map of coordinates of each network device.
-	 * @param connections List of connections between buttons
-	 */
-	private void mapConnections(final List<Map.Entry<JButton, JButton>> connections){
-		lineMap = new ArrayList<>();
-		for(Map.Entry<JButton, JButton> connection : connections){
-			Point tempA = connection.getKey().getLocation();
-			Point tempB = connection.getValue().getLocation();
-			tempA = new Point((int)tempA.getX() + 30, (int)tempA.getY() + 30);
-			tempB = new Point((int)tempB.getX() + 30, (int)tempB.getY() + 30);
-			lineMap.add(new AbstractMap.SimpleEntry<>(tempA, tempB));
-		}
-	}
-
-	/**
 	 * Paints a line between two buttons depending on the entries in the lineMap map.
 	 * @param g Graphics object
 	 */
@@ -165,7 +150,7 @@ public class LevelGUI extends JPanel {
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setStroke(new BasicStroke(4));
-		for(Map.Entry<Point, Point> entry : lineMap){
+		for(Map.Entry<Point, Point> entry : GUIUtils.mapConnections(deviceConnections)){
 			Line2D line2D = new Line2D.Double(entry.getKey(), entry.getValue());
 			g2d.draw(line2D);
 		}
@@ -223,7 +208,6 @@ public class LevelGUI extends JPanel {
 				upgradeButton.setIcon(GUIUtils.scaleImage("resources/ui/upgradeButton/upgradeButton" + upgradeNumber + ".png", 120, 60));
 			});
 		}
-
 		GUIUtils.organizeSideComponent(this, packetPanel, upgradePanel);
 	}
 
@@ -391,6 +375,9 @@ public class LevelGUI extends JPanel {
 		}
 	}
 
+	/**
+	 * Create the pre level dialog pop up frame which has a description of the levels and the objectives.
+	 */
 	private void preLevelDialog(){
 		JFrame levelDescription = new JFrame();
 		JPanel descriptionPanel = new JPanel();

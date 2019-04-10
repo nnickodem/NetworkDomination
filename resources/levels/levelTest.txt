@@ -5,7 +5,7 @@
 -,-,-,-,-,-,-,-,-,-,-,-
 -,-,-,-,PC.Blue.2,-,-,-,-,-,-,-
 -,-,-,-,-,-,-,-,-,-,-,-
-* Device 1,Device 2,Distance(Integer) (spaces are ignored, but comma is required)
+* Device 1,Device 2,Distance(Integer)(Pathing function weight value) (spaces are ignored, but comma is required)
 Server.Red.1,Switch.Red.1,1
 PC.Blue.3,Switch.Red.1,1
 Switch.Red.1,PC.Blue.2,1

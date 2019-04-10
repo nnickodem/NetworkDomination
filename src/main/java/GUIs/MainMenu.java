@@ -26,7 +26,7 @@ import static java.lang.System.exit;
 /**
  * Creates the main menu gui
  */
-public class MainMenu extends JFrame {
+public class MainMenu extends JPanel {
 
 	private final Dimension buttonSize = new Dimension(120, 60);
 	private GameHandler gameHandler;
@@ -34,90 +34,11 @@ public class MainMenu extends JFrame {
 	/**
 	 * Constructs the main menu JPanel
 	 */
-	public MainMenu() {
-		JPanel mainMenu = new JPanel(new GridBagLayout());
+	public MainMenu(final MainGui mainGui) {
+		setLayout(new GridBagLayout());
 		setMaximumSize(Toolkit.getDefaultToolkit().getScreenSize());
-		setExtendedState(JFrame.MAXIMIZED_BOTH);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setTitle("Network Domination");
-
-		addKeyListener(new KeyListener() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if (!mainMenu.isVisible()) {
-					if (e.getKeyCode() == VK_ESCAPE) {
-						//Create JFrame and JPanel instances
-						JFrame pauseFrame = new JFrame();
-						JPanel pausePanel = new JPanel();
-
-						//Add Save button to pause menu
-						JButton saveButton = new JButton(GUIUtils.scaleImage("resources/ui/button/buttonBase.png", 120, 60));
-						saveButton.setPreferredSize(buttonSize);
-						saveButton.setContentAreaFilled(false);
-						saveButton.setFocusPainted(false);
-						JLabel saveLabel = new JLabel("Save");
-						saveLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-						saveLabel.setForeground(Color.WHITE);
-						saveLabel.setAlignmentY(.3f);
-						saveLabel.setAlignmentX(Label.CENTER_ALIGNMENT);
-						saveButton.add(saveLabel);
-						pausePanel.add(saveButton);
-
-						//Add return to main menu button to pause menu
-						JButton returnButton = new JButton(GUIUtils.scaleImage("resources/ui/button/buttonBase.png", 120, 60));
-						returnButton.setPreferredSize(buttonSize);
-						returnButton.setContentAreaFilled(false);
-						returnButton.setFocusPainted(false);
-						JLabel returnLabel = new JLabel("Main Menu");
-						returnLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-						returnLabel.setForeground(Color.WHITE);
-						returnLabel.setAlignmentY(.3f);
-						returnLabel.setAlignmentX(Label.CENTER_ALIGNMENT);
-						returnButton.add(returnLabel);
-						returnButton.addActionListener(e1 -> {
-							mainMenu.setVisible(true);
-							pauseFrame.dispose();
-							setContentPane(mainMenu);
-							gameHandler.stopTimer();
-						});
-						pausePanel.add(returnButton);
-
-						//Add Exit button to pause menu
-						JButton pauseExitButton = new JButton(GUIUtils.scaleImage("resources/ui/button/buttonBase.png", 120, 60));
-						pauseExitButton.setPreferredSize(buttonSize);
-						pauseExitButton.setContentAreaFilled(false);
-						pauseExitButton.setFocusPainted(false);
-						JLabel pauseExitLabel = new JLabel("Exit");
-						pauseExitLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-						pauseExitLabel.setForeground(Color.WHITE);
-						pauseExitLabel.setAlignmentY(.3f);
-						pauseExitLabel.setAlignmentX(Label.CENTER_ALIGNMENT);
-						pauseExitButton.add(pauseExitLabel);
-						pauseExitButton.addActionListener(e1 -> {
-							exit(0);
-						});
-						pausePanel.add(pauseExitButton);
-
-						//Add the JFrame criteria
-						pauseFrame.setSize(new Dimension(250, 300));
-						pauseFrame.add(pausePanel);
-						pauseFrame.setLocationRelativeTo(null);
-						pauseFrame.setVisible(true);
-					}
-				}
-			}
-
-			@Override
-			public void keyTyped(KeyEvent e) {
-
-			}
-			@Override
-			public void keyReleased(KeyEvent e) {
-
-			}
-		});
-		mainMenu.setBorder(BorderFactory.createEmptyBorder());
-		mainMenu.setBackground(Color.DARK_GRAY);
+		setBorder(BorderFactory.createEmptyBorder());
+		setBackground(Color.DARK_GRAY);
 		GridBagConstraints constraints = new GridBagConstraints();
 
 		JButton playButton = new JButton(GUIUtils.scaleImage("resources/ui/button/buttonBase.png", 120, 60));
@@ -137,17 +58,9 @@ public class MainMenu extends JFrame {
 		playButton.add(playLabel);
 
 		playButton.addActionListener(e -> {
-			GameLevel level = FileHandler.readLevel("5");
-			LevelGUI levelGUI = new LevelGUI(level);
-			gameHandler = new GameHandler(level, levelGUI);
-			setTitle("Network Domination - Level 1");
-			add(levelGUI);
-			setContentPane(levelGUI);
-			remove(mainMenu);
-			mainMenu.setVisible(false);
-			gameHandler.run();
+			mainGui.initCampaignScreen(this);
 		});
-		mainMenu.add(playButton, constraints);
+		add(playButton, constraints);
 
 		JButton loadButton = new JButton(GUIUtils.scaleImage("resources/ui/button/buttonBase.png", 120, 60));
 		constraints.gridx = 0;
@@ -163,7 +76,7 @@ public class MainMenu extends JFrame {
 		loadLabel.setAlignmentY(.3f);
 		loadLabel.setAlignmentX(Label.CENTER_ALIGNMENT);
 		loadButton.add(loadLabel);
-		mainMenu.add(loadButton, constraints);
+		add(loadButton, constraints);
 
 		JButton optionsButton = new JButton(GUIUtils.scaleImage("resources/ui/button/buttonBase.png", 120, 60));
 		constraints.gridx = 0;
@@ -180,17 +93,9 @@ public class MainMenu extends JFrame {
 		optionsLabel.setAlignmentX(Label.CENTER_ALIGNMENT);
 		optionsButton.add(optionsLabel);
 		optionsButton.addActionListener(e -> {
-			CampaignGUI campaignScreen = new CampaignGUI();
-			setTitle("Campaign Screen");
-			add(campaignScreen);
-			setContentPane(campaignScreen);
-			invalidate();
-			validate();
-			remove(mainMenu);
-			mainMenu.setVisible(false);
-
+			System.out.println("Button clicked");
 		});
-		mainMenu.add(optionsButton, constraints);
+		add(optionsButton, constraints);
 
 		JButton exitButton = new JButton(GUIUtils.scaleImage("resources/ui/button/buttonBase.png", 120, 60));
 		exitButton.addActionListener(e-> exit(0));
@@ -208,15 +113,11 @@ public class MainMenu extends JFrame {
 		exitLabel.setAlignmentX(Label.CENTER_ALIGNMENT);
 		exitButton.add(exitLabel);
 		exitButton.addActionListener(e-> exit(0));
-		mainMenu.add(exitButton, constraints);
+		add(exitButton, constraints);
 
 		//Add the mainMenu panel to the frame and set the window size
 		setFocusable(true);
-		getContentPane().add(mainMenu);
-		getContentPane().setBackground(Color.DARK_GRAY);
 
 		setMaximumSize(Toolkit.getDefaultToolkit().getScreenSize());
-		setExtendedState(JFrame.MAXIMIZED_BOTH);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 }

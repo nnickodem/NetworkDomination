@@ -1,3 +1,4 @@
+import GUIs.MainGui;
 import GUIs.MainMenu;
 import ResourceHandlers.LogHandler;
 
@@ -20,7 +21,7 @@ public class main {
 			// set look and feel to the system and feel
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
-			SwingUtilities.invokeLater(() -> new MainMenu().setVisible(true));
+			SwingUtilities.invokeLater(MainGui::new);
 		} catch (Exception e) {
 			logger.log(Level.SEVERE, "Fatal Error", e);
 		}
