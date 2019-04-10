@@ -19,7 +19,9 @@ PC.Red.1,4,15
 * description
 - Beat Level
 * mainObjectives
-- Fill Later
+- Capture the enemy PC
 * secondaryObjectives
 - Fill Later
+* win conditions
+PC.Red.1
 *

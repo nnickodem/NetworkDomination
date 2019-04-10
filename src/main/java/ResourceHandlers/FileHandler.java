@@ -8,15 +8,6 @@ import Objects.NetworkDevices.Router;
 import Objects.NetworkDevices.Server;
 import Objects.NetworkDevices.Switch;
 
-import java.awt.Font;
-import java.awt.FontFormatException;
-import java.awt.GraphicsEnvironment;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.AbstractMap;
@@ -27,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  * Handles reading/writing of various external resources including save files, level files, and fonts
@@ -90,6 +82,8 @@ public class FileHandler {
 			List<String> mainObjectives = handleLevelInfo(file);
 			//Get the Secondary Objectives of the desired level
 			List<String> secondaryObjectives = handleLevelInfo(file);
+			//Get win conditions
+			List<String> winConditions = handleLevelInfo(file);
 
 			String[][] mapArray = new String[levelMap.get(0).size()][levelMap.size()];
 			List<String> deviceConnections;
@@ -107,8 +101,11 @@ public class FileHandler {
 					}
 				}
 			}
+			List<NetworkDevice> winConditionDevices = winConditions.stream()
+														.map(idToDeviceObject::get)
+														.collect(Collectors.toList());
 
-			return new GameLevel(mapArray, mapConnections, idToDeviceObject, description, mainObjectives, secondaryObjectives);
+			return new GameLevel(mapArray, mapConnections, idToDeviceObject, description, mainObjectives, secondaryObjectives, winConditionDevices);
 		} catch (Exception e) {
 			logger.log(Level.SEVERE, "Error reading level file", e);
 			return null;

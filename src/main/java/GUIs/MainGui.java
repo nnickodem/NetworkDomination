@@ -1,5 +1,9 @@
 package GUIs;
 
+import GameHandlers.GameHandler;
+import Objects.GameLevel;
+import ResourceHandlers.FileHandler;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -14,13 +18,16 @@ import java.awt.event.KeyListener;
 import static java.awt.event.KeyEvent.VK_ESCAPE;
 import static java.lang.System.exit;
 
+/**
+ * Master GUI class
+ */
 public class MainGui extends JFrame {
 
-	private MainMenu mainMenu;
 	private final Dimension buttonSize = new Dimension(120, 60);
 
 	public MainGui() {
 		setVisible(true);
+		setFocusable(true);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Network Domination");
@@ -29,76 +36,81 @@ public class MainGui extends JFrame {
 		//createPauseMenu();
 	}
 
+	/**
+	 * Creates the main menu JPanel
+	 */
 	public void createMainMenu() {
-		mainMenu = new MainMenu(this);
+		MainMenu mainMenu = new MainMenu(this);
 		add(mainMenu);
 		mainMenu.setVisible(true);
 		getContentPane().add(mainMenu);
 		createPauseMenu();
 	}
 
-	public void createPauseMenu(){
+	/**
+	 * Adds a key listener which creates a pause menu JFrame on escape keypress
+	 */
+	public void createPauseMenu() {
 		addKeyListener(new KeyListener() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				if (!isVisible()) {
-					if (e.getKeyCode() == VK_ESCAPE) {
-						//Create JFrame and JPanel instances
-						JFrame pauseFrame = new JFrame();
-						JPanel pausePanel = new JPanel();
+				if (e.getKeyCode() == VK_ESCAPE) {
+					//Create JFrame and JPanel instances
+					JFrame pauseFrame = new JFrame();
+					JPanel pausePanel = new JPanel();
 
-						//Add Save button to pause menu
-						JButton saveButton = new JButton(GUIUtils.scaleImage("resources/ui/button/buttonBase.png", 120, 60));
-						saveButton.setPreferredSize(buttonSize);
-						saveButton.setContentAreaFilled(false);
-						saveButton.setFocusPainted(false);
-						JLabel saveLabel = new JLabel("Save");
-						saveLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-						saveLabel.setForeground(Color.WHITE);
-						saveLabel.setAlignmentY(.3f);
-						saveLabel.setAlignmentX(Label.CENTER_ALIGNMENT);
-						saveButton.add(saveLabel);
-						pausePanel.add(saveButton);
+					//Add Save button to pause menu
+					JButton saveButton = new JButton(GUIUtils.scaleImage("resources/ui/button/buttonBase.png", 120, 60));
+					saveButton.setPreferredSize(buttonSize);
+					saveButton.setContentAreaFilled(false);
+					saveButton.setFocusPainted(false);
+					JLabel saveLabel = new JLabel("Save");
+					saveLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+					saveLabel.setForeground(Color.WHITE);
+					saveLabel.setAlignmentY(.3f);
+					saveLabel.setAlignmentX(Label.CENTER_ALIGNMENT);
+					saveButton.add(saveLabel);
+					pausePanel.add(saveButton);
 
-						//Add return to main menu button to pause menu
-						JButton returnButton = new JButton(GUIUtils.scaleImage("resources/ui/button/buttonBase.png", 120, 60));
-						returnButton.setPreferredSize(buttonSize);
-						returnButton.setContentAreaFilled(false);
-						returnButton.setFocusPainted(false);
-						JLabel returnLabel = new JLabel("Main Menu");
-						returnLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-						returnLabel.setForeground(Color.WHITE);
-						returnLabel.setAlignmentY(.3f);
-						returnLabel.setAlignmentX(Label.CENTER_ALIGNMENT);
-						returnButton.add(returnLabel);
-						returnButton.addActionListener(e1 -> {
-							setVisible(true);
-							pauseFrame.dispose();
-							//setContentPane(mainMenu);
-							//gameHandler.stopTimer();
-						});
-						pausePanel.add(returnButton);
+					//Add return to main menu button to pause menu
+					JButton returnButton = new JButton(GUIUtils.scaleImage("resources/ui/button/buttonBase.png", 120, 60));
+					returnButton.setPreferredSize(buttonSize);
+					returnButton.setContentAreaFilled(false);
+					returnButton.setFocusPainted(false);
+					JLabel returnLabel = new JLabel("Main Menu");
+					returnLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+					returnLabel.setForeground(Color.WHITE);
+					returnLabel.setAlignmentY(.3f);
+					returnLabel.setAlignmentX(Label.CENTER_ALIGNMENT);
+					returnButton.add(returnLabel);
+					returnButton.addActionListener(e1 -> {
+						setVisible(true);
+						pauseFrame.dispose();
+						//setContentPane(mainMenu);
+						//gameHandler.stopTimer();
+					});
+					pausePanel.add(returnButton);
 
-						//Add Exit button to pause menu
-						JButton pauseExitButton = new JButton(GUIUtils.scaleImage("resources/ui/button/buttonBase.png", 120, 60));
-						pauseExitButton.setPreferredSize(buttonSize);
-						pauseExitButton.setContentAreaFilled(false);
-						pauseExitButton.setFocusPainted(false);
-						JLabel pauseExitLabel = new JLabel("Exit");
-						pauseExitLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-						pauseExitLabel.setForeground(Color.WHITE);
-						pauseExitLabel.setAlignmentY(.3f);
-						pauseExitLabel.setAlignmentX(Label.CENTER_ALIGNMENT);
-						pauseExitButton.add(pauseExitLabel);
-						pauseExitButton.addActionListener(e1 -> exit(0));
-						pausePanel.add(pauseExitButton);
+					//Add Exit button to pause menu
+					JButton pauseExitButton = new JButton(GUIUtils.scaleImage("resources/ui/button/buttonBase.png", 120, 60));
+					pauseExitButton.setPreferredSize(buttonSize);
+					pauseExitButton.setContentAreaFilled(false);
+					pauseExitButton.setFocusPainted(false);
+					JLabel pauseExitLabel = new JLabel("Exit");
+					pauseExitLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+					pauseExitLabel.setForeground(Color.WHITE);
+					pauseExitLabel.setAlignmentY(.3f);
+					pauseExitLabel.setAlignmentX(Label.CENTER_ALIGNMENT);
+					pauseExitButton.add(pauseExitLabel);
+					pauseExitButton.addActionListener(e1 -> exit(0));
+					pausePanel.add(pauseExitButton);
 
-						//Add the JFrame criteria
-						pauseFrame.setSize(new Dimension(250, 300));
-						pauseFrame.add(pausePanel);
-						pauseFrame.setLocationRelativeTo(null);
-						pauseFrame.setVisible(true);
-					}
+					//Add the JFrame criteria
+					pauseFrame.setSize(new Dimension(250, 300));
+					pauseFrame.add(pausePanel);
+					pauseFrame.setLocationRelativeTo(null);
+					pauseFrame.setVisible(true);
+					pauseFrame.setResizable(false);
 				}
 			}
 
@@ -113,22 +125,35 @@ public class MainGui extends JFrame {
 		});
 	}
 
-	public void createLevel() {
-		//add(new LevelGui());
+	/**
+	 * Creates a level JPanel
+	 * @param levelName name/number of the level
+	 * @param previousPanel Previous JPanel
+	 */
+	public void createLevel(final String levelName, final JPanel previousPanel) {
+		GameLevel gameLevel = FileHandler.readLevel(levelName);
+		LevelGUI levelGui = new LevelGUI(gameLevel);
+		GameHandler gameHandler = new GameHandler(gameLevel, levelGui, this);
+		revalidate();
+		add(levelGui);
+		setTitle("Network Domination - " + levelName);
+		setContentPane(levelGui);
+		gameHandler.run();
+		remove(previousPanel);
+		previousPanel.setVisible(false);
 	}
 
-	public void createCampaignScreen() {
-		add(new CampaignGUI());
-	}
-
-	public void initCampaignScreen(final JPanel panel){
-		CampaignGUI campaignScreen = new CampaignGUI();
+	/**
+	 * Creates a campaign JPanel
+	 * @param previousPanel Previous JPanel
+	 */
+	public void createCampaignScreen(final JPanel previousPanel) {
+		CampaignGUI campaignScreen = new CampaignGUI(this);
 		//setTitle("Campaign Screen");
 		add(campaignScreen);
-		//setContentPane(campaignScreen);
-		invalidate();
-		validate();
-		remove(panel);
-		panel.setVisible(false);
+		setContentPane(campaignScreen);
+		revalidate();
+		remove(previousPanel);
+		previousPanel.setVisible(false);
 	}
 }

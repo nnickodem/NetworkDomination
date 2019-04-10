@@ -42,7 +42,12 @@ PC.Red.4,5,10
 Beat the Level
 Testing
 * mainObjectives
-- Become the first one to capture the server
+- Capture the enemy PCs
 * secondaryObjectives
 - None
+* win conditions
+PC.Yellow.1
+PC.Yellow.2
+PC.Red.3
+PC.Red.4
 *

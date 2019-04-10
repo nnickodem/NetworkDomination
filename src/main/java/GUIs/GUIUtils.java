@@ -4,9 +4,12 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
@@ -75,7 +78,51 @@ public class GUIUtils {
 		button.add(label);
 	}
 
-	public static void createCampaignLabel(final JButton button, final JLabel label){
+	/**
+	 * Display level end message
+	 * @param levelGui LevelGUI object
+	 * @param mainGui MainGUI object
+	 * @param result level end message/result
+	 */
+	public static void displayLevelEndMessage(final LevelGUI levelGui, final MainGui mainGui, final String result) { //TODO: Format
+		JFrame winFrame = new JFrame();
+		JPanel winPanel = new JPanel();
+		winPanel.setLayout(new BoxLayout(winPanel, BoxLayout.PAGE_AXIS));
+		winFrame.add(winPanel);
+
+		JLabel winMessage = new JLabel("You " + result + "!");
+		winMessage.setBorder(new EmptyBorder(0,70,0,70));
+		winMessage.setFont(new Font(Font.DIALOG, Font.BOLD, 24));
+		winMessage.setAlignmentX(Component.CENTER_ALIGNMENT);
+		winPanel.add(winMessage);
+
+		JButton winButton = new JButton(scaleImage("resources/ui/button/buttonBase.png", 120, 60));
+		winButton.setContentAreaFilled(false);
+		winButton.setFocusPainted(false);
+		winButton.setSize(new Dimension(120, 60));
+		JLabel winLabel = new JLabel("OK");
+		createButtonLabel(winButton, winLabel);
+		winButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+		//winButton.addActionListener();
+		winButton.addActionListener(e -> {
+			mainGui.createCampaignScreen(levelGui);
+			winFrame.dispose();
+		});
+		//main gui return to campaign here
+		winPanel.add(winButton);
+
+		winFrame.setVisible(true);
+		winFrame.setSize(500,500);
+		winFrame.setLocationRelativeTo(null);
+		winFrame.setResizable(false);
+	}
+
+	/**
+	 * create JLabel for campaign JButton
+	 * @param button campaign level JButton
+	 * @param label campaign level JLabel
+	 */
+	public static void createCampaignLabel(final JButton button, final JLabel label) {
 		label.setFont(new Font("Arial", Font.PLAIN, 18));
 		label.setForeground(Color.BLACK);
 		label.setAlignmentY(.6f);
@@ -87,7 +134,7 @@ public class GUIUtils {
 	 * Creates a Map of coordinates of each network device.
 	 * @param connections List of connections between buttons
 	 */
-	public static List<Map.Entry<Point, Point>> mapConnections(final List<Map.Entry<JButton, JButton>> connections){
+	public static List<Map.Entry<Point, Point>> mapConnections(final List<Map.Entry<JButton, JButton>> connections) {
 		List<Map.Entry<Point, Point>>lineMap = new ArrayList<>();
 		for(Map.Entry<JButton, JButton> connection : connections){
 			Point tempA = connection.getKey().getLocation();
@@ -98,5 +145,4 @@ public class GUIUtils {
 		}
 		return lineMap;
 	}
-
 }

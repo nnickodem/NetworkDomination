@@ -24,6 +24,9 @@ PC.Red.1,5,10
 Beat Level
 * mainObjectives
 - Dominate the Screen
+- Capture the enemy PC
 * secondaryObjectives
 - Git Gud
+* win conditions
+PC.Red.1
 *
