@@ -50,8 +50,9 @@ public class LevelGUI extends JPanel {
 	private List<Map.Entry<JButton, JButton>> deviceConnections = new ArrayList<>();
 	private GameLevel gameLevel;
 	private BiMap<String, JButton> idToDeviceButton = HashBiMap.create();
-	private Map<JLabel, PacketInfo> packetToInfo = new HashMap<>();
 	private Map<String, JLabel> idToPacketCounter = new HashMap<>();
+	private Timer packetTimer;
+	private Map<JLabel, PacketInfo> packetToInfo = new HashMap<>();
 	private Map<JButton, JLabel> buttonToLabel = new HashMap<>();
 	private JButton selectedDevice;
 	private JButton targetDevice;
@@ -186,6 +187,7 @@ public class LevelGUI extends JPanel {
 				packetButton.addActionListener(e -> {
 					NetworkDevice device = gameLevel.getIdToDeviceObject().get(idToDeviceButton.inverse().get(selectedDevice));
 					device.setSending(!device.isSending());
+					transferFocusBackward();
 				});
 			}
 			packetButton.setEnabled(false);
@@ -206,6 +208,7 @@ public class LevelGUI extends JPanel {
 			upgradeButton.addActionListener(e -> { //TODO: remove, demo for button
 				upgradeNumber = (upgradeNumber + 1) % 4;
 				upgradeButton.setIcon(GUIUtils.scaleImage("resources/ui/upgradeButton/upgradeButton" + upgradeNumber + ".png", 120, 60));
+				transferFocusBackward();
 			});
 		}
 		GUIUtils.organizeSideComponent(this, packetPanel, upgradePanel);
@@ -268,8 +271,8 @@ public class LevelGUI extends JPanel {
 	 * Creates and starts a timer that updates the position of all packets every 10 ms
 	 */
 	private void packetTimer() {
-		Timer timer = new Timer(10, e -> {
-			for (Map.Entry<JLabel, PacketInfo> packet : packetToInfo.entrySet()) {
+		packetTimer = new Timer(10, e -> {
+			for(Map.Entry<JLabel, PacketInfo> packet : packetToInfo.entrySet()) {
 				JLabel label = packet.getKey();
 				PacketInfo packetInfo = packet.getValue();
 				Point start = packetInfo.getSource().getLocation();
@@ -313,7 +316,14 @@ public class LevelGUI extends JPanel {
 				}
 			}
 		});
-		timer.start();
+		packetTimer.start();
+	}
+
+	/**
+	 * Stops the packet animation timer
+	 */
+	public void stopPacketTimer() {
+		packetTimer.stop();
 	}
 
 	/**

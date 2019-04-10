@@ -1,6 +1,8 @@
 package GameHandlers;
 
+import GUIs.GUIUtils;
 import GUIs.LevelGUI;
+import GUIs.MainGui;
 import Objects.GameLevel;
 import Objects.NetworkDevices.NetworkDevice;
 
@@ -18,12 +20,14 @@ public class GameHandler extends Thread {
 	private static final Logger logger = Logger.getLogger("errorLogger");
 	private GameLevel level;
 	private LevelGUI levelGui;
+	private MainGui mainGui;
 	private Integer tick = 0;
 	private Timer timer;
 
-	public GameHandler(final GameLevel level, final LevelGUI levelGui) {
+	public GameHandler(final GameLevel level, final LevelGUI levelGui, final MainGui mainGui) {
 		this.level = level;
 		this.levelGui = levelGui;
+		this.mainGui = mainGui;
 	}
 
 	/**
@@ -55,6 +59,18 @@ public class GameHandler extends Thread {
 				updateAI();
 			}
 		}
+
+		if(level.getWinConditions().stream().map(NetworkDevice::getTeam).allMatch(t -> t.equals("Blue"))) {
+			endLevel("win");
+		} else if(level.getIdToDeviceObject().values().stream().map(NetworkDevice::getTeam).noneMatch(t -> t.equals("Blue"))) {
+			endLevel("lost");
+		}
+	}
+
+	private void endLevel(final String result) {
+		stopTimer();
+		levelGui.stopPacketTimer();
+		GUIUtils.displayLevelEndMessage(levelGui, mainGui, result);
 	}
 
 	/**

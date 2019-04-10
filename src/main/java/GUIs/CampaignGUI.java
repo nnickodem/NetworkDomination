@@ -1,17 +1,10 @@
 package GUIs;
 
-import GameHandlers.GameHandler;
-import Objects.GameLevel;
-import ResourceHandlers.FileHandler;
-
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -22,12 +15,13 @@ import java.util.List;
 import java.util.Map;
 
 public class CampaignGUI extends JPanel {
-	private final Dimension buttonSize = new Dimension(120,60);
-	private final List<JButton> levelButtons = new ArrayList<>();
-	List<Map.Entry<JButton, JButton>> deviceConnections = new ArrayList<>();
-	private GameHandler gameHandler;
 
-	public CampaignGUI() {
+	private final List<JButton> levelButtons = new ArrayList<>();
+	private List<Map.Entry<JButton, JButton>> deviceConnections = new ArrayList<>();
+	private MainGui mainGui;
+
+	public CampaignGUI(final MainGui mainGui) {
+		this.mainGui = mainGui;
 		setVisible(true);
 		setLayout(null);
 		setBackground(Color.DARK_GRAY);
@@ -68,16 +62,7 @@ public class CampaignGUI extends JPanel {
 		level.setOpaque(false);
 		level.setContentAreaFilled(false);
 		level.addActionListener(e -> {
-			GameLevel gameLevel = FileHandler.readLevel(name.substring(6));
-			LevelGUI levelGui = new LevelGUI(gameLevel);
-			gameHandler = new GameHandler(gameLevel, levelGui);
-			revalidate();
-			setVisible(false);
-			add(levelGui);
-			JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
-			frame.setTitle("Network Domination - " + level.getText());
-			frame.setContentPane(levelGui);
-			gameHandler.run();
+			mainGui.createLevel(name.substring(6), this);
 		});
 		levelButtons.add(level);
 
@@ -90,7 +75,7 @@ public class CampaignGUI extends JPanel {
 	 * @param g Graphics object
 	 */
 	@Override
-	protected void paintComponent(final Graphics g){
+	protected void paintComponent(final Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setStroke(new BasicStroke(4));

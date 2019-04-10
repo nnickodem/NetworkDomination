@@ -31,7 +31,10 @@ PC.Red.2,3,15
 * description
 Domination
 * mainObjectives
-- Beat Level
+- Capture the enemy PCs
 * secondaryObjectives
 - None
+* win conditions
+PC.Red.1
+PC.Red.2
 *
