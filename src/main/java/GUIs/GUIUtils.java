@@ -11,7 +11,12 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.Label;
+import java.awt.Point;
 import java.awt.Toolkit;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class GUIUtils {
 
@@ -31,7 +36,7 @@ public class GUIUtils {
 	}
 
 	/**
-	 * Organizes side component, setting borders, width/height, backgrouhnds, etc
+	 * Organizes side component, setting borders, width/height, backgrounds, etc
 	 * @param mainPanel main panel the side panel will be located in
 	 * @param topPanel top button panel
 	 * @param bottomPanel bottom button panel
@@ -68,6 +73,30 @@ public class GUIUtils {
 		label.setAlignmentY(.3f);
 		label.setAlignmentX(Label.CENTER_ALIGNMENT);
 		button.add(label);
+	}
+
+	public static void createCampaignLabel(final JButton button, final JLabel label){
+		label.setFont(new Font("Arial", Font.PLAIN, 18));
+		label.setForeground(Color.BLACK);
+		label.setAlignmentY(.6f);
+		label.setAlignmentX(.1f);
+		button.add(label);
+	}
+
+	/**
+	 * Creates a Map of coordinates of each network device.
+	 * @param connections List of connections between buttons
+	 */
+	public static List<Map.Entry<Point, Point>> mapConnections(final List<Map.Entry<JButton, JButton>> connections){
+		List<Map.Entry<Point, Point>>lineMap = new ArrayList<>();
+		for(Map.Entry<JButton, JButton> connection : connections){
+			Point tempA = connection.getKey().getLocation();
+			Point tempB = connection.getValue().getLocation();
+			tempA = new Point((int)tempA.getX() + 30, (int)tempA.getY() + 30);
+			tempB = new Point((int)tempB.getX() + 30, (int)tempB.getY() + 30);
+			lineMap.add(new AbstractMap.SimpleEntry<>(tempA, tempB));
+		}
+		return lineMap;
 	}
 
 }
