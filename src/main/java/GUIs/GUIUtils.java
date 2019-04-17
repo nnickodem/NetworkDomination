@@ -102,7 +102,6 @@ public class GUIUtils {
 		JLabel winLabel = new JLabel("OK");
 		createButtonLabel(winButton, winLabel);
 		winButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-		//winButton.addActionListener();
 		winButton.addActionListener(e -> {
 			mainGui.createCampaignScreen();
 			winFrame.dispose();

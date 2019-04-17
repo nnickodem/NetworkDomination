@@ -94,8 +94,6 @@ public class MainGui extends JFrame {
 						setVisible(true);
 						pauseFrame.dispose();
 						createMainMenu();
-
-
 					});
 					pausePanel.add(returnButton);
 
