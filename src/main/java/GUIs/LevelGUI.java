@@ -14,6 +14,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -115,9 +116,13 @@ public class LevelGUI extends JPanel {
 		idToDeviceButton.put(deviceID, deviceButton);
 		deviceButton.addActionListener(e -> {
 			setButtonUsage(deviceID);
+			if(selectedDevice != null) {
+				selectedDevice.setBorder(BorderFactory.createEmptyBorder());
+			}
 			selectedDevice = deviceButton;
 			transferFocusBackward();
 			updateTargetSelection(idToDeviceButton.get(device.getTarget()));
+			deviceButton.setBorder(BorderFactory.createMatteBorder(0,2,2,0,Color.CYAN));
 		});
 		deviceButton.addMouseListener(new MouseAdapter() {
 			@Override
@@ -381,7 +386,8 @@ public class LevelGUI extends JPanel {
 		}
 		targetDevice = deviceButton;
 		if(deviceButton != null) {
-			deviceButton.setBorder(BorderFactory.createLineBorder(Color.CYAN, 2));
+			Border border = BorderFactory.createMatteBorder(2,0,0,2,Color.CYAN);
+			deviceButton.setBorder(border);
 		}
 	}
 

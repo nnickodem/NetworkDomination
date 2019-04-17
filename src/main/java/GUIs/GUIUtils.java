@@ -80,11 +80,10 @@ public class GUIUtils {
 
 	/**
 	 * Display level end message
-	 * @param levelGui LevelGUI object
 	 * @param mainGui MainGUI object
 	 * @param result level end message/result
 	 */
-	public static void displayLevelEndMessage(final LevelGUI levelGui, final MainGui mainGui, final String result) { //TODO: Format
+	public static void displayLevelEndMessage(final MainGui mainGui, final String result) { //TODO: Format
 		JFrame winFrame = new JFrame();
 		JPanel winPanel = new JPanel();
 		winPanel.setLayout(new BoxLayout(winPanel, BoxLayout.PAGE_AXIS));
@@ -103,9 +102,8 @@ public class GUIUtils {
 		JLabel winLabel = new JLabel("OK");
 		createButtonLabel(winButton, winLabel);
 		winButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-		//winButton.addActionListener();
 		winButton.addActionListener(e -> {
-			mainGui.createCampaignScreen(levelGui);
+			mainGui.createCampaignScreen();
 			winFrame.dispose();
 		});
 		//main gui return to campaign here
