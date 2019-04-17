@@ -70,7 +70,7 @@ public class GameHandler extends Thread {
 	private void endLevel(final String result) {
 		stopTimer();
 		levelGui.stopPacketTimer();
-		GUIUtils.displayLevelEndMessage(levelGui, mainGui, result);
+		GUIUtils.displayLevelEndMessage(mainGui, result);
 	}
 
 	/**

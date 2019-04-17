@@ -24,6 +24,7 @@ import static java.lang.System.exit;
 public class MainGui extends JFrame {
 
 	private final Dimension buttonSize = new Dimension(120, 60);
+	private JPanel currentPanel;
 
 	public MainGui() {
 		setVisible(true);
@@ -33,7 +34,7 @@ public class MainGui extends JFrame {
 		setTitle("Network Domination");
 		setBackground(Color.DARK_GRAY);
 		createMainMenu();
-		//createPauseMenu();
+		createPauseMenu();
 	}
 
 	/**
@@ -41,10 +42,16 @@ public class MainGui extends JFrame {
 	 */
 	public void createMainMenu() {
 		MainMenu mainMenu = new MainMenu(this);
+		remove(mainMenu);
+		if(currentPanel != null){
+			remove(currentPanel);
+			currentPanel.setVisible(false);
+		}
 		add(mainMenu);
 		mainMenu.setVisible(true);
-		getContentPane().add(mainMenu);
-		createPauseMenu();
+		setContentPane(mainMenu);
+		revalidate();
+		currentPanel = mainMenu;
 	}
 
 	/**
@@ -86,8 +93,9 @@ public class MainGui extends JFrame {
 					returnButton.addActionListener(e1 -> {
 						setVisible(true);
 						pauseFrame.dispose();
-						//setContentPane(mainMenu);
-						//gameHandler.stopTimer();
+						createMainMenu();
+
+
 					});
 					pausePanel.add(returnButton);
 
@@ -128,32 +136,32 @@ public class MainGui extends JFrame {
 	/**
 	 * Creates a level JPanel
 	 * @param levelName name/number of the level
-	 * @param previousPanel Previous JPanel
 	 */
-	public void createLevel(final String levelName, final JPanel previousPanel) {
+	public void createLevel(final String levelName) {
 		GameLevel gameLevel = FileHandler.readLevel(levelName);
 		LevelGUI levelGui = new LevelGUI(gameLevel);
 		GameHandler gameHandler = new GameHandler(gameLevel, levelGui, this);
 		revalidate();
+		remove(currentPanel);
+		currentPanel.setVisible(false);
 		add(levelGui);
 		setTitle("Network Domination - " + levelName);
 		setContentPane(levelGui);
 		gameHandler.run();
-		remove(previousPanel);
-		previousPanel.setVisible(false);
+		currentPanel = levelGui;
 	}
 
 	/**
 	 * Creates a campaign JPanel
-	 * @param previousPanel Previous JPanel
 	 */
-	public void createCampaignScreen(final JPanel previousPanel) {
+	public void createCampaignScreen() {
 		CampaignGUI campaignScreen = new CampaignGUI(this);
-		//setTitle("Campaign Screen");
+		setTitle("Campaign Screen");
+		remove(currentPanel);
+		currentPanel.setVisible(false);
 		add(campaignScreen);
 		setContentPane(campaignScreen);
 		revalidate();
-		remove(previousPanel);
-		previousPanel.setVisible(false);
+		currentPanel = campaignScreen;
 	}
 }

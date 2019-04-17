@@ -61,9 +61,7 @@ public class CampaignGUI extends JPanel {
 		level.setBounds(x,y,60, 60);
 		level.setOpaque(false);
 		level.setContentAreaFilled(false);
-		level.addActionListener(e -> {
-			mainGui.createLevel(name.substring(6), this);
-		});
+		level.addActionListener(e -> mainGui.createLevel(name.substring(6)));
 		levelButtons.add(level);
 
 		GUIUtils.createCampaignLabel(level, new JLabel(name.substring(6)));
