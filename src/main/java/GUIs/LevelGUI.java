@@ -127,7 +127,7 @@ public class LevelGUI extends JPanel {
 		deviceButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if(e.isMetaDown() && gameLevel.getIdToDeviceObject().get(idToDeviceButton.inverse().get(deviceButton)).getTeam().equals("Blue")) {
+				if(e.isMetaDown() && gameLevel.getIdToDeviceObject().get(idToDeviceButton.inverse().get(selectedDevice)).getTeam().equals("Blue")) {
 					updateTargetSelection(deviceButton);
 					gameLevel.getIdToDeviceObject().get(idToDeviceButton.inverse().get(selectedDevice)).setTarget(idToDeviceButton.inverse().get(deviceButton));
 				}
