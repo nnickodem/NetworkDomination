@@ -1,12 +1,7 @@
 package GUIs;
 
-import GameHandlers.GameHandler;
-import Objects.GameLevel;
-import ResourceHandlers.FileHandler;
-
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.Color;
@@ -17,10 +12,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Label;
 import java.awt.Toolkit;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
-import static java.awt.event.KeyEvent.VK_ESCAPE;
 import static java.lang.System.exit;
 
 /**
@@ -29,7 +21,6 @@ import static java.lang.System.exit;
 public class MainMenu extends JPanel {
 
 	private final Dimension buttonSize = new Dimension(120, 60);
-	private GameHandler gameHandler;
 
 	/**
 	 * Constructs the main menu JPanel
