@@ -1,5 +1,4 @@
 import GUIs.MainGui;
-import GUIs.MainMenu;
 import ResourceHandlers.LogHandler;
 
 import javax.swing.SwingUtilities;
