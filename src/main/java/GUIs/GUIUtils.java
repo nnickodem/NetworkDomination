@@ -128,6 +128,10 @@ public class GUIUtils {
 		button.add(label);
 	}
 
+	/**
+	 * Creates the design specifications for a button
+	 * @return the button
+	 */
 	public static JButton createButtonDesigns(){
 		Dimension buttonSize = new Dimension(120, 60);
 			JButton button = new JButton(GUIUtils.scaleImage("resources/ui/button/buttonBase.png", 120, 60));
@@ -137,6 +141,11 @@ public class GUIUtils {
 			return button;
 	}
 
+	/**
+	 * Create the label for the matching button
+	 * @param string label text
+	 * @return the label
+	 */
 	public static JLabel createButtonLabelDesigns(String string){
 		JLabel label = new JLabel(string);
 		label.setFont(new Font("Arial", Font.PLAIN, 16));
