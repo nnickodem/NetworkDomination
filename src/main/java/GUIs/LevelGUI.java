@@ -22,7 +22,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Label;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -45,7 +44,6 @@ public class LevelGUI extends JPanel {
 	private static final Logger logger = Logger.getLogger("errorLogger");
 	private static final int PACKET_TIME = 1300;
 	private final String deviceImagePath = "resources/objects/NetworkDevices/";
-	private final String packetImagePath = "resources/objects/Packets/";
 	private final Dimension buttonSize = new Dimension(120,60);
 	private final List<JButton> packetButtons = new ArrayList<>();
 	private List<Map.Entry<JButton, JButton>> deviceConnections = new ArrayList<>();
@@ -57,7 +55,9 @@ public class LevelGUI extends JPanel {
 	private Map<JButton, JLabel> buttonToLabel = new HashMap<>();
 	private JButton selectedDevice;
 	private JButton targetDevice;
+	private JLabel levelScore;
 	private int upgradeNumber = 1; //demo for upgrade button TODO: remove
+	private int localScore = 0;
 
 	/**
 	 * Constructs the level JPanel
@@ -82,7 +82,7 @@ public class LevelGUI extends JPanel {
 			}
 		}
 
-		JLabel levelScore = new JLabel("Level Score: " + 0);
+		levelScore = new JLabel("Level Score: " + localScore);
 		levelScore.setBounds(25,0,200,50);
 		levelScore.setFont(levelScore.getFont().deriveFont(24.0F));
 		levelScore.setForeground(Color.WHITE);
@@ -172,16 +172,10 @@ public class LevelGUI extends JPanel {
 
 		List<String> packetTypes = Arrays.asList("Botnet", "ICMP", "SYN", "CryptoJack");
 		for(String packetType : packetTypes){
-			JButton packetButton = new JButton(GUIUtils.scaleImage("resources/ui/button/buttonBase.png", 120, 60));
-			packetButton.setPreferredSize(buttonSize);
-			packetButton.setContentAreaFilled(false);
-			packetButton.setFocusPainted(false);
+			JButton packetButton = GUIUtils.createButtonDesigns();
 			packetButtons.add(packetButton);
-			JLabel packetLabel = new JLabel(packetType);
-			packetLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-			packetLabel.setForeground(Color.WHITE);
-			packetLabel.setAlignmentY(.3f);
-			packetLabel.setAlignmentX(Label.CENTER_ALIGNMENT);
+
+			JLabel packetLabel = GUIUtils.createButtonLabelDesigns(packetType);
 			packetButton.add(packetLabel);
 			if(!packetType.equals("Botnet")) {
 				packetButton.addActionListener(e -> {
@@ -244,6 +238,7 @@ public class LevelGUI extends JPanel {
 	private void sendPacket(final String packetType, final JButton source, final JButton target, final String team) {
 		String packetCounter = idToPacketCounter.get(idToDeviceButton.inverse().get(source)).getText();
 		if(target != null && Integer.valueOf(packetCounter.substring(0,packetCounter.indexOf("/"))) > 0) {
+			String packetImagePath = "resources/objects/Packets/";
 			JLabel packet = new JLabel(GUIUtils.scaleImage(packetImagePath + packetType + "/" + packetType + team + ".png", 30, 30));
 			packet.setBounds(source.getLocation().x + 20, source.getLocation().y + 20, 30, 30);
 			add(packet);
@@ -366,10 +361,14 @@ public class LevelGUI extends JPanel {
 			current -= packetCount;
 		}
 		if(current <= device.getMaxPacket() && current >= 0) {
-			idToPacketCounter.get(deviceID).setText(String.valueOf(current) + "/" + device.getMaxPacket());
+			idToPacketCounter.get(deviceID).setText(current + "/" + device.getMaxPacket());
 		} else if(current < 0 && !device.getTeam().equals(packetTeam)) {
 			idToDeviceButton.get(deviceID).setIcon(GUIUtils.scaleImage(deviceImagePath + device.getType() + "/" + device.getType() + packetTeam + ".png", 60, 60));
 			device.setTeam(packetTeam);
+			if (device.getTeam().equals("Blue")) {
+				localScore = localScore + 100;
+				levelScore.setText("Level Score: " + localScore);
+			}
 			device.setTarget(null);
 			device.setSending(false);
 			gameLevel.incrementMapVersion();

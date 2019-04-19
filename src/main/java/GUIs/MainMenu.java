@@ -20,8 +20,6 @@ import static java.lang.System.exit;
  */
 public class MainMenu extends JPanel {
 
-	private final Dimension buttonSize = new Dimension(120, 60);
-
 	/**
 	 * Constructs the main menu JPanel
 	 */
@@ -38,6 +36,7 @@ public class MainMenu extends JPanel {
 		constraints.insets = new Insets(3,0,3,0);
 		constraints.fill = GridBagConstraints.CENTER;
 
+		Dimension buttonSize = new Dimension(120, 60);
 		playButton.setPreferredSize(buttonSize);
 		playButton.setContentAreaFilled(false);
 		playButton.setFocusPainted(false);

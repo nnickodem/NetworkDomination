@@ -128,6 +128,24 @@ public class GUIUtils {
 		button.add(label);
 	}
 
+	public static JButton createButtonDesigns(){
+		Dimension buttonSize = new Dimension(120, 60);
+			JButton button = new JButton(GUIUtils.scaleImage("resources/ui/button/buttonBase.png", 120, 60));
+			button.setPreferredSize(buttonSize);
+			button.setContentAreaFilled(false);
+			button.setFocusPainted(false);
+			return button;
+	}
+
+	public static JLabel createButtonLabelDesigns(String string){
+		JLabel label = new JLabel(string);
+		label.setFont(new Font("Arial", Font.PLAIN, 16));
+		label.setForeground(Color.WHITE);
+		label.setAlignmentY(.3f);
+		label.setAlignmentX(Label.CENTER_ALIGNMENT);
+		return label;
+	}
+
 	/**
 	 * Creates a Map of coordinates of each network device.
 	 * @param connections List of connections between buttons

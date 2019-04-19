@@ -10,10 +10,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Label;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Arrays;
+import java.util.List;
 
 import static java.awt.event.KeyEvent.VK_ESCAPE;
 import static java.lang.System.exit;
@@ -23,7 +23,6 @@ import static java.lang.System.exit;
  */
 public class MainGui extends JFrame {
 
-	private final Dimension buttonSize = new Dimension(120, 60);
 	private JPanel currentPanel;
 
 	public MainGui() {
@@ -66,50 +65,25 @@ public class MainGui extends JFrame {
 					JFrame pauseFrame = new JFrame();
 					JPanel pausePanel = new JPanel();
 
-					//Add Save button to pause menu
-					JButton saveButton = new JButton(GUIUtils.scaleImage("resources/ui/button/buttonBase.png", 120, 60));
-					saveButton.setPreferredSize(buttonSize);
-					saveButton.setContentAreaFilled(false);
-					saveButton.setFocusPainted(false);
-					JLabel saveLabel = new JLabel("Save");
-					saveLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-					saveLabel.setForeground(Color.WHITE);
-					saveLabel.setAlignmentY(.3f);
-					saveLabel.setAlignmentX(Label.CENTER_ALIGNMENT);
-					saveButton.add(saveLabel);
-					pausePanel.add(saveButton);
+					List<String> pauseMenuLabels = Arrays.asList("Save", "Main Menu", "Exit");
 
-					//Add return to main menu button to pause menu
-					JButton returnButton = new JButton(GUIUtils.scaleImage("resources/ui/button/buttonBase.png", 120, 60));
-					returnButton.setPreferredSize(buttonSize);
-					returnButton.setContentAreaFilled(false);
-					returnButton.setFocusPainted(false);
-					JLabel returnLabel = new JLabel("Main Menu");
-					returnLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-					returnLabel.setForeground(Color.WHITE);
-					returnLabel.setAlignmentY(.3f);
-					returnLabel.setAlignmentX(Label.CENTER_ALIGNMENT);
-					returnButton.add(returnLabel);
-					returnButton.addActionListener(e1 -> {
-						setVisible(true);
-						pauseFrame.dispose();
-						createMainMenu();
-					});
-					pausePanel.add(returnButton);
+					for(String pauseLabel : pauseMenuLabels){
+						JButton button = GUIUtils.createButtonDesigns();
+						JLabel label = GUIUtils.createButtonLabelDesigns(pauseLabel);
+						button.add(label);
+						if(pauseLabel.equals("Main Menu")){
+							button.addActionListener(e1 -> {
+								setVisible(true);
+								pauseFrame.dispose();
+								createMainMenu();
+							});
+						}
 
-					//Add Exit button to pause menu
-					JButton pauseExitButton = new JButton(GUIUtils.scaleImage("resources/ui/button/buttonBase.png", 120, 60));
-					pauseExitButton.setPreferredSize(buttonSize);
-					pauseExitButton.setContentAreaFilled(false);
-					pauseExitButton.setFocusPainted(false);
-					JLabel pauseExitLabel = new JLabel("Exit");
-					pauseExitLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-					pauseExitLabel.setForeground(Color.WHITE);
-					pauseExitLabel.setAlignmentY(.3f);
-					pauseExitLabel.setAlignmentX(Label.CENTER_ALIGNMENT);
-					pauseExitButton.add(pauseExitLabel);
-					pauseExitButton.addActionListener(e1 -> exit(0));
-					pausePanel.add(pauseExitButton);
+						else if(pauseLabel.equals("Exit")){
+							button.addActionListener(e1 -> exit(0));
+						}
+						pausePanel.add(button);
+					}
 
 					//Add the JFrame criteria
 					pauseFrame.setSize(new Dimension(250, 300));
@@ -137,6 +111,7 @@ public class MainGui extends JFrame {
 	 */
 	public void createLevel(final String levelName) {
 		GameLevel gameLevel = FileHandler.readLevel(levelName);
+		assert gameLevel != null;
 		LevelGUI levelGui = new LevelGUI(gameLevel);
 		GameHandler gameHandler = new GameHandler(gameLevel, levelGui, this);
 		revalidate();
