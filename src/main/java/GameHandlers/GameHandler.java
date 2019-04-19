@@ -5,6 +5,7 @@ import GUIs.LevelGUI;
 import GUIs.MainGui;
 import Objects.GameLevel;
 import Objects.NetworkDevices.NetworkDevice;
+import ResourceHandlers.FileHandler;
 
 import javax.swing.Timer;
 import java.util.ArrayList;
@@ -62,8 +63,10 @@ public class GameHandler extends Thread {
 
 		if(level.getWinConditions().stream().map(NetworkDevice::getTeam).allMatch(t -> t.equals("Blue"))) {
 			endLevel("win");
+			FileHandler.updateSave(level.getLevelID(), "1");
 		} else if(level.getIdToDeviceObject().values().stream().map(NetworkDevice::getTeam).noneMatch(t -> t.equals("Blue"))) {
 			endLevel("lost");
+			FileHandler.updateSave(level.getLevelID(), "-1");
 		}
 	}
 

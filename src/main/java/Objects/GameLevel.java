@@ -10,6 +10,7 @@ import java.util.Map;
  */
 public class GameLevel {
 
+	private String levelID;
 	private String[][] levelMap;
 	private Map<Map.Entry<String,String>, Integer> connections;
 	private Map<String, NetworkDevice> idToDeviceObject;
@@ -19,11 +20,12 @@ public class GameLevel {
 	private List<NetworkDevice> winConditions;
 	private Integer mapVersion;
 
-	public GameLevel(final String [][] levelMap,
+	public GameLevel(final String levelID, final String [][] levelMap,
 					 final Map<Map.Entry<String, String>, Integer> connections,
 					 final Map<String, NetworkDevice> idToDeviceObject, List<String> description,
 					 final List<String> primaryObjectives, final List<String> secondaryObjectives,
 					 final List<NetworkDevice> winConditions) {
+		this.levelID = levelID;
 		this.levelMap = levelMap;
 		this.connections = connections;
 		this.idToDeviceObject = idToDeviceObject;
@@ -32,6 +34,10 @@ public class GameLevel {
 		this.secondaryObjectives = secondaryObjectives;
 		this.winConditions = winConditions;
 		mapVersion = 1;
+	}
+
+	public String getLevelID() {
+		return levelID;
 	}
 
 	public String[][] getLevelMap() {
