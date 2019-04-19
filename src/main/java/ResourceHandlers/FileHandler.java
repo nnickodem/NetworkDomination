@@ -61,7 +61,7 @@ public class FileHandler {
 
 			saveXML(document);
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.log(Level.SEVERE, "Failed to write save file!", e);
 		}
 	}
 
@@ -81,12 +81,12 @@ public class FileHandler {
 
 			saveXML(doc);
 		} catch(IOException i) {
-			i.printStackTrace();
+			logger.log(Level.SEVERE, "Failed to read save file!", i);
 			writeSaveFile();
 			updateSave(levelID, result);
 
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.log(Level.SEVERE, "Failed to update save file!", e);
 		}
 	}
 
@@ -109,12 +109,12 @@ public class FileHandler {
 
 			return levelStatus;
 		} catch(IOException i) {
-			i.printStackTrace();
+			logger.log(Level.SEVERE, "Failed to read save file!", i);
 			writeSaveFile();
 			return getSave();
 
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.log(Level.SEVERE, "Failed to read save file!", e);
 			return null;
 		}
 	}
@@ -132,7 +132,7 @@ public class FileHandler {
 			StreamResult result = new StreamResult(new File(saveFilePath));
 			transformer.transform(source, result);
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.log(Level.SEVERE, "Failed to save XML!", e);
 		}
 	}
 
