@@ -1,5 +1,7 @@
 package GUIs;
 
+import ResourceHandlers.FileHandler;
+
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -35,11 +37,13 @@ public class CampaignGUI extends JPanel {
 		globalScore.setForeground(Color.WHITE);
 		add(globalScore);
 
-		add(addLevelButton("Level 1", 25, 500));
-		add(addLevelButton("Level 2", 250, 500));
-		add(addLevelButton("Level 3", 500, 250));
-		add(addLevelButton("Level 4", 500, 750));
-		add(addLevelButton("Level 5", 750, 500));
+		List<String> levelStatus = FileHandler.getSave();
+
+		add(addLevelButton("1", 25, 500, levelStatus.get(0)));
+		add(addLevelButton("2", 250, 500, levelStatus.get(1)));
+		add(addLevelButton("3", 500, 250, levelStatus.get(2)));
+		add(addLevelButton("4", 500, 750, levelStatus.get(3)));
+		add(addLevelButton("5", 750, 500, levelStatus.get(4)));
 
 		//Create the connections between the buttons
 		deviceConnections.add(new AbstractMap.SimpleEntry<>(levelButtons.get(0), levelButtons.get(1)));
@@ -56,15 +60,26 @@ public class CampaignGUI extends JPanel {
 	 * @param y - y coordinate
 	 * @return - level JButton
 	 */
-	private JButton addLevelButton(String name, int x, int y) {
-		JButton level = new JButton(GUIUtils.scaleImage("resources/objects/NetworkDevices/pc/pcWhite.png",60,60));
+	private JButton addLevelButton(final String name, final int x, final int y, final String status) {
+		String color;
+		switch(status) {
+			case "1":
+				color = "Blue";
+				break;
+			case "-1":
+				color = "Red";
+				break;
+			default:
+				color = "White";
+		}
+		JButton level = new JButton(GUIUtils.scaleImage("resources/objects/NetworkDevices/pc/pc" + color + ".png",60,60));
 		level.setBounds(x,y,60, 60);
 		level.setOpaque(false);
 		level.setContentAreaFilled(false);
-		level.addActionListener(e -> mainGui.createLevel(name.substring(6)));
+		level.addActionListener(e -> mainGui.createLevel(name));
 		levelButtons.add(level);
 
-		GUIUtils.createCampaignLabel(level, new JLabel(name.substring(6)));
+		GUIUtils.createCampaignLabel(level, new JLabel(name));
 		return level;
 	}
 

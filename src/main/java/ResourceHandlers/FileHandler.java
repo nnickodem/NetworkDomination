@@ -7,7 +7,18 @@ import Objects.NetworkDevices.PC;
 import Objects.NetworkDevices.Router;
 import Objects.NetworkDevices.Server;
 import Objects.NetworkDevices.Switch;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.AbstractMap;
@@ -27,6 +38,103 @@ public class FileHandler {
 
 	private static final Logger logger = Logger.getLogger("errorLogger");
 	private static final String levelFilePath = "resources/levels/";
+	private static final String saveFilePath = "resources/save.xml";
+	private static final int numLevels = 5;
+
+	/**
+	 * Writes a new empty save file xml
+	 */
+	public static void writeSaveFile() {
+		try {
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			Document document = builder.newDocument();
+
+			Element root = document.createElement("CampaignSave");
+			document.appendChild(root);
+
+			for(int i = 1; i <= numLevels; i++) {
+				Element level = document.createElement("Level_" + i);
+				level.appendChild(document.createTextNode("0"));
+				root.appendChild(level);
+			}
+
+			saveXML(document);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Updates the save xml for a given level and status
+	 * @param levelID Level ID
+	 * @param result result of level
+	 */
+	public static void updateSave(final String levelID, final String result) {
+		try {
+			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+			Document doc = docBuilder.parse(saveFilePath);
+
+			Node level = doc.getElementsByTagName("Level_"+levelID).item(0);
+			level.setTextContent(result);
+
+			saveXML(doc);
+		} catch(IOException i) {
+			i.printStackTrace();
+			writeSaveFile();
+			updateSave(levelID, result);
+
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Gets all save information
+	 * @return List<String> where each entry is a level result
+	 */
+	public static List<String> getSave() {
+		try {
+			File fXmlFile = new File(saveFilePath);
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			Document doc = dBuilder.parse(fXmlFile);
+
+			List<String> levelStatus = new ArrayList<>();
+			for(int i = 1; i <= numLevels; i++) {
+				Node level = doc.getElementsByTagName("Level_" + i).item(0);
+				levelStatus.add(level.getTextContent());
+			}
+
+			return levelStatus;
+		} catch(IOException i) {
+			i.printStackTrace();
+			writeSaveFile();
+			return getSave();
+
+		} catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	/**
+	 * Saves XML
+	 * @param doc document
+	 */
+	private static void saveXML(final Document doc) {
+		try {
+			TransformerFactory transformerFactory = TransformerFactory
+					.newInstance();
+			Transformer transformer = transformerFactory.newTransformer();
+			DOMSource source = new DOMSource(doc);
+			StreamResult result = new StreamResult(new File(saveFilePath));
+			transformer.transform(source, result);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * Reads a given level file and converts the information to a GameLevel object
@@ -105,7 +213,7 @@ public class FileHandler {
 														.map(idToDeviceObject::get)
 														.collect(Collectors.toList());
 
-			return new GameLevel(mapArray, mapConnections, idToDeviceObject, description, mainObjectives, secondaryObjectives, winConditionDevices);
+			return new GameLevel(levelName, mapArray, mapConnections, idToDeviceObject, description, mainObjectives, secondaryObjectives, winConditionDevices);
 		} catch (Exception e) {
 			logger.log(Level.SEVERE, "Error reading level file", e);
 			return null;
