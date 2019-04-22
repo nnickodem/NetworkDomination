@@ -19,7 +19,7 @@ Switch.White.2,0,20
 PC.White.1,5,10
 PC.Blue.1,4,15
 Server.White.1,4,30
-PC.Red.1,5,10
+PC.Red.1,6,10
 * description
 Beat Level
 * mainObjectives
