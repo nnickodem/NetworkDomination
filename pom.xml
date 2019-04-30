@@ -121,6 +121,9 @@
                                 <resource>
                                     <directory>resources</directory>
                                     <filtering>true</filtering>
+                                    <excludes>
+                                        <exclude>save.xml</exclude>
+                                    </excludes>
                                 </resource>
                             </resources>
                         </configuration>

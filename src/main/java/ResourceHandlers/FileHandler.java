@@ -81,7 +81,7 @@ public class FileHandler {
 
 			saveXML(doc);
 		} catch(IOException i) {
-			logger.log(Level.SEVERE, "Failed to read save file!", i);
+			logger.log(Level.WARNING, "Failed to read save file, attempting to write one...", i);
 			writeSaveFile();
 			updateSave(levelID, result);
 
@@ -109,7 +109,7 @@ public class FileHandler {
 
 			return levelStatus;
 		} catch(IOException i) {
-			logger.log(Level.SEVERE, "Failed to read save file!", i);
+			logger.log(Level.WARNING, "Failed to read save file, attempting to write one...", i);
 			writeSaveFile();
 			return getSave();
 

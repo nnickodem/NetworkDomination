@@ -6,21 +6,21 @@
 -,Router.Yellow.1,-,-,PC.Blue.2,-,-,-,PC.Blue.1,-,-,-
 -,-,-,-,-,-,PC.Red.1,-,-,-,-,-
 * Device 1,Device 2,Distance(Integer) (spaces are ignored, but comma is required)
-Server.Red.1,Switch.White.1,1
+Server.Red.1,Switch.White.1,3
 Switch.White.1,PC.Blue.2,1
 Switch.White.1,PC.Blue.1,1
 PC.Blue.2,Router.Yellow.1,3
-PC.Red.1,PC.Blue.2,1
+PC.Red.1,PC.Blue.2,2
 PC.Blue.3,Switch.White.1,1
 PC.Blue.3,Router.Yellow.1,2
 PC.Blue.3,PC.Blue.2,1
 Router.Yellow.1,Switch.White.1,4
 * Device, speed, max_packet (spaces are ignored, commas required, speed/max_packet must be integers
-Server.Red.1,0,25
+Server.Red.1,5,25
 Switch.White.1,0,20
-PC.Blue.2,5,15
+PC.Blue.2,4,15
 PC.Blue.1,3,15
-PC.Red.1,3,15
+PC.Red.1,6,15
 Router.Yellow.1,3,20
 PC.Blue.3,3,15
 * description
